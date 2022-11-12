@@ -1,9 +1,9 @@
 # Server
+- 서버 컴퓨터 - AWS EC2
+- 데이터베이스 - MySql
+- 프레임워크 - express.js
 
-## 환경 구축
-    - 서버 컴퓨터 - AWS EC2
-    - 데이터베이스 - MySql
-    - 프레임워크 - express.js (Node.js)
+</br>
 
 ## 테이블 명세
 | table | column | example1 | example2 | data type | condition | PK | FK | memo |
@@ -36,11 +36,10 @@
 |  |  |  |  |  |  |  |  |  |
 |  |  |  |  |  |  |  |  |  |
 
+</br>
+
 ## REST API 명세
-    - 공통 URI: http:// ~~~~ **/eatcoin-api**
-    
-    [디테일](https://www.notion.so/2ab0c1988daa4d3ab5b6821f3c3cc75f)
-    
+- 공통 URI: http:// ~~~~ **/eatcoin-api**    
 
 | Category | Method | Summary | URI | 비고 |
 | --- | --- | --- | --- | --- |
