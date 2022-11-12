@@ -43,18 +43,18 @@
 
 | Category | Method | Summary | URI | 비고 |
 | --- | --- | --- | --- | --- |
-| 내역 | get | 내역 조회 | /histrorys (/{hid}) | 전체 or 특정 내역 조회 |
-|  | post | 내역 추가 | /historys |  |
-|  | put | 내역 수정 | /historys/{hid} |  |
-|  | delete | 내역 삭제 | /historys/{hid} |  |
-|  | get | 특정 내역 상세보기 | /historys/detail/{hid} |  |
+| 내역 | get | 내역 조회 | /histories (/{hid}) | 전체 or 특정 내역 조회 |
+|  | post | 내역 추가 | /histories |  |
+|  | put | 내역 수정 | /histories/{hid} |  |
+|  | delete | 내역 삭제 | /histories/{hid} |  |
+|  | get | 특정 내역 상세보기 | /histories/detail/{hid} |  |
 |  |  |  |  |  |
 | 통계 | get | 카테고리/자산 별 통계 조회 | /statistics |  |
 |  |  |  |  |  |
-| 메뉴 | get | 메뉴 조회 | /menues (/{mid}) |  |
-|  | post | 메뉴 추가 | /menues |  |
-|  | put | 메뉴 수정 | /menues/{mid} |  |
-|  | delete | 메뉴 삭제 | /menues/{mid} |  |
+| 메뉴 | get | 메뉴 조회 | /menu (/{mid}) |  |
+|  | post | 메뉴 추가 | /menu |  |
+|  | put | 메뉴 수정 | /menu/{mid} |  |
+|  | delete | 메뉴 삭제 | /menu/{mid} |  |
 |  |  |  |  |  |
 | 카테고리 | get | 목록 조회 | /categories (/{cid}) |  |
 |  | post | 카테고리 추가 | /categories |  |
