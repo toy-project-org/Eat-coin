@@ -1,4 +1,4 @@
-# 💰 Eat-coin
+# 💰 Eat Coin
 가계부 프로젝트
 
 </br>
@@ -12,7 +12,7 @@
       - framework - vue.js
     - back
       - framework - express.js
-      - database - mysql
+      - database - mysSQL
       - server - aws ec2
 
 3. **개발 동기**
