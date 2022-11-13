@@ -5,7 +5,6 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
-var apiRouter = require('./routes/eatcoin-api');      // api 미들웨어 경로
 
 var app = express();
 
@@ -20,7 +19,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/eatcoin-api', apiRouter);                 // api 미들웨어 등록
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
