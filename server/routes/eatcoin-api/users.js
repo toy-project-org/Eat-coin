@@ -8,6 +8,8 @@ router.use(morgan("combined"));
 var from = ' from users';
 var where = ' where uid = ?';
 
+// todo: 에러 핸들링!!!
+
 // 1-1. users 조회
 router.get('/', function(req, res, next) {
     console.log("find all");
