@@ -1,0 +1,22 @@
+@import './_main.scss';
+@import './home.scss';
+
+.add-history-nav {
+  @extend %flex-row-space-btw;
+}
+
+.add-history-title {
+  padding: 5px;
+  font-size: $font-md;
+  font-weight: 500;
+}
+
+.add-history-sub-title {
+  margin: 0.5rem 10px 0 0.6rem;
+  font-size: $font-md;
+  font-weight: 500;
+}
+
+.add-history-input-width {
+  width: 245px;
+}

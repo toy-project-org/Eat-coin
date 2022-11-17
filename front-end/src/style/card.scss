@@ -1,0 +1,48 @@
+@import './_main.scss';
+
+.card-container {
+  @extend %flex-row-space-btw;
+  align-items: center;
+  position: relative;
+
+  background-color: $card-color;
+  border-radius: 10px;
+  margin: 5px 0;
+  height: $card-height;
+
+  .card-icon {
+    background-color: $icon-color;
+    background-size: 100%;
+    width: $icon-size;
+    height: $icon-size;
+    border-radius: 50%;
+
+    margin-left: 5px;
+  }
+
+  .card-title,
+  .card-amount-plus,
+  .card-amount-minus {
+    line-height: $card-height;
+  }
+
+  .card-title {
+    position: absolute;
+    left: $icon-size + 15px;
+    font-size: $font-sm;
+  }
+  .card-amount-plus,
+  .card-amount-minus {
+    position: absolute;
+    right: 7px;
+    text-align: right;
+    font-size: $font-md;
+  }
+
+  .card-amount-minus {
+    color: $red-color;
+  }
+  .card-amount-plus {
+    color: $green-color;
+  }
+}

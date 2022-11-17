@@ -1,0 +1,20 @@
+@import './_main.scss';
+
+.wrapper {
+  position: relative;
+  margin: 0px 10px;
+  padding: 0.1px;
+}
+
+#app {
+  box-sizing: border-box;
+  font-family: 'consolas';
+  margin-top: 60px;
+  width: 100%;
+  max-width: 460px;
+  margin: auto;
+  position: relative;
+  border-right: 1px solid $bg-color;
+  border-left: 1px solid $bg-color;
+  background-color: $bg-color;
+}

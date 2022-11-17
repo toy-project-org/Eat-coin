@@ -1,0 +1,25 @@
+<template>
+  <div class="wrapper">
+    <router-view></router-view>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  name: 'App',
+
+  methods: {
+    movePage(new_page: string) {
+      this.$router.push({
+        name: new_page,
+      });
+    },
+  },
+});
+</script>
+
+<style lang="scss">
+@import './style/app.scss';
+</style>

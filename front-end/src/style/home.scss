@@ -1,0 +1,26 @@
+@import './_main.scss';
+
+.bx-show,
+.history-see-all {
+  font-size: 1.5rem;
+}
+
+.total-money-in,
+.total-money-out {
+  font-size: $font-md;
+}
+.total-money-in {
+  color: $green-color;
+}
+.total-money-out {
+  color: $red-color;
+}
+
+.history-content {
+  margin-bottom: 12px;
+
+  .history-date {
+    margin-left: 5px;
+    font-size: $font-sm;
+  }
+}
