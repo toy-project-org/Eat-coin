@@ -10,6 +10,8 @@ $bar-color: #ffffff;
 $bg-color: #ffffff;
 $icon-color: #7c9473;
 
+$light-green-color: #4caf50;
+
 // size
 $main-header-height: 60px;
 // $main-footer-height: 50px;
@@ -87,6 +89,15 @@ body::-webkit-scrollbar-thumb {
   opacity: 0 !important;
   cursor: default !important;
 }
+.btn-active-size {
+  height: 40px !important;
+  width: 40px !important;
+
+  i {
+    font-size: 1.7rem;
+    color: #808386;
+  }
+}
 
 .page-title {
   font-size: $font-lg;
@@ -119,13 +130,9 @@ body::-webkit-scrollbar-thumb {
 }
 
 .btn-sm {
-  height: 35px;
-  width: 100%;
-  background-color: #ffffff;
-  border-radius: 10px;
-  margin: 0 3px;
-  font-size: $font-md;
-  cursor: pointer;
+  height: 30px;
+  width: 70px;
+  font-size: $font-sm !important;
 }
 
 %flex-row-space-btw {
