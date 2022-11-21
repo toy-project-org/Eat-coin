@@ -138,7 +138,7 @@ body::-webkit-scrollbar-thumb {
   }
 
   .container-box-content {
-    padding: 12px;
+    padding: 0 12px 10px;
   }
 }
 
@@ -181,4 +181,15 @@ body::-webkit-scrollbar-thumb {
 }
 .v-list-item-title {
   font-size: $font-md !important;
+}
+
+.history-content {
+  margin-bottom: 12px;
+
+  .history-date {
+    margin-left: 5px;
+    font-size: $font-sm;
+    font-weight: 500;
+    padding-top: 5px;
+  }
 }

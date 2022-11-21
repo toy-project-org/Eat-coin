@@ -26,7 +26,7 @@
 
   <!-- Monthly income and expenditure breakdown -->
   <div class="container-box mt-3">
-    <div class="calendar-box p-1 mb-1">
+    <div class="calendar-box p-1 pt-2 mb-1">
       <v-btn icon variant="text" class="btn-calendar-arrow">
         <i class="bx bx-chevron-left"></i>
       </v-btn>
@@ -135,5 +135,5 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import '../style/historyList.scss';
+@import '../style/history.scss';
 </style>

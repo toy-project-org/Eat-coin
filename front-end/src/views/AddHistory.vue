@@ -13,7 +13,7 @@
   <v-form class="container-box pb-1" ref="formRef">
     <div class="container-box-content">
       <!-- Date -->
-      <h3 class="add-history-title">Date</h3>
+      <h3 class="add-history-title mt-3">Date</h3>
       <Datepicker v-model="date" :format="dateFormat"></Datepicker>
 
       <!-- Account Content -->
