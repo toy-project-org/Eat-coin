@@ -14,7 +14,6 @@ $light-green-color: #4caf50;
 
 // size
 $main-header-height: 60px;
-// $main-footer-height: 50px;
 $container-header-height: 55px;
 $card-height: 50px;
 $icon-size: 35px;
@@ -28,6 +27,7 @@ $font-xs: 0.625rem; // 10px
 * {
   font-family: 'Poppins', sans-serif;
   color: $font-color;
+  font-size: $font-md;
 }
 
 html,
@@ -48,6 +48,13 @@ ul {
   margin: 0;
   padding: 0;
   list-style-type: none;
+}
+a {
+  text-decoration: none;
+  color: $font-color;
+}
+a:visited {
+  color: $font-color;
 }
 button {
   border: none;
@@ -129,14 +136,43 @@ body::-webkit-scrollbar-thumb {
   }
 }
 
-.btn-sm {
-  height: 30px;
-  width: 70px;
+@mixin btn-sm($bg-color) {
+  background-color: $bg-color;
+  border-radius: 5px;
+  padding: 7px 14px;
   font-size: $font-sm !important;
+  font-weight: 500;
+  letter-spacing: 1px;
+  box-shadow: 0px 3px 1px -2px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)),
+    0px 2px 2px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
+    0px 1px 5px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.12));
+}
+
+.btn-sm-green {
+  @include btn-sm($light-green-color);
+}
+.btn-sm-white {
+  @include btn-sm(#ffffff);
 }
 
 %flex-row-space-btw {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.v-field__input {
+  min-height: 37px !important;
+}
+.v-input__details {
+  padding: 6px $font-md 2px !important;
+}
+.v-messages__message {
+  font-size: $font-sm;
+}
+.v-list {
+  max-height: 210px !important;
+}
+.v-list-item-title {
+  font-size: $font-md !important;
 }

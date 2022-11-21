@@ -4,6 +4,7 @@
   @extend %flex-row-space-btw;
   align-items: center;
   position: relative;
+  box-shadow: rgba(99, 99, 99, 0.15) 0px 2px 8px 0px;
 
   background-color: $card-color;
   border-radius: 10px;

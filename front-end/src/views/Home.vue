@@ -28,7 +28,7 @@
   <div class="container-box">
     <div class="container-box-header">
       <span class="container-box-title">History</span>
-      <v-btn icon variant="text" @click="movePage('History')" class="mr-1">
+      <v-btn icon variant="text" @click="movePage('HistoryList')" class="mr-1">
         <i class="history-see-all bx bx-chevron-right"></i>
       </v-btn>
     </div>

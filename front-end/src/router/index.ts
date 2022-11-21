@@ -2,6 +2,9 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Home from '../views/Home.vue';
 import History from '../views/History.vue';
 import AddHistory from '../views/AddHistory.vue';
+import HistoryList from '../views/HistoryList.vue';
+import HistoryCalendar from '../views/HistoryCalendar.vue';
+import HistoryCategory from '../views/HistoryCategory.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -13,6 +16,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/history',
     name: 'History',
     component: History,
+    children: [
+      { path: 'list', name: 'HistoryList', component: HistoryList },
+      { path: 'calendar', name: 'HistoryCalendar', component: HistoryCalendar },
+      { path: 'category', name: 'HistoryCategory', component: HistoryCategory },
+    ],
   },
   {
     path: '/add-history',

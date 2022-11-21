@@ -87,10 +87,8 @@
                 </v-card-text>
 
                 <div class="d-flex justify-content-end mx-5 mb-4">
-                  <v-btn class="btn-sm mr-2" @click="isActive.value = false">Close</v-btn>
-                  <v-btn class="btn-sm" color="success" @click="addAssetsVaildate(isActive)"
-                    >Save</v-btn
-                  >
+                  <button class="btn-sm-white mr-2" @click="isActive.value = false">CLOSE</button>
+                  <button class="btn-sm-green" @click="addAssetsVaildate(isActive)">SAVE</button>
                 </div>
               </v-card>
             </template>
@@ -138,10 +136,8 @@
                 </v-card-text>
 
                 <div class="d-flex justify-content-end mx-5 mb-4">
-                  <v-btn class="btn-sm mr-2" @click="isActive.value = false">Close</v-btn>
-                  <v-btn class="btn-sm" color="success" @click="addCategoryVaildate(isActive)"
-                    >Save</v-btn
-                  >
+                  <button class="btn-sm-white mr-2" @click="isActive.value = false">CLOSE</button>
+                  <button class="btn-sm-green" @click="addCategoryVaildate(isActive)">SAVE</button>
                 </div>
               </v-card>
             </template>
