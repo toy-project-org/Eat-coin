@@ -61,7 +61,7 @@
         <div class="d-flex add-history-input-width">
           <v-dialog>
             <template v-slot:activator="{ props }">
-              <v-btn v-bind="props" icon variant="text" class="btn-active-size mr-1">
+              <v-btn v-bind="props" icon variant="text" class="btn-add-history-plus mr-1">
                 <i class="bx bx-plus-circle"></i>
               </v-btn>
             </template>
@@ -110,7 +110,7 @@
         <div class="d-flex add-history-input-width">
           <v-dialog>
             <template v-slot:activator="{ props }">
-              <v-btn v-bind="props" icon variant="text" class="btn-active-size mr-1">
+              <v-btn v-bind="props" icon variant="text" class="btn-add-history-plus mr-1">
                 <i class="bx bx-plus-circle"></i>
               </v-btn>
             </template>

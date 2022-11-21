@@ -26,12 +26,12 @@
 
   <!-- Monthly income and expenditure breakdown -->
   <div class="container-box mt-3">
-    <div class="container-box-header">
-      <v-btn icon variant="text">
+    <div class="calendar-box p-1 mb-1">
+      <v-btn icon variant="text" class="btn-calendar-arrow">
         <i class="bx bx-chevron-left"></i>
       </v-btn>
-      <p class="container-box-title">2022년 11월</p>
-      <v-btn icon variant="text">
+      <p class="calendar-title mx-2">{{ listMonth.year }}년 {{ listMonth.month }}월</p>
+      <v-btn icon variant="text" class="btn-calendar-arrow">
         <i class="bx bx-chevron-right"></i>
       </v-btn>
     </div>
@@ -45,21 +45,58 @@
   <!-- Output depending on type -->
   <div class="container-box mt-3">
     <div class="container-box-header">
-      <p class="container-box-title">Balance</p>
+      <p class="container-box-title-md">내역 조회</p>
+
+      <div class="mr-3" style="width: 100px">
+        <v-select
+          v-model="listDataType"
+          :items="['전체', '지출', '수입']"
+          density="compact"
+          variant="solo"
+          hide-details
+        ></v-select>
+      </div>
+    </div>
+
+    <div class="container-box-content">
+      <div class="history-content">
+        <p class="history-date">11월 1일 (화)</p>
+        <card></card>
+      </div>
+      <div class="history-content">
+        <p class="history-date">10월 29일 (화)</p>
+        <card></card>
+      </div>
+      <div class="history-content">
+        <p class="history-date">09월 10일 (화)</p>
+        <card></card>
+      </div>
+      <div class="history-content">
+        <p class="history-date">11월 1일 (화)</p>
+        <card></card>
+      </div>
+      <div class="history-content">
+        <p class="history-date">11월 1일 (화)</p>
+        <card></card>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import Card from './Card.vue';
 
 export default defineComponent({
   name: 'HistoryList',
+
+  components: { Card },
 
   data: () => {
     return {
       listDatePeriod: '일주일',
       listMonth: { year: '', month: '' },
+      listDataType: '전체',
       loaded: false,
       loading: false,
     };
@@ -81,7 +118,7 @@ export default defineComponent({
 
     initDateMonth() {
       const year = new Date().getFullYear().toString();
-      const month = new Date().getMonth();
+      const month = new Date().getMonth() + 1;
       const newMonth = month < 10 ? '0' + month : '' + month;
       this.listMonth = { year, month: newMonth };
     },

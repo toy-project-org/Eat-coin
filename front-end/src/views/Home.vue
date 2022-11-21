@@ -64,9 +64,9 @@ import { mapMutations, mapState } from 'vuex';
 import Card from './Card.vue';
 
 export default defineComponent({
-  components: { Card },
-
   name: 'Home',
+
+  components: { Card },
 
   data: () => {
     return {

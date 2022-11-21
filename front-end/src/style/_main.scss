@@ -96,14 +96,20 @@ body::-webkit-scrollbar-thumb {
   opacity: 0 !important;
   cursor: default !important;
 }
-.btn-active-size {
-  height: 40px !important;
-  width: 40px !important;
+@mixin btn-active($size, $font-size, $color) {
+  height: $size !important;
+  width: $size !important;
 
   i {
-    font-size: 1.7rem;
-    color: #808386;
+    font-size: $font-size;
+    color: $color;
   }
+}
+.btn-add-history-plus {
+  @include btn-active(40px, 1.5rem, #808386);
+}
+.btn-calendar-arrow {
+  @include btn-active(35px, 1.2rem, $font-color);
 }
 
 .page-title {
