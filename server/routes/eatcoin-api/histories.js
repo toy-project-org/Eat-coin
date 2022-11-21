@@ -11,6 +11,7 @@ const from = ' from histories';
 const where = ' where hid = ?';
 
 // todo: 에러 핸들링!!!
+// cors 찾아보기
 
 // 1-1. 최근 내역 조회
 router.get('/', function(req, res, next) {
@@ -38,11 +39,11 @@ router.get('/', function(req, res, next) {
             };
 
             list.push(history);
+
         });
 
         console.log(list);
         res.json(list);
-
     });
 });
 
@@ -109,6 +110,7 @@ router.get('/:ym', (req, res, next) => {
             }
             
             list.push(history);
+            
         });
 
         console.log(list);
@@ -141,7 +143,7 @@ router.get('/amount/:date', (req, res, next) => {
 
         console.log(income, expend);
         res.json(amount);
-    })
+    });
 });
 
 // 2. 내역 추가
@@ -175,7 +177,6 @@ router.put('/:id', (req, res, next) => {
     var search = db.format('select *' + from + where, [id]);
     var update = db.format('update users set title = ?, amount = ?, payment_date = ?, category = ?, isfixed = ?, card = ?, memo  = ? where hid = ?', [title, amount, payment_date, category, isfixed, card, memo, id]);
 
-
     db.query(search, (err, results, fds) => {
         if (err) throw err;
         console.log(results);
@@ -184,7 +185,7 @@ router.put('/:id', (req, res, next) => {
             if (err) throw err;
             res.status(200).json({ message : "OK"});
         })
-    })
+    });
 });
 
 // 4. 내역 삭제
@@ -203,7 +204,7 @@ router.delete('/:id', (req, res, next) => {
             if (err) throw err;
             res.status(200).json({ massage : "OK"});
         })
-    })
-})
+    });
+});
 
 module.exports = router;
