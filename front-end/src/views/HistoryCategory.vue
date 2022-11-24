@@ -33,7 +33,8 @@
     </div>
 
     <div class="py-3">
-      <category-chart />
+      <category-chart v-if="usageType === '카테고리'" />
+      <card-chart v-else />
     </div>
 
     <div class="container-box-content">
@@ -44,6 +45,7 @@
 </template>
 
 <script lang="ts">
+import CardChart from '@/components/CardChart.vue';
 import CategoryChart from '@/components/CategoryChart.vue';
 import { defineComponent } from 'vue';
 import Card from './Card.vue';
@@ -54,6 +56,7 @@ export default defineComponent({
   components: {
     Card,
     CategoryChart,
+    CardChart,
   },
 
   data: () => {
