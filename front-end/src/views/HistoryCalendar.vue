@@ -1,11 +1,11 @@
 <template>
   <div class="container-box mt-3">
     <div class="calendar-box p-1 pt-2 mb-1">
-      <v-btn icon variant="text" class="btn-calendar-arrow">
+      <v-btn icon variant="text" class="btn-calendar-arrow" @click="changeCalendar(-1)">
         <i class="bx bx-chevron-left"></i>
       </v-btn>
       <p class="calendar-title mx-2">{{ listMonth.year }}년 {{ listMonth.month }}월</p>
-      <v-btn icon variant="text" class="btn-calendar-arrow">
+      <v-btn icon variant="text" class="btn-calendar-arrow" @click="changeCalendar(1)">
         <i class="bx bx-chevron-right"></i>
       </v-btn>
     </div>
@@ -22,7 +22,9 @@
         </div>
       </div>
 
-      <div>달력</div>
+      <div class="my-3">
+        <calendar :currYear="year" :currMonth="month" />
+      </div>
     </div>
   </div>
 
@@ -37,16 +39,19 @@
 </template>
 
 <script lang="ts">
+import Calendar from '@/components/Calendar.vue';
 import { defineComponent } from 'vue';
 import Card from './Card.vue';
 
 export default defineComponent({
   name: 'HistoryCalendar',
 
-  components: { Card },
+  components: { Card, Calendar },
 
   data: () => {
     return {
+      year: 0,
+      month: 0,
       listMonth: { year: '', month: '' },
     };
   },
@@ -56,11 +61,29 @@ export default defineComponent({
   },
 
   methods: {
+    formatCalendarHeader() {
+      const newYear = this.year.toString();
+      const newMonth = this.month < 10 ? '0' + this.month : '' + this.month;
+      this.listMonth = { year: newYear, month: newMonth };
+    },
+
     initDateMonth() {
-      const year = new Date().getFullYear().toString();
-      const month = new Date().getMonth() + 1;
-      const newMonth = month < 10 ? '0' + month : '' + month;
-      this.listMonth = { year, month: newMonth };
+      this.year = new Date().getFullYear();
+      this.month = new Date().getMonth() + 1;
+
+      this.formatCalendarHeader();
+    },
+
+    changeCalendar(m: number) {
+      this.month += m;
+
+      if (this.month < 1 || this.month > 12) {
+        const date = new Date(this.year, this.month - 1);
+        this.year = date.getFullYear();
+        this.month = date.getMonth() + 1;
+      }
+
+      this.formatCalendarHeader();
     },
   },
 });
