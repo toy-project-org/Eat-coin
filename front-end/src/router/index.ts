@@ -5,6 +5,7 @@ import AddHistory from '../views/AddHistory.vue';
 import HistoryList from '../views/HistoryList.vue';
 import HistoryCalendar from '../views/HistoryCalendar.vue';
 import HistoryCategory from '../views/HistoryCategory.vue';
+import Detail from '../views/Detail.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -26,6 +27,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/add-history',
     name: 'AddHistory',
     component: AddHistory,
+  },
+  {
+    path: '/detail/:id',
+    name: 'Detail',
+    component: Detail,
   },
 ];
 

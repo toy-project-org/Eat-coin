@@ -4,12 +4,12 @@
       <i class="bx bx-menu icon-size-md"></i>
     </v-btn>
     <p @click="movePage('Home')" class="header-logo cursor-pointer">EAT COIN</p>
-    <v-btn icon variant="text" class="btn-disabled">
+    <v-btn icon variant="text" @click="movePage('AddHistory')">
       <i class="bx bx-plus icon-size-md"></i>
     </v-btn>
   </header>
 
-  <h2 class="page-title">Add History</h2>
+  <h2 class="page-title">Detail</h2>
   <v-form class="container-box pb-1" ref="formRef">
     <div class="container-box-content">
       <!-- Date -->
@@ -170,7 +170,7 @@
 
     <div class="d-flex justify-content-evenly mb-3">
       <v-btn @click="formValidate" color="success" rounded="lg" style="width: 35%">SAVE</v-btn>
-      <v-btn @click="reset" color="warning" rounded="lg" style="width: 35%">RESET</v-btn>
+      <v-btn color="grey" rounded="lg" style="width: 35%">Cancel</v-btn>
     </div>
   </v-form>
 </template>
@@ -181,7 +181,7 @@ import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
 export default defineComponent({
-  name: 'AddHistory',
+  name: 'Detail',
 
   components: { Datepicker },
 
@@ -244,13 +244,13 @@ export default defineComponent({
       if (valid)
         alert(
           `Form is valid
-          이전날짜: ${this.date}
-          날짜: ${this.newDate}
-          내역: ${this.title}
-          금액: ${this.amount}
-          자산: ${this.assets}
-          카테고리: ${this.category}
-          메모: ${this.memo}`,
+            이전날짜: ${this.date}
+            날짜: ${this.newDate}
+            내역: ${this.title}
+            금액: ${this.amount}
+            자산: ${this.assets}
+            카테고리: ${this.category}
+            메모: ${this.memo}`,
         );
     },
     async addAssetsVaildate(isActive: any) {
@@ -278,33 +278,15 @@ export default defineComponent({
 
       alert(
         `Form is reset
-          이전날짜: ${this.date}
-          날짜: ${this.newDate}
-          내역: ${this.title}
-          금액: ${this.amount}
-          자산: ${this.assets}
-          카테고리: ${this.category}
-          메모: ${this.memo}`,
+            이전날짜: ${this.date}
+            날짜: ${this.newDate}
+            내역: ${this.title}
+            금액: ${this.amount}
+            자산: ${this.assets}
+            카테고리: ${this.category}
+            메모: ${this.memo}`,
       );
     },
-  },
-
-  watch: {
-    // newDate() {
-    //   console.log('date', this.newDate);
-    // },
-    // autoUpdate() {
-    //   console.log('autoupdate', this.autoUpdate);
-    // },
-    // title() {
-    //   console.log('title', this.title);
-    // },
-    // amount() {
-    //   console.log('amount', this.amount);
-    // },
-    // memo() {
-    //   console.log('memo', this.memo);
-    // },
   },
 });
 </script>

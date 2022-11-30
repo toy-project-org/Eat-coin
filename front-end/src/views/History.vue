@@ -1,11 +1,11 @@
 <template>
   <header class="header">
     <v-btn icon variant="text">
-      <i class="bx bx-menu" style="font-size: 1.5rem"></i>
+      <i class="bx bx-menu icon-size-md"></i>
     </v-btn>
     <p @click="movePage('Home')" class="header-logo cursor-pointer">EAT COIN</p>
     <v-btn icon variant="text" @click="movePage('AddHistory')">
-      <i class="bx bx-plus" style="font-size: 1.5rem"></i>
+      <i class="bx bx-plus icon-size-md"></i>
     </v-btn>
   </header>
 

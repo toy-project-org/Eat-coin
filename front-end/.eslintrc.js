@@ -18,7 +18,7 @@ module.exports = {
     'vue/multi-word-component-names': [
       'error',
       {
-        ignores: ['Home', 'Card', 'History', 'Datepicker', 'Calendar'],
+        ignores: ['Home', 'Card', 'History', 'Datepicker', 'Calendar', 'Detail'],
       },
     ],
   },
