@@ -38,8 +38,8 @@
     </div>
 
     <div class="container-box-content">
-      <card></card>
-      <card></card>
+      <!-- <card></card>
+      <card></card> -->
     </div>
   </div>
 </template>
@@ -54,7 +54,7 @@ export default defineComponent({
   name: 'HistoryCategory',
 
   components: {
-    Card,
+    // Card,
     CategoryChart,
     CardChart,
   },

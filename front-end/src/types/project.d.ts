@@ -4,6 +4,24 @@ export interface Obj_app {
   id: number;
 }
 
+export interface HistoryItem {
+  hid: number;
+  title: string;
+  amount: number;
+  payment_date: string;
+  category: {
+    cid: number;
+    name: string;
+    type: string;
+    image: string;
+  };
+}
+
+export interface FormatHistoryItem {
+  date: string;
+  historyItemList: Array<HistoryItem>;
+}
+
 declare module '@vue/runtime-core' {
   interface State {
     test_1: number;

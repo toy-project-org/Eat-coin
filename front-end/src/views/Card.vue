@@ -1,31 +1,37 @@
 <template>
   <div class="card-container" @click="movePage('Detail')">
     <div class="card-icon"></div>
-    <p class="card-title">가나다라마바사아자차카타파하</p>
-    <p class="card-amount-plus">+1,000,000,000</p>
-  </div>
-
-  <div class="card-container">
-    <div class="card-icon"></div>
-    <p class="card-title">지출 내역 or 수입 내역</p>
-    <p class="card-amount-minus">-10,000</p>
+    <p class="card-title">{{ historyItem?.title }}</p>
+    <p v-if="historyItem.category.type === '수입'" class="card-amount-plus">
+      +{{ formatAmount(historyItem.amount) }}
+    </p>
+    <p v-else class="card-amount-minus">-{{ formatAmount(historyItem.amount) }}</p>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { HistoryItem } from '@/types/project';
+import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
   name: 'Card',
+
+  props: {
+    historyItem: { type: Object as PropType<HistoryItem>, required: true },
+  },
 
   methods: {
     movePage(new_page: string) {
       this.$router.push({
         name: new_page,
         params: {
-          id: 'dd',
+          id: this.historyItem?.hid,
         },
       });
+    },
+
+    formatAmount(amount: number) {
+      return amount.toLocaleString('ko-KR');
     },
   },
 });

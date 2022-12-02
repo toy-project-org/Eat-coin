@@ -32,7 +32,7 @@
     <div class="container-box-content">
       <div class="history-content mt-3">
         <p class="history-date">11월 1일 (화)</p>
-        <card></card>
+        <!-- <card></card> -->
       </div>
     </div>
   </div>
@@ -46,7 +46,10 @@ import Card from './Card.vue';
 export default defineComponent({
   name: 'HistoryCalendar',
 
-  components: { Card, Calendar },
+  components: {
+    // Card,
+    Calendar,
+  },
 
   data: () => {
     return {
