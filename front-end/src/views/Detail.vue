@@ -19,9 +19,31 @@
       <!-- Account Content -->
       <h3 class="add-history-title mt-3">Content</h3>
       <nav class="add-history-nav mb-5">
-        <v-btn variant="flat" rounded="lg" style="width: 32%">수입</v-btn>
-        <v-btn variant="flat" rounded="lg" style="width: 32%">지출</v-btn>
-        <v-btn variant="flat" rounded="lg" style="width: 32%">예/적금</v-btn>
+        <v-btn
+          variant="flat"
+          rounded="lg"
+          :color="type === '수입' ? 'success' : ''"
+          style="width: 32%"
+          @click="setType('수입')"
+          >수입</v-btn
+        >
+        <v-btn
+          variant="flat"
+          rounded="lg"
+          :color="type === '지출' ? 'success' : ''"
+          style="width: 32%"
+          @click="setType('지출')"
+          >지출</v-btn
+        >
+        <v-btn
+          variant="flat"
+          rounded="lg"
+          :color="type === '예/적금' ? 'success' : ''"
+          style="width: 32%"
+          @click="setType('예/적금')"
+        >
+          예/적금
+        </v-btn>
       </nav>
 
       <div class="add-history-nav">
@@ -170,12 +192,13 @@
 
     <div class="d-flex justify-content-evenly mb-3">
       <v-btn @click="formValidate" color="success" rounded="lg" style="width: 35%">SAVE</v-btn>
-      <v-btn color="grey" rounded="lg" style="width: 35%">Cancel</v-btn>
+      <v-btn @click="beforePage" color="grey" rounded="lg" style="width: 35%">Cancel</v-btn>
     </div>
   </v-form>
 </template>
 
 <script lang="ts">
+// import * as api from '@/api/app';
 import { defineComponent } from 'vue';
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
@@ -187,8 +210,9 @@ export default defineComponent({
 
   data() {
     return {
-      date: '',
+      date: '22-12-01',
       newDate: '',
+      type: '',
       autoUpdate: true,
       title: '',
       titleRules: [
@@ -219,11 +243,31 @@ export default defineComponent({
     };
   },
 
+  init() {
+    // api.getAppList({ code }).then(res => {
+    // });
+  },
+
+  created() {
+    let day = new Date(`20${this.date}`);
+    this.date = day.toString();
+    this.type = '수입';
+    this.title = '교촌치킨';
+    this.amount = '10000';
+    this.assets = '하나신용카드';
+    this.category = '식비';
+    this.memo = '맛있게 배불띠~~';
+  },
+
   methods: {
     movePage(new_page: string) {
       this.$router.push({
         name: new_page,
       });
+    },
+
+    beforePage() {
+      this.$router.go(-1);
     },
 
     dateFormat(date: any) {
@@ -239,6 +283,11 @@ export default defineComponent({
       return `${year}/${newMonth}/${newDay}`;
     },
 
+    setType(newType: string) {
+      this.type = newType;
+      console.log('new TYpe', this.type);
+    },
+
     async formValidate() {
       const { valid } = await (this.$refs as any).formRef.validate();
       if (valid)
@@ -246,6 +295,7 @@ export default defineComponent({
           `Form is valid
             이전날짜: ${this.date}
             날짜: ${this.newDate}
+            타입: ${this.type}
             내역: ${this.title}
             금액: ${this.amount}
             자산: ${this.assets}
@@ -253,6 +303,7 @@ export default defineComponent({
             메모: ${this.memo}`,
         );
     },
+
     async addAssetsVaildate(isActive: any) {
       const { valid } = await (this.$refs as any).newAssetsRef.validate();
       if (valid) {
@@ -262,6 +313,7 @@ export default defineComponent({
         isActive.value = false;
       }
     },
+
     async addCategoryVaildate(isActive: any) {
       const { valid } = await (this.$refs as any).newCategoryRef.validate();
       if (valid) {
@@ -271,6 +323,7 @@ export default defineComponent({
         isActive.value = false;
       }
     },
+
     reset() {
       (this.$refs as any).formRef.reset();
       this.date = '';

@@ -19,9 +19,31 @@
       <!-- Account Content -->
       <h3 class="add-history-title mt-3">Content</h3>
       <nav class="add-history-nav mb-5">
-        <v-btn variant="flat" rounded="lg" style="width: 32%">수입</v-btn>
-        <v-btn variant="flat" rounded="lg" style="width: 32%">지출</v-btn>
-        <v-btn variant="flat" rounded="lg" style="width: 32%">예/적금</v-btn>
+        <v-btn
+          variant="flat"
+          rounded="lg"
+          :color="type === '수입' ? 'success' : ''"
+          style="width: 32%"
+          @click="setType('수입')"
+          >수입</v-btn
+        >
+        <v-btn
+          variant="flat"
+          rounded="lg"
+          :color="type === '지출' ? 'success' : ''"
+          style="width: 32%"
+          @click="setType('지출')"
+          >지출</v-btn
+        >
+        <v-btn
+          variant="flat"
+          rounded="lg"
+          :color="type === '예/적금' ? 'success' : ''"
+          style="width: 32%"
+          @click="setType('예/적금')"
+        >
+          예/적금
+        </v-btn>
       </nav>
 
       <div class="add-history-nav">
@@ -189,6 +211,7 @@ export default defineComponent({
     return {
       date: '',
       newDate: '',
+      type: '',
       autoUpdate: true,
       title: '',
       titleRules: [
@@ -239,6 +262,11 @@ export default defineComponent({
       return `${year}/${newMonth}/${newDay}`;
     },
 
+    setType(newType: string) {
+      this.type = newType;
+      console.log('new TYpe', this.type);
+    },
+
     async formValidate() {
       const { valid } = await (this.$refs as any).formRef.validate();
       if (valid)
@@ -246,6 +274,7 @@ export default defineComponent({
           `Form is valid
           이전날짜: ${this.date}
           날짜: ${this.newDate}
+          타입: ${this.type}
           내역: ${this.title}
           금액: ${this.amount}
           자산: ${this.assets}
@@ -253,6 +282,7 @@ export default defineComponent({
           메모: ${this.memo}`,
         );
     },
+
     async addAssetsVaildate(isActive: any) {
       const { valid } = await (this.$refs as any).newAssetsRef.validate();
       if (valid) {
@@ -262,6 +292,7 @@ export default defineComponent({
         isActive.value = false;
       }
     },
+
     async addCategoryVaildate(isActive: any) {
       const { valid } = await (this.$refs as any).newCategoryRef.validate();
       if (valid) {
@@ -271,6 +302,7 @@ export default defineComponent({
         isActive.value = false;
       }
     },
+
     reset() {
       (this.$refs as any).formRef.reset();
       this.date = '';
@@ -290,6 +322,9 @@ export default defineComponent({
   },
 
   watch: {
+    // date() {
+    //   console.log(this.date);
+    // },
     // newDate() {
     //   console.log('date', this.newDate);
     // },

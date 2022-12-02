@@ -1,11 +1,11 @@
 <template>
   <div class="card-container" @click="movePage('Detail')">
     <div class="card-icon"></div>
-    <p class="card-title">{{ historyItem?.title }}</p>
-    <p v-if="historyItem.category.type === '수입'" class="card-amount-plus">
-      +{{ formatAmount(historyItem.amount) }}
+    <p class="card-title">{{ cardItem.title }}</p>
+    <p v-if="cardItem.category.type === '수입'" class="card-amount-plus">
+      +{{ formatAmount(cardItem.amount) }}
     </p>
-    <p v-else class="card-amount-minus">-{{ formatAmount(historyItem.amount) }}</p>
+    <p v-else class="card-amount-minus">-{{ formatAmount(cardItem.amount) }}</p>
   </div>
 </template>
 
@@ -17,7 +17,7 @@ export default defineComponent({
   name: 'Card',
 
   props: {
-    historyItem: { type: Object as PropType<HistoryItem>, required: true },
+    cardItem: { type: Object as PropType<HistoryItem>, required: true },
   },
 
   methods: {
@@ -25,7 +25,7 @@ export default defineComponent({
       this.$router.push({
         name: new_page,
         params: {
-          id: this.historyItem?.hid,
+          id: this.cardItem?.hid,
         },
       });
     },

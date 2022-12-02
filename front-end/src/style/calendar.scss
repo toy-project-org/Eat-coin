@@ -51,6 +51,9 @@
 .days .day.active::before {
   background-color: $light-green-color;
 }
+.days .day.active2::before {
+  border: 1.5px solid $light-green-color;
+}
 
 .day-in,
 .day-out {

@@ -12,7 +12,13 @@
       </ul>
       <ul class="days">
         <li v-for="prevDay in firstDayOfMonth" :key="prevDay"></li>
-        <li class="day" v-for="day in lastDateOfMonth" :key="day" :class="`${isToday(day)}`">
+        <li
+          class="day"
+          v-for="day in lastDateOfMonth"
+          :key="day"
+          :class="[`${isToday(day)}`, selectedDay === day ? 'active2' : '']"
+          @click="selectDay(day)"
+        >
           <p class="day-number mb-1">{{ day }}</p>
           <p class="day-in">10,000</p>
           <p class="day-out">20,000</p>
@@ -34,6 +40,7 @@ export default defineComponent({
 
   data: () => {
     return {
+      selectedDay: 0,
       lastDateOfMonth: 0,
       lastDateOfLastMonthList: [] as Array<number>,
       firstDayOfMonth: 0,
@@ -52,6 +59,11 @@ export default defineComponent({
         this.currMonth == date.getMonth() + 1
         ? 'active'
         : '';
+    },
+
+    selectDay(day: number) {
+      this.selectedDay = day;
+      this.$emit('setSelectDay', day);
     },
 
     drawCalendar() {

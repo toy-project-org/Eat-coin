@@ -23,7 +23,7 @@
       </div>
 
       <div class="my-3">
-        <calendar :currYear="year" :currMonth="month" />
+        <calendar :currYear="year" :currMonth="month" @setSelectDay="setSelectDay" />
       </div>
     </div>
   </div>
@@ -87,6 +87,10 @@ export default defineComponent({
       }
 
       this.formatCalendarHeader();
+    },
+
+    setSelectDay(day: number) {
+      console.log('day~~', day);
     },
   },
 });

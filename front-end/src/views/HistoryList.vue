@@ -61,19 +61,19 @@
     <div v-show="listDataType === '전체'" class="container-box-content">
       <div class="history-content" v-for="history in historyOneWeekList" :key="history.date">
         <p class="history-date">{{ formatDate(history.date) }}</p>
-        <card v-for="item in history.historyItemList" :key="item.hid" :history-item="item"></card>
+        <card v-for="item in history.historyItemList" :key="item.hid" :card-item="item"></card>
       </div>
     </div>
     <div v-show="listDataType === '수입'" class="container-box-content">
       <div class="history-content" v-for="history in historyOneWeekListIn" :key="history.date">
         <p class="history-date">{{ formatDate(history.date) }}</p>
-        <card v-for="item in history.historyItemList" :key="item.hid" :history-item="item"></card>
+        <card v-for="item in history.historyItemList" :key="item.hid" :card-item="item"></card>
       </div>
     </div>
     <div v-show="listDataType === '지출'" class="container-box-content">
       <div class="history-content" v-for="history in historyOneWeekListOut" :key="history.date">
         <p class="history-date">{{ formatDate(history.date) }}</p>
-        <card v-for="item in history.historyItemList" :key="item.hid" :history-item="item"></card>
+        <card v-for="item in history.historyItemList" :key="item.hid" :card-item="item"></card>
       </div>
     </div>
   </div>
