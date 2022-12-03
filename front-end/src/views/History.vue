@@ -57,6 +57,11 @@ export default defineComponent({
     historyNav() {
       console.log('nav', this.historyNav);
     },
+
+    // Change the historyNav when you press Back
+    $route(to, from) {
+      this.historyNav = to.path.substring(9);
+    },
   },
 });
 </script>
