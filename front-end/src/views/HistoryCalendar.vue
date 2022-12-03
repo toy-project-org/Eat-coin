@@ -70,7 +70,7 @@ export default defineComponent({
       year: 0,
       month: 0,
       listMonth: { year: '', month: '' },
-      selectedDay: '',
+      selectedDay: { year: 0, month: 0, day: 0 },
     };
   },
 
@@ -85,14 +85,15 @@ export default defineComponent({
       this.listMonth = { year: newYear, month: newMonth };
     },
 
-    formatDate(date: string) {
-      // e.g. 22-12-01 > 12월 01일 (목)
+    formatDate(date: SelectedDay) {
+      // e.g. 2022, 12, 1 > 12월 01일 (목)
       const WEEKDAY = ['일', '월', '화', '수', '목', '금', '토'];
-      let day = new Date(`${date}`);
+      let day = new Date(date.year, date.month - 1, date.day);
       let dayOfWeek = WEEKDAY[day.getDay()];
 
-      let dateList = date.split('-');
-      const newDateFormat = `${dateList[1]}월 ${dateList[2]}일 (${dayOfWeek})`;
+      const formatMonth = date.month < 10 ? '0' + date.month : date.month;
+      const formatDay = date.day < 10 ? '0' + date.day : date.day;
+      const newDateFormat = `${formatMonth}월 ${formatDay}일 (${dayOfWeek})`;
       return newDateFormat;
     },
 
@@ -100,9 +101,8 @@ export default defineComponent({
       const date = new Date();
       this.year = date.getFullYear();
       this.month = date.getMonth() + 1;
-
       const day = date.getDate();
-      this.selectedDay = `${this.year}-${this.month}-${day}`;
+      this.selectedDay = { year: this.year, month: this.month, day };
 
       this.formatCalendarHeader();
     },
@@ -121,8 +121,7 @@ export default defineComponent({
 
     setSelectDay(selectedDay: SelectedDay) {
       // api 연결하게 되면 해당 내역 가져오기
-      this.selectedDay = `${selectedDay.year}-${selectedDay.month}-${selectedDay.day}`;
-      console.log('parent day~~', selectedDay);
+      this.selectedDay = selectedDay;
     },
   },
 });

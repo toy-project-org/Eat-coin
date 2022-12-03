@@ -73,7 +73,6 @@ export default defineComponent({
       this.selectedDay.year = this.currYear;
       this.selectedDay.month = this.currMonth;
       this.selectedDay.day = day;
-      console.log('selected', this.selectedDay.year, this.selectedDay.month, this.selectedDay.day);
       this.$emit('setSelectDay', this.selectedDay);
     },
 

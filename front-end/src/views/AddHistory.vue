@@ -320,27 +320,6 @@ export default defineComponent({
       );
     },
   },
-
-  watch: {
-    // date() {
-    //   console.log(this.date);
-    // },
-    // newDate() {
-    //   console.log('date', this.newDate);
-    // },
-    // autoUpdate() {
-    //   console.log('autoupdate', this.autoUpdate);
-    // },
-    // title() {
-    //   console.log('title', this.title);
-    // },
-    // amount() {
-    //   console.log('amount', this.amount);
-    // },
-    // memo() {
-    //   console.log('memo', this.memo);
-    // },
-  },
 });
 </script>
 
