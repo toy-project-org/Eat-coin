@@ -27,11 +27,11 @@
   <!-- Monthly income and expenditure breakdown -->
   <div class="container-box mt-3">
     <div class="calendar-box p-1 pt-2 mb-1">
-      <v-btn icon variant="text" class="btn-calendar-arrow">
+      <v-btn icon variant="text" class="btn-calendar-arrow" @click="changeCalendar(-1)">
         <i class="bx bx-chevron-left"></i>
       </v-btn>
       <p class="calendar-title mx-2">{{ listMonth.year }}년 {{ listMonth.month }}월</p>
-      <v-btn icon variant="text" class="btn-calendar-arrow">
+      <v-btn icon variant="text" class="btn-calendar-arrow" @click="changeCalendar(1)">
         <i class="bx bx-chevron-right"></i>
       </v-btn>
     </div>
@@ -92,6 +92,8 @@ export default defineComponent({
 
   data: () => {
     return {
+      year: 0,
+      month: 0,
       listDatePeriod: '일주일',
       listMonth: { year: '', month: '' },
       listDataType: '전체',
@@ -120,10 +122,11 @@ export default defineComponent({
     },
 
     initDateMonth() {
-      const year = new Date().getFullYear().toString();
-      const month = new Date().getMonth() + 1;
-      const newMonth = month < 10 ? '0' + month : '' + month;
-      this.listMonth = { year, month: newMonth };
+      const date = new Date();
+      this.year = date.getFullYear();
+      this.month = date.getMonth() + 1;
+
+      this.formatCalendarHeader();
     },
 
     dateMonthFormat(date: any) {
@@ -132,6 +135,12 @@ export default defineComponent({
       const newMonth = month < 10 ? '0' + month : month;
 
       return `${year}/${newMonth}`;
+    },
+
+    formatCalendarHeader() {
+      const newYear = this.year.toString();
+      const newMonth = this.month < 10 ? '0' + this.month : '' + this.month;
+      this.listMonth = { year: newYear, month: newMonth };
     },
 
     formatDate(date: string) {
@@ -143,6 +152,17 @@ export default defineComponent({
       let dateList = date.split('-');
       const newDateFormat = `${dateList[1]}월 ${dateList[2]}일 (${dayOfWeek})`;
       return newDateFormat;
+    },
+
+    addNewDate(data: HistoryItem) {
+      let addHistoryDate = {
+        date: '',
+        historyItemList: [] as Array<HistoryItem>,
+      };
+      addHistoryDate.date = data.payment_date;
+      addHistoryDate.historyItemList.push(data);
+
+      return addHistoryDate;
     },
 
     formatHistoryData() {
@@ -158,46 +178,37 @@ export default defineComponent({
         );
 
         if (formatDataList === undefined) {
-          let addHistoryDate = {
-            date: '',
-            historyItemList: [] as Array<HistoryItem>,
-          };
-          addHistoryDate.date = data.payment_date;
-          addHistoryDate.historyItemList.push(data);
-
-          this.historyOneWeekList.push(addHistoryDate);
+          this.historyOneWeekList.push(this.addNewDate(data));
         } else {
           formatDataList.historyItemList.push(data);
         }
 
         if (data.category.type === '수입') {
           if (formatDataListIn === undefined) {
-            let addHistoryDate = {
-              date: '',
-              historyItemList: [] as Array<HistoryItem>,
-            };
-            addHistoryDate.date = data.payment_date;
-            addHistoryDate.historyItemList.push(data);
-
-            this.historyOneWeekListIn.push(addHistoryDate);
+            this.historyOneWeekListIn.push(this.addNewDate(data));
           } else {
             formatDataListIn.historyItemList.push(data);
           }
         } else if (data.category.type === '지출') {
           if (formatDataListOut === undefined) {
-            let addHistoryDate = {
-              date: '',
-              historyItemList: [] as Array<HistoryItem>,
-            };
-            addHistoryDate.date = data.payment_date;
-            addHistoryDate.historyItemList.push(data);
-
-            this.historyOneWeekListOut.push(addHistoryDate);
+            this.historyOneWeekListOut.push(this.addNewDate(data));
           } else {
             formatDataListOut.historyItemList.push(data);
           }
         }
       });
+    },
+
+    changeCalendar(m: number) {
+      this.month += m;
+
+      if (this.month < 1 || this.month > 12) {
+        const date = new Date(this.year, this.month - 1);
+        this.year = date.getFullYear();
+        this.month = date.getMonth() + 1;
+      }
+
+      this.formatCalendarHeader();
     },
   },
 });

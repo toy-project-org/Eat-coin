@@ -13,13 +13,22 @@
   cursor: pointer;
 
   .card-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     background-color: $icon-color;
     background-size: 100%;
     width: $icon-size;
     height: $icon-size;
     border-radius: 50%;
-
     margin-left: 5px;
+  }
+
+  .card-icon-title {
+    color: #fff;
+    font-size: $font-lg;
+    font-weight: 500;
   }
 
   .card-title,

@@ -16,7 +16,7 @@
           class="day"
           v-for="day in lastDateOfMonth"
           :key="day"
-          :class="[`${isToday(day)}`, selectedDay === day ? 'active2' : '']"
+          :class="[`${isToday(day)}`, `${isSelected(day)}`]"
           @click="selectDay(day)"
         >
           <p class="day-number mb-1">{{ day }}</p>
@@ -34,13 +34,13 @@ export default defineComponent({
   name: 'Calendar',
 
   props: {
-    currYear: Number,
-    currMonth: Number,
+    currYear: { type: Number, required: true },
+    currMonth: { type: Number, required: true },
   },
 
   data: () => {
     return {
-      selectedDay: 0,
+      selectedDay: { year: 0, month: 0, day: 0 },
       lastDateOfMonth: 0,
       lastDateOfLastMonthList: [] as Array<number>,
       firstDayOfMonth: 0,
@@ -61,9 +61,20 @@ export default defineComponent({
         : '';
     },
 
+    isSelected(day: number) {
+      return day === this.selectedDay.day &&
+        this.currYear === this.selectedDay.year &&
+        this.currMonth === this.selectedDay.month
+        ? 'select-day'
+        : '';
+    },
+
     selectDay(day: number) {
-      this.selectedDay = day;
-      this.$emit('setSelectDay', day);
+      this.selectedDay.year = this.currYear;
+      this.selectedDay.month = this.currMonth;
+      this.selectedDay.day = day;
+      console.log('selected', this.selectedDay.year, this.selectedDay.month, this.selectedDay.day);
+      this.$emit('setSelectDay', this.selectedDay);
     },
 
     drawCalendar() {

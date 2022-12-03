@@ -1,6 +1,8 @@
 <template>
   <div class="card-container" @click="movePage('Detail')">
-    <div class="card-icon"></div>
+    <div class="card-icon">
+      <p class="card-icon-title">{{ cardItem.title[0] }}</p>
+    </div>
     <p class="card-title">{{ cardItem.title }}</p>
     <p v-if="cardItem.category.type === '수입'" class="card-amount-plus">
       +{{ formatAmount(cardItem.amount) }}

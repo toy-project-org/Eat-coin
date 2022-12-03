@@ -31,8 +31,21 @@
   <div class="container-box mt-3">
     <div class="container-box-content">
       <div class="history-content mt-3">
-        <p class="history-date">11월 1일 (화)</p>
-        <!-- <card></card> -->
+        <p class="history-date">{{ formatDate(selectedDay) }}</p>
+        <card
+          :card-item="{
+            hid: 1,
+            title: '삼첩분식',
+            amount: 18000,
+            payment_date: '22-10-01',
+            category: {
+              cid: 1,
+              name: '식비',
+              type: '지출',
+              image: 'http://~~',
+            },
+          }"
+        ></card>
       </div>
     </div>
   </div>
@@ -40,6 +53,7 @@
 
 <script lang="ts">
 import Calendar from '@/components/Calendar.vue';
+import { SelectedDay } from '@/types/project';
 import { defineComponent } from 'vue';
 import Card from './Card.vue';
 
@@ -47,7 +61,7 @@ export default defineComponent({
   name: 'HistoryCalendar',
 
   components: {
-    // Card,
+    Card,
     Calendar,
   },
 
@@ -56,6 +70,7 @@ export default defineComponent({
       year: 0,
       month: 0,
       listMonth: { year: '', month: '' },
+      selectedDay: '',
     };
   },
 
@@ -70,9 +85,24 @@ export default defineComponent({
       this.listMonth = { year: newYear, month: newMonth };
     },
 
+    formatDate(date: string) {
+      // e.g. 22-12-01 > 12월 01일 (목)
+      const WEEKDAY = ['일', '월', '화', '수', '목', '금', '토'];
+      let day = new Date(`${date}`);
+      let dayOfWeek = WEEKDAY[day.getDay()];
+
+      let dateList = date.split('-');
+      const newDateFormat = `${dateList[1]}월 ${dateList[2]}일 (${dayOfWeek})`;
+      return newDateFormat;
+    },
+
     initDateMonth() {
-      this.year = new Date().getFullYear();
-      this.month = new Date().getMonth() + 1;
+      const date = new Date();
+      this.year = date.getFullYear();
+      this.month = date.getMonth() + 1;
+
+      const day = date.getDate();
+      this.selectedDay = `${this.year}-${this.month}-${day}`;
 
       this.formatCalendarHeader();
     },
@@ -89,8 +119,10 @@ export default defineComponent({
       this.formatCalendarHeader();
     },
 
-    setSelectDay(day: number) {
-      console.log('day~~', day);
+    setSelectDay(selectedDay: SelectedDay) {
+      // api 연결하게 되면 해당 내역 가져오기
+      this.selectedDay = `${selectedDay.year}-${selectedDay.month}-${selectedDay.day}`;
+      console.log('parent day~~', selectedDay);
     },
   },
 });

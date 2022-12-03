@@ -22,6 +22,12 @@ export interface FormatHistoryItem {
   historyItemList: Array<HistoryItem>;
 }
 
+export interface SelectedDay {
+  year: number;
+  month: number;
+  day: number;
+}
+
 declare module '@vue/runtime-core' {
   interface State {
     test_1: number;

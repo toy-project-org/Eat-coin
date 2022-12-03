@@ -106,6 +106,17 @@ export default defineComponent({
       return newDateFormat;
     },
 
+    addNewDate(data: HistoryItem) {
+      let addHistoryDate = {
+        date: '',
+        historyItemList: [] as Array<HistoryItem>,
+      };
+      addHistoryDate.date = data.payment_date;
+      addHistoryDate.historyItemList.push(data);
+
+      return addHistoryDate;
+    },
+
     formatHistoryData() {
       mainPost.map(data => {
         const formatDataList = this.historyOneWeekList.find(
@@ -113,14 +124,7 @@ export default defineComponent({
         );
 
         if (formatDataList === undefined) {
-          let addHistoryDate = {
-            date: '',
-            historyItemList: [] as Array<HistoryItem>,
-          };
-          addHistoryDate.date = data.payment_date;
-          addHistoryDate.historyItemList.push(data);
-
-          this.historyOneWeekList.push(addHistoryDate);
+          this.historyOneWeekList.push(this.addNewDate(data));
         } else {
           formatDataList.historyItemList.push(data);
         }
