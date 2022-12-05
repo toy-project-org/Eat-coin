@@ -249,7 +249,7 @@ export default defineComponent({
   },
 
   created() {
-    let day = new Date(`20${this.date}`);
+    let day = new Date(`${this.date}`);
     this.date = day.toString();
     this.type = '수입';
     this.title = '교촌치킨';
