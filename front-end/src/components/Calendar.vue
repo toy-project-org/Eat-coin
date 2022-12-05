@@ -17,11 +17,11 @@
           v-for="day in lastDateOfMonth"
           :key="day"
           :class="[`${isToday(day)}`, `${isSelected(day)}`]"
-          @click="selectDay(day)"
+          @click="setSelectedDate(day)"
         >
           <p class="day-number mb-1">{{ day }}</p>
-          <p class="day-in">10,000</p>
-          <p class="day-out">20,000</p>
+          <p class="day-in">{{ formatAmount(dayAmountList.in) }}</p>
+          <p class="day-out">{{ formatAmount(dayAmountList.out) }}</p>
         </li>
       </ul>
     </div>
@@ -29,9 +29,12 @@
 </template>
 
 <script lang="ts">
+import MixinCommon from '@/common/mixin';
 import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'Calendar',
+
+  mixins: [MixinCommon],
 
   props: {
     currYear: { type: Number, required: true },
@@ -40,10 +43,11 @@ export default defineComponent({
 
   data: () => {
     return {
-      selectedDay: { year: 0, month: 0, day: 0 },
+      dayAmountList: { in: 10000, out: 500 },
+      selectedDate: { year: 0, month: 0, day: 0 },
+      firstDayOfMonth: 0,
       lastDateOfMonth: 0,
       lastDateOfLastMonthList: [] as Array<number>,
-      firstDayOfMonth: 0,
     };
   },
 
@@ -62,18 +66,16 @@ export default defineComponent({
     },
 
     isSelected(day: number) {
-      return day === this.selectedDay.day &&
-        this.currYear === this.selectedDay.year &&
-        this.currMonth === this.selectedDay.month
+      return day === this.selectedDate.day &&
+        this.currYear === this.selectedDate.year &&
+        this.currMonth === this.selectedDate.month
         ? 'select-day'
         : '';
     },
 
-    selectDay(day: number) {
-      this.selectedDay.year = this.currYear;
-      this.selectedDay.month = this.currMonth;
-      this.selectedDay.day = day;
-      this.$emit('setSelectDay', this.selectedDay);
+    setSelectedDate(day: number) {
+      this.selectedDate = { year: this.currYear, month: this.currMonth, day };
+      this.$emit('setSelectedDate', this.selectedDate);
     },
 
     drawCalendar() {

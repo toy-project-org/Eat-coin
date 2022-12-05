@@ -210,7 +210,7 @@ export default defineComponent({
 
   data() {
     return {
-      date: '22-12-01',
+      date: '2022-12-01',
       newDate: '',
       type: '',
       autoUpdate: true,
@@ -285,7 +285,6 @@ export default defineComponent({
 
     setType(newType: string) {
       this.type = newType;
-      console.log('new TYpe', this.type);
     },
 
     async formValidate() {

@@ -2,18 +2,20 @@
   <!-- Monthly income and expenditure breakdown -->
   <div class="container-box mt-3">
     <div class="calendar-box p-1 pt-2 mb-1">
-      <v-btn icon variant="text" class="btn-calendar-arrow">
+      <v-btn icon variant="text" class="btn-calendar-arrow" @click="changeYearAndMonth(-1)">
         <i class="bx bx-chevron-left"></i>
       </v-btn>
-      <p class="calendar-title mx-2">{{ listMonth.year }}년 {{ listMonth.month }}월</p>
-      <v-btn icon variant="text" class="btn-calendar-arrow">
+      <p class="calendar-title mx-2">
+        {{ currDateMonthStr.year }}년 {{ currDateMonthStr.month }}월
+      </p>
+      <v-btn icon variant="text" class="btn-calendar-arrow" @click="changeYearAndMonth(1)">
         <i class="bx bx-chevron-right"></i>
       </v-btn>
     </div>
 
     <div class="p-3 pt-0">
-      <p class="total-money-in">수입 100,000,000</p>
-      <p class="total-money-out">지출 50,000</p>
+      <p class="total-money-in">수입 {{ formatAmount(currMonthAmount.in) }}</p>
+      <p class="total-money-out">지출 {{ formatAmount(currMonthAmount.out) }}</p>
     </div>
   </div>
 
@@ -24,7 +26,7 @@
       <div class="mr-3" style="width: 110px">
         <v-select
           v-model="usageType"
-          :items="['카테고리', '카드']"
+          :items="usageTypeItems"
           density="compact"
           variant="solo"
           hide-details
@@ -37,32 +39,52 @@
       <card-chart v-else />
     </div>
 
-    <div class="container-box-content">
-      <!-- <card></card>
-      <card></card> -->
+    <div class="container-box-content mt-5">
+      <card
+        v-for="item in 3"
+        :key="item"
+        :card-item="{
+          hid: 1,
+          title: `하나은행${item}`,
+          amount: 18000,
+          payment_date: '22-10-01',
+          category: {
+            cid: 1,
+            name: '식비',
+            type: '지출',
+            image: 'http://~~',
+          },
+        }"
+      ></card>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import CardChart from '@/components/CardChart.vue';
 import CategoryChart from '@/components/CategoryChart.vue';
+import CardChart from '@/components/CardChart.vue';
+import Card from '@/components/Card.vue';
 import { defineComponent } from 'vue';
-import Card from './Card.vue';
+import MixinCommon from '@/common/mixin';
 
 export default defineComponent({
   name: 'HistoryCategory',
 
+  mixins: [MixinCommon],
+
   components: {
-    // Card,
+    Card,
     CategoryChart,
     CardChart,
   },
 
   data: () => {
     return {
-      listMonth: { year: '', month: '' },
+      currMonthAmount: { in: 10000, out: 500000 },
+      currDateMonth: { year: 0, month: 0 },
+      currDateMonthStr: { year: '', month: '' },
       usageType: '카테고리',
+      usageTypeItems: ['카테고리', '카드'],
     };
   },
 
@@ -72,10 +94,16 @@ export default defineComponent({
 
   methods: {
     initDateMonth() {
-      const year = new Date().getFullYear().toString();
-      const month = new Date().getMonth() + 1;
-      const newMonth = month < 10 ? '0' + month : '' + month;
-      this.listMonth = { year, month: newMonth };
+      const date = new Date();
+      this.currDateMonth.year = date.getFullYear();
+      this.currDateMonth.month = date.getMonth() + 1;
+
+      this.currDateMonthStr = this.formatYearAndMonthHeader(this.currDateMonth);
+    },
+
+    changeYearAndMonth(m: number) {
+      this.setYearAndMonth(this.currDateMonth, m);
+      this.currDateMonthStr = this.formatYearAndMonthHeader(this.currDateMonth);
     },
   },
 });

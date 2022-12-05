@@ -3,8 +3,8 @@
   <div class="d-flex mt-3">
     <div class="mr-1" style="width: 120px">
       <v-select
-        v-model="listDatePeriod"
-        :items="['1년', '6개월', '한 달', '일주일']"
+        v-model="datePeriod"
+        :items="datePeriodItems"
         density="compact"
         variant="solo"
         hide-details
@@ -27,18 +27,20 @@
   <!-- Monthly income and expenditure breakdown -->
   <div class="container-box mt-3">
     <div class="calendar-box p-1 pt-2 mb-1">
-      <v-btn icon variant="text" class="btn-calendar-arrow" @click="changeCalendar(-1)">
+      <v-btn icon variant="text" class="btn-calendar-arrow" @click="changeYearAndMonth(-1)">
         <i class="bx bx-chevron-left"></i>
       </v-btn>
-      <p class="calendar-title mx-2">{{ listMonth.year }}년 {{ listMonth.month }}월</p>
-      <v-btn icon variant="text" class="btn-calendar-arrow" @click="changeCalendar(1)">
+      <p class="calendar-title mx-2">
+        {{ currDateMonthStr.year }}년 {{ currDateMonthStr.month }}월
+      </p>
+      <v-btn icon variant="text" class="btn-calendar-arrow" @click="changeYearAndMonth(1)">
         <i class="bx bx-chevron-right"></i>
       </v-btn>
     </div>
 
     <div class="p-3 pt-0">
-      <p class="total-money-in">수입 100,000,000</p>
-      <p class="total-money-out">지출 50,000</p>
+      <p class="total-money-in">수입 {{ formatAmount(currMonthAmount.in) }}</p>
+      <p class="total-money-out">지출 {{ formatAmount(currMonthAmount.out) }}</p>
     </div>
   </div>
 
@@ -49,8 +51,8 @@
 
       <div class="mr-3" style="width: 100px">
         <v-select
-          v-model="listDataType"
-          :items="listDataTypeItems"
+          v-model="dataType"
+          :items="dataTypeItems"
           density="compact"
           variant="solo"
           hide-details
@@ -58,21 +60,21 @@
       </div>
     </div>
 
-    <div v-show="listDataType === '전체'" class="container-box-content">
-      <div class="history-content" v-for="history in historyOneWeekList" :key="history.date">
-        <p class="history-date">{{ formatDate(history.date) }}</p>
+    <div v-show="dataType === '전체'" class="container-box-content">
+      <div class="history-content" v-for="history in historyDataList" :key="history.date">
+        <p class="history-date">{{ formatStrDate(history.date) }}</p>
         <card v-for="item in history.historyItemList" :key="item.hid" :card-item="item"></card>
       </div>
     </div>
-    <div v-show="listDataType === '수입'" class="container-box-content">
-      <div class="history-content" v-for="history in historyOneWeekListIn" :key="history.date">
-        <p class="history-date">{{ formatDate(history.date) }}</p>
+    <div v-show="dataType === '수입'" class="container-box-content">
+      <div class="history-content" v-for="history in historyDataListIn" :key="history.date">
+        <p class="history-date">{{ formatStrDate(history.date) }}</p>
         <card v-for="item in history.historyItemList" :key="item.hid" :card-item="item"></card>
       </div>
     </div>
-    <div v-show="listDataType === '지출'" class="container-box-content">
-      <div class="history-content" v-for="history in historyOneWeekListOut" :key="history.date">
-        <p class="history-date">{{ formatDate(history.date) }}</p>
+    <div v-show="dataType === '지출'" class="container-box-content">
+      <div class="history-content" v-for="history in historyDataListOut" :key="history.date">
+        <p class="history-date">{{ formatStrDate(history.date) }}</p>
         <card v-for="item in history.historyItemList" :key="item.hid" :card-item="item"></card>
       </div>
     </div>
@@ -81,28 +83,32 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { FormatHistoryItem, HistoryItem } from '@/types/project';
-import Card from './Card.vue';
+import { FormatHistoryItem } from '@/types/project';
+import Card from '@/components/Card.vue';
 import mainPost from '../assets/data/main';
+import MixinCommon from '@/common/mixin';
 
 export default defineComponent({
   name: 'HistoryList',
+
+  mixins: [MixinCommon],
 
   components: { Card },
 
   data: () => {
     return {
-      year: 0,
-      month: 0,
-      listDatePeriod: '일주일',
-      listMonth: { year: '', month: '' },
-      listDataType: '전체',
-      listDataTypeItems: ['전체', '수입', '지출'],
+      currMonthAmount: { in: 10000, out: 500000 },
+      currDateMonth: { year: 0, month: 0 },
+      currDateMonthStr: { year: '', month: '' },
+      datePeriod: '일주일',
+      datePeriodItems: ['1년', '6개월', '한 달', '일주일'],
+      dataType: '전체',
+      dataTypeItems: ['전체', '수입', '지출'],
       loaded: false,
       loading: false,
-      historyOneWeekList: [] as Array<FormatHistoryItem>,
-      historyOneWeekListIn: [] as Array<FormatHistoryItem>,
-      historyOneWeekListOut: [] as Array<FormatHistoryItem>,
+      historyDataList: [] as Array<FormatHistoryItem>,
+      historyDataListIn: [] as Array<FormatHistoryItem>,
+      historyDataListOut: [] as Array<FormatHistoryItem>,
     };
   },
 
@@ -123,92 +129,27 @@ export default defineComponent({
 
     initDateMonth() {
       const date = new Date();
-      this.year = date.getFullYear();
-      this.month = date.getMonth() + 1;
+      this.currDateMonth.year = date.getFullYear();
+      this.currDateMonth.month = date.getMonth() + 1;
 
-      this.formatCalendarHeader();
-    },
-
-    dateMonthFormat(date: any) {
-      const year = date.year;
-      const month = date.month + 1;
-      const newMonth = month < 10 ? '0' + month : month;
-
-      return `${year}/${newMonth}`;
-    },
-
-    formatCalendarHeader() {
-      const newYear = this.year.toString();
-      const newMonth = this.month < 10 ? '0' + this.month : '' + this.month;
-      this.listMonth = { year: newYear, month: newMonth };
-    },
-
-    formatDate(date: string) {
-      // e.g. 22-12-01 > 12월 01일 (목)
-      const WEEKDAY = ['일', '월', '화', '수', '목', '금', '토'];
-      let day = new Date(`20${date}`);
-      let dayOfWeek = WEEKDAY[day.getDay()];
-
-      let dateList = date.split('-');
-      const newDateFormat = `${dateList[1]}월 ${dateList[2]}일 (${dayOfWeek})`;
-      return newDateFormat;
-    },
-
-    addNewDate(data: HistoryItem) {
-      let addHistoryDate = {
-        date: '',
-        historyItemList: [] as Array<HistoryItem>,
-      };
-      addHistoryDate.date = data.payment_date;
-      addHistoryDate.historyItemList.push(data);
-
-      return addHistoryDate;
+      this.currDateMonthStr = this.formatYearAndMonthHeader(this.currDateMonth);
     },
 
     formatHistoryData() {
       mainPost.map(data => {
-        const formatDataList = this.historyOneWeekList.find(
-          formatData => formatData.date === data.payment_date,
-        );
-        const formatDataListIn = this.historyOneWeekListIn.find(
-          formatData => formatData.date === data.payment_date,
-        );
-        const formatDataListOut = this.historyOneWeekListOut.find(
-          formatData => formatData.date === data.payment_date,
-        );
-
-        if (formatDataList === undefined) {
-          this.historyOneWeekList.push(this.addNewDate(data));
-        } else {
-          formatDataList.historyItemList.push(data);
-        }
+        this.addHistoryData(this.historyDataList, data);
 
         if (data.category.type === '수입') {
-          if (formatDataListIn === undefined) {
-            this.historyOneWeekListIn.push(this.addNewDate(data));
-          } else {
-            formatDataListIn.historyItemList.push(data);
-          }
+          this.addHistoryData(this.historyDataListIn, data);
         } else if (data.category.type === '지출') {
-          if (formatDataListOut === undefined) {
-            this.historyOneWeekListOut.push(this.addNewDate(data));
-          } else {
-            formatDataListOut.historyItemList.push(data);
-          }
+          this.addHistoryData(this.historyDataListOut, data);
         }
       });
     },
 
-    changeCalendar(m: number) {
-      this.month += m;
-
-      if (this.month < 1 || this.month > 12) {
-        const date = new Date(this.year, this.month - 1);
-        this.year = date.getFullYear();
-        this.month = date.getMonth() + 1;
-      }
-
-      this.formatCalendarHeader();
+    changeYearAndMonth(m: number) {
+      this.setYearAndMonth(this.currDateMonth, m);
+      this.currDateMonthStr = this.formatYearAndMonthHeader(this.currDateMonth);
     },
   },
 });

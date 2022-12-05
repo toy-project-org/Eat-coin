@@ -22,10 +22,20 @@ export interface FormatHistoryItem {
   historyItemList: Array<HistoryItem>;
 }
 
-export interface SelectedDay {
+export interface SelectedDate {
   year: number;
   month: number;
   day: number;
+}
+
+export interface DateMonth {
+  year: number;
+  month: number;
+}
+
+export interface DateMonthStr {
+  year: string;
+  month: string;
 }
 
 declare module '@vue/runtime-core' {

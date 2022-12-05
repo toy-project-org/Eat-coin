@@ -3,7 +3,7 @@ export default [
     hid: 1,
     title: '삼첩분식',
     amount: 18000,
-    payment_date: '22-10-01',
+    payment_date: '2022-10-01',
     category: {
       cid: 1,
       name: '식비',
@@ -15,7 +15,7 @@ export default [
     hid: 2,
     title: '삼첩분식2',
     amount: 20000,
-    payment_date: '22-10-01',
+    payment_date: '2022-10-01',
     category: {
       cid: 1,
       name: '식비2',
@@ -27,7 +27,7 @@ export default [
     hid: 3,
     title: '삼첩분식3',
     amount: 18003,
-    payment_date: '22-10-01',
+    payment_date: '2022-10-01',
     category: {
       cid: 1,
       name: '식비3',
@@ -39,7 +39,7 @@ export default [
     hid: 4,
     title: '교촌치킨',
     amount: 23000,
-    payment_date: '22-10-09',
+    payment_date: '2022-10-09',
     category: {
       cid: 1,
       name: '식비',
@@ -51,7 +51,7 @@ export default [
     hid: 5,
     title: '교촌치킨2',
     amount: 23002,
-    payment_date: '22-10-09',
+    payment_date: '2022-10-09',
     category: {
       cid: 1,
       name: '식비2',
@@ -63,7 +63,7 @@ export default [
     hid: 6,
     title: '교촌치킨3',
     amount: 230033,
-    payment_date: '22-10-09',
+    payment_date: '2022-10-09',
     category: {
       cid: 1,
       name: '식비3',
@@ -75,7 +75,7 @@ export default [
     hid: 7,
     title: '10월 월급',
     amount: 100000000,
-    payment_date: '22-10-25',
+    payment_date: '2022-10-25',
     category: {
       cid: 2,
       name: '월급2',
@@ -87,7 +87,7 @@ export default [
     hid: 8,
     title: '10월 월급22',
     amount: 100000000,
-    payment_date: '22-10-25',
+    payment_date: '2022-10-25',
     category: {
       cid: 2,
       name: '월급3',
@@ -99,7 +99,7 @@ export default [
     hid: 9,
     title: '10월 월급',
     amount: 100000,
-    payment_date: '22-10-01',
+    payment_date: '2022-10-01',
     category: {
       cid: 2,
       name: '월급22',
@@ -111,7 +111,7 @@ export default [
     hid: 10,
     title: '10월 월급23',
     amount: 1000000,
-    payment_date: '22-10-01',
+    payment_date: '2022-10-01',
     category: {
       cid: 2,
       name: '월급3',

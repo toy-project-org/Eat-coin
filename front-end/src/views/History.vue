@@ -11,7 +11,7 @@
 
   <h2 class="page-title">History</h2>
   <v-tabs v-model="historyNav" slider-color="green-lighten-2" color="green-lighten-2">
-    <div v-for="item in navItems" :key="item" style="width: 33%">
+    <div v-for="item in historyNavItems" :key="item" style="width: 33%">
       <router-link :to="`/history/${item}`">
         <v-tab :value="item" style="width: 100%">{{ item }}</v-tab>
       </router-link>
@@ -30,7 +30,7 @@ export default defineComponent({
   data: () => {
     return {
       historyNav: 'list',
-      navItems: ['list', 'calendar', 'category'],
+      historyNavItems: ['list', 'calendar', 'category'],
     };
   },
 
@@ -54,10 +54,6 @@ export default defineComponent({
   },
 
   watch: {
-    historyNav() {
-      console.log('nav', this.historyNav);
-    },
-
     // Change the historyNav when you press Back
     $route(to, from) {
       this.historyNav = to.path.substring(9);

@@ -12,11 +12,14 @@
 </template>
 
 <script lang="ts">
+import MixinCommon from '@/common/mixin';
 import { HistoryItem } from '@/types/project';
 import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
   name: 'Card',
+
+  mixins: [MixinCommon],
 
   props: {
     cardItem: { type: Object as PropType<HistoryItem>, required: true },
@@ -27,13 +30,9 @@ export default defineComponent({
       this.$router.push({
         name: new_page,
         params: {
-          id: this.cardItem?.hid,
+          id: this.cardItem.hid,
         },
       });
-    },
-
-    formatAmount(amount: number) {
-      return amount.toLocaleString('ko-KR');
     },
   },
 });
