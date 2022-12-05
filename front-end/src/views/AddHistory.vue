@@ -307,10 +307,12 @@ export default defineComponent({
       (this.$refs as any).formRef.reset();
       this.date = '';
       this.newDate = '';
+      this.type = '';
 
       alert(
         `Form is reset
           이전날짜: ${this.date}
+          타입: ${this.type}
           날짜: ${this.newDate}
           내역: ${this.title}
           금액: ${this.amount}
