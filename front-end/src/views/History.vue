@@ -18,7 +18,13 @@
     </div>
   </v-tabs>
 
-  <router-view></router-view>
+  <router-view v-slot="{ Component, route }">
+    <transition :name="transitionName || 'next'" mode="out-in" appear>
+      <div :key="route.path">
+        <component :is="Component" />
+      </div>
+    </transition>
+  </router-view>
 </template>
 
 <script lang="ts">
@@ -31,6 +37,7 @@ export default defineComponent({
     return {
       historyNav: 'list',
       historyNavItems: ['list', 'calendar', 'category'],
+      transitionName: '',
     };
   },
 
@@ -57,6 +64,13 @@ export default defineComponent({
     // Change the historyNav when you press Back
     $route(to, from) {
       this.historyNav = to.path.substring(9);
+
+      // console.log(to.meta.page, from.meta.page);
+      if (to.meta.page == null || from.meta.page == null) {
+        this.transitionName = 'next';
+      } else {
+        this.transitionName = to.meta.page > from.meta.page ? 'next' : 'prev';
+      }
     },
   },
 });

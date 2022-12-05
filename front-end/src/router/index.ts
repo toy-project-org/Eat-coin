@@ -18,9 +18,30 @@ const routes: Array<RouteRecordRaw> = [
     name: 'History',
     component: History,
     children: [
-      { path: 'list', name: 'HistoryList', component: HistoryList },
-      { path: 'calendar', name: 'HistoryCalendar', component: HistoryCalendar },
-      { path: 'category', name: 'HistoryCategory', component: HistoryCategory },
+      {
+        path: 'list',
+        name: 'HistoryList',
+        component: HistoryList,
+        meta: {
+          page: 1,
+        },
+      },
+      {
+        path: 'calendar',
+        name: 'HistoryCalendar',
+        component: HistoryCalendar,
+        meta: {
+          page: 2,
+        },
+      },
+      {
+        path: 'category',
+        name: 'HistoryCategory',
+        component: HistoryCategory,
+        meta: {
+          page: 3,
+        },
+      },
     ],
   },
   {
