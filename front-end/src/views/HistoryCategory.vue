@@ -39,23 +39,8 @@
       <card-chart v-else />
     </div>
 
-    <div class="container-box-content mt-5">
-      <card
-        v-for="item in 3"
-        :key="item"
-        :card-item="{
-          hid: 1,
-          title: `하나은행${item}`,
-          amount: 18000,
-          payment_date: '22-10-01',
-          category: {
-            cid: 1,
-            name: '식비',
-            type: '지출',
-            image: 'http://~~',
-          },
-        }"
-      ></card>
+    <div class="container-box-content mt-5 inner fade-in">
+      <card v-for="(item, idx) in categoryItems" :key="idx" :card-item="item" />
     </div>
   </div>
 </template>
@@ -66,6 +51,9 @@ import CardChart from '@/components/CardChart.vue';
 import Card from '@/components/Card.vue';
 import { defineComponent } from 'vue';
 import MixinCommon from '@/common/mixin';
+import { HistoryItem } from '@/types/project';
+import categoryData from '@/assets/data/categoryData';
+import cardData from '@/assets/data/cardData';
 
 export default defineComponent({
   name: 'HistoryCategory',
@@ -85,11 +73,13 @@ export default defineComponent({
       currDateMonthStr: { year: '', month: '' },
       usageType: '카테고리',
       usageTypeItems: ['카테고리', '카드'],
+      categoryItems: [] as HistoryItem[],
     };
   },
 
   created() {
     this.initDateMonth();
+    this.categoryItems = categoryData;
   },
 
   methods: {
@@ -104,6 +94,16 @@ export default defineComponent({
     changeYearAndMonth(m: number) {
       this.setYearAndMonth(this.currDateMonth, m);
       this.currDateMonthStr = this.formatYearAndMonthHeader(this.currDateMonth);
+    },
+  },
+
+  watch: {
+    usageType() {
+      if (this.usageType === '카테고리') {
+        this.categoryItems = categoryData;
+      } else {
+        this.categoryItems = cardData;
+      }
     },
   },
 });

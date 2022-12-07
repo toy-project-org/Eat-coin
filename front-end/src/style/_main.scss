@@ -24,6 +24,12 @@ $font-md: 0.875rem; // 14px
 $font-sm: 0.75rem; // 12px
 $font-xs: 0.625rem; // 10px
 
+// Transition
+$tran-02: all 0.2s ease;
+$tran-03: all 0.3s ease;
+$tran-04: all 0.4s ease;
+$tran-05: all 0.5s ease;
+
 * {
   font-family: 'Poppins', sans-serif;
   color: $font-color;
@@ -204,12 +210,40 @@ body::-webkit-scrollbar-thumb {
   z-index: 0;
 }
 .prev-enter-to {
-  animation: enterFromLeft 1000ms both cubic-bezier(0.165, 0.84, 0.44, 1);
+  animation: enterFromLeft 900ms both cubic-bezier(0.165, 0.84, 0.44, 1);
   z-index: 0;
 }
 .next-enter-to {
-  animation: enterFromRight 1000ms both cubic-bezier(0.165, 0.84, 0.44, 1);
+  animation: enterFromRight 900ms both cubic-bezier(0.165, 0.84, 0.44, 1);
   z-index: 1;
+}
+
+.prev-enter-active .inner,
+.prev-leave-active .inner,
+.next-enter-active .inner,
+.next-leave-active .inner {
+  transition: all 1000ms ease-in-out;
+}
+
+.fade-in {
+  animation: fadein 1000ms;
+}
+
+.prev-first-enter-from .inner,
+.prev-first-leave-to .inner {
+  opacity: 0;
+}
+
+.prev-enter-from .inner,
+.prev-leave-to .inner {
+  transform: translateX(-20px);
+  opacity: 0;
+}
+
+.next-enter-from .inner,
+.next-leave-to .inner {
+  transform: translateX(20px);
+  opacity: 0;
 }
 
 @keyframes enterFromLeft {
@@ -228,3 +262,23 @@ body::-webkit-scrollbar-thumb {
     transform: translateX(0);
   }
 }
+
+@keyframes fadein {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+  
+ 
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+ 

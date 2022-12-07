@@ -36,7 +36,7 @@
 
   <div class="container-box mt-3">
     <div class="container-box-content">
-      <div class="history-content mt-3">
+      <div class="history-content mt-3 inner fade-in">
         <p class="history-date">{{ formatBasicDate(selectedDate) }}</p>
         <card
           v-for="item in 3"
@@ -65,7 +65,6 @@ import Card from '@/components/Card.vue';
 import { SelectedDate } from '@/types/project';
 import { defineComponent } from 'vue';
 import MixinCommon from '@/common/mixin';
-
 export default defineComponent({
   name: 'HistoryCalendar',
 

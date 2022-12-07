@@ -21,11 +21,11 @@
       </div>
 
       <div v-if="balance.show" class="p-3 pt-0">
-        <p class="total-money-in">수입 {{ formatAmount(balance.in) }}</p>
-        <p class="total-money-out">지출 {{ formatAmount(balance.out) }}</p>
+        <p class="total-money-in fade-in">수입 {{ formatAmount(balance.in) }}</p>
+        <p class="total-money-out fade-in">지출 {{ formatAmount(balance.out) }}</p>
       </div>
       <div v-else class="p-3 pt-0">
-        <p style="height: 42px">... 비밀이지롱 ~~</p>
+        <p class="fade-in" style="height: 42px">... 비밀이지롱 ~~</p>
       </div>
     </div>
   </transition>
@@ -40,7 +40,7 @@
         </v-btn>
       </div>
 
-      <div class="container-box-content">
+      <div class="container-box-content inner fade-in">
         <div class="history-content" v-for="history in historyDataList" :key="history.date">
           <p class="history-date">{{ formatStrDate(history.date) }}</p>
           <card v-for="item in history.historyItemList" :key="item.hid" :card-item="item"></card>
@@ -56,6 +56,19 @@ import { FormatHistoryItem } from '@/types/project';
 import Card from '@/components/Card.vue';
 import mainPost from '../assets/data/main';
 import MixinCommon from '@/common/mixin';
+
+const STORAGE_KEY = 'show-balance';
+const storage = {
+  fetch() {
+    const showBalance = localStorage.getItem(STORAGE_KEY);
+    return showBalance;
+  },
+
+  save(isShow: boolean) {
+    const parsed = JSON.stringify(isShow);
+    localStorage.setItem(STORAGE_KEY, parsed);
+  },
+};
 
 export default defineComponent({
   name: 'Home',
@@ -76,6 +89,7 @@ export default defineComponent({
   },
 
   created() {
+    this.initShowBalance();
     this.formatHistoryData();
   },
 
@@ -86,8 +100,14 @@ export default defineComponent({
       });
     },
 
+    initShowBalance() {
+      let storageFetch = storage.fetch();
+      this.balance.show = storageFetch === null ? true : JSON.parse(storage.fetch() as string);
+    },
+
     showBalance() {
       this.balance.show = !this.balance.show;
+      storage.save(this.balance.show);
     },
 
     formatHistoryData() {

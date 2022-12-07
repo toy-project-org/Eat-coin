@@ -9,192 +9,205 @@
     </v-btn>
   </header>
 
-  <h2 class="page-title">Add History</h2>
-  <v-form class="container-box pb-1" ref="formRef">
-    <div class="container-box-content">
-      <!-- Date -->
-      <h3 class="add-history-title mt-3">Date</h3>
-      <Datepicker v-model="date" :format="dateFormat"></Datepicker>
+  <transition name="next" mode="out-in" appear>
+    <div>
+      <h2 class="page-title">Add History</h2>
+      <v-form class="container-box pb-1" ref="formRef">
+        <div class="container-box-content">
+          <!-- Date -->
+          <h3 class="add-history-title mt-3">Date</h3>
+          <Datepicker v-model="date" :format="dateFormat" class="fade-in"></Datepicker>
 
-      <!-- Account Content -->
-      <h3 class="add-history-title mt-3">Content</h3>
-      <nav class="add-history-nav mb-5">
-        <v-btn
-          variant="flat"
-          rounded="lg"
-          :color="type === '수입' ? 'success' : ''"
-          style="width: 32%"
-          @click="setType('수입')"
-          >수입</v-btn
-        >
-        <v-btn
-          variant="flat"
-          rounded="lg"
-          :color="type === '지출' ? 'success' : ''"
-          style="width: 32%"
-          @click="setType('지출')"
-          >지출</v-btn
-        >
-        <v-btn
-          variant="flat"
-          rounded="lg"
-          :color="type === '예/적금' ? 'success' : ''"
-          style="width: 32%"
-          @click="setType('예/적금')"
-        >
-          예/적금
-        </v-btn>
-      </nav>
+          <!-- Account Content -->
+          <h3 class="add-history-title mt-3">Content</h3>
+          <nav class="add-history-nav mb-5 fade-in">
+            <v-btn
+              variant="flat"
+              rounded="lg"
+              :color="type === '수입' ? 'success' : ''"
+              style="width: 32%"
+              @click="setType('수입')"
+              >수입</v-btn
+            >
+            <v-btn
+              variant="flat"
+              rounded="lg"
+              :color="type === '지출' ? 'success' : ''"
+              style="width: 32%"
+              @click="setType('지출')"
+              >지출</v-btn
+            >
+            <v-btn
+              variant="flat"
+              rounded="lg"
+              :color="type === '예/적금' ? 'success' : ''"
+              style="width: 32%"
+              @click="setType('예/적금')"
+            >
+              예/적금
+            </v-btn>
+          </nav>
 
-      <div class="add-history-nav">
-        <span class="mt-5 add-history-sub-title">고정</span>
-        <div>
-          <v-switch v-model="autoUpdate" color="green-lighten-2" inset hide-details></v-switch>
+          <div class="add-history-nav">
+            <span class="mt-5 add-history-sub-title">고정</span>
+            <div>
+              <v-switch v-model="autoUpdate" color="green-lighten-2" inset hide-details></v-switch>
+            </div>
+          </div>
+          <div class="mt-3 add-history-nav">
+            <span class="add-history-sub-title">내역</span>
+            <div class="add-history-input-width fade-in">
+              <v-text-field
+                v-model="title"
+                variant="solo"
+                density="compact"
+                :rules="titleRules"
+                required
+                clearable
+              ></v-text-field>
+            </div>
+          </div>
+          <div class="mt-1 add-history-nav">
+            <span class="add-history-sub-title">금액</span>
+            <div class="add-history-input-width fade-in">
+              <v-text-field
+                v-model="amount"
+                variant="solo"
+                density="compact"
+                :rules="amountRules"
+                required
+                clearable
+              ></v-text-field>
+            </div>
+          </div>
+          <div class="mt-1 add-history-nav">
+            <span class="add-history-sub-title">자산</span>
+            <div class="d-flex add-history-input-width fade-in">
+              <v-dialog>
+                <template v-slot:activator="{ props }">
+                  <v-btn v-bind="props" icon variant="text" class="btn-add-history-plus mr-1">
+                    <i class="bx bx-plus-circle"></i>
+                  </v-btn>
+                </template>
+
+                <template v-slot:default="{ isActive }">
+                  <v-card class="mx-auto" width="300">
+                    <v-card-item>
+                      <v-card-title style="font-size: 1rem">+ 자산 추가</v-card-title>
+                    </v-card-item>
+
+                    <v-card-text>
+                      <v-form ref="newAssetsRef">
+                        <v-text-field
+                          placeholder="자산명을 입력하세요."
+                          v-model="newAssets"
+                          variant="outlined"
+                          density="compact"
+                          :rules="assetsRules"
+                          required
+                          clearable
+                        ></v-text-field>
+                      </v-form>
+                    </v-card-text>
+
+                    <div class="d-flex justify-content-end mx-5 mb-4">
+                      <button class="btn-sm-white mr-2" @click="isActive.value = false">
+                        CLOSE
+                      </button>
+                      <button class="btn-sm-green" @click="addAssetsVaildate(isActive)">
+                        SAVE
+                      </button>
+                    </div>
+                  </v-card>
+                </template>
+              </v-dialog>
+              <v-autocomplete
+                v-model="assets"
+                :rules="assetsRules"
+                :items="assetsItems"
+                placeholder="Select..."
+                variant="solo"
+                density="compact"
+                required
+                clearable
+              ></v-autocomplete>
+            </div>
+          </div>
+          <div class="mt-1 add-history-nav">
+            <span class="add-history-sub-title">카테고리</span>
+            <div class="d-flex add-history-input-width fade-in">
+              <v-dialog>
+                <template v-slot:activator="{ props }">
+                  <v-btn v-bind="props" icon variant="text" class="btn-add-history-plus mr-1">
+                    <i class="bx bx-plus-circle"></i>
+                  </v-btn>
+                </template>
+
+                <template v-slot:default="{ isActive }">
+                  <v-card class="mx-auto" width="300">
+                    <v-card-item>
+                      <v-card-title style="font-size: 1rem">+ 카테고리 추가</v-card-title>
+                    </v-card-item>
+
+                    <v-card-text>
+                      <v-form ref="newCategoryRef">
+                        <v-text-field
+                          placeholder="카테고리명을 입력하세요."
+                          v-model="newCategory"
+                          variant="outlined"
+                          density="compact"
+                          :rules="categoryRules"
+                          required
+                          clearable
+                        ></v-text-field>
+                      </v-form>
+                    </v-card-text>
+
+                    <div class="d-flex justify-content-end mx-5 mb-4">
+                      <button class="btn-sm-white mr-2" @click="isActive.value = false">
+                        CLOSE
+                      </button>
+                      <button class="btn-sm-green" @click="addCategoryVaildate(isActive)">
+                        SAVE
+                      </button>
+                    </div>
+                  </v-card>
+                </template>
+              </v-dialog>
+              <v-autocomplete
+                v-model="category"
+                :rules="categoryRules"
+                :items="categoryItems"
+                placeholder="Select..."
+                variant="solo"
+                density="compact"
+                required
+                clearable
+              ></v-autocomplete>
+            </div>
+          </div>
+          <div>
+            <p class="add-history-sub-title mb-2">메모</p>
+            <v-textarea
+              class="fade-in"
+              v-model="memo"
+              :rules="memoRules"
+              variant="solo"
+              rows="2"
+              clearable
+              counter
+              no-resize
+            ></v-textarea>
+          </div>
         </div>
-      </div>
-      <div class="mt-3 add-history-nav">
-        <span class="add-history-sub-title">내역</span>
-        <div class="add-history-input-width">
-          <v-text-field
-            v-model="title"
-            variant="solo"
-            density="compact"
-            :rules="titleRules"
-            required
-            clearable
-          ></v-text-field>
+
+        <div class="d-flex justify-content-evenly mb-3">
+          <v-btn @click="formValidate" color="success" rounded="lg" style="width: 35%">SAVE</v-btn>
+          <v-btn @click="reset" color="warning" rounded="lg" style="width: 35%">RESET</v-btn>
         </div>
-      </div>
-      <div class="mt-1 add-history-nav">
-        <span class="add-history-sub-title">금액</span>
-        <div class="add-history-input-width">
-          <v-text-field
-            v-model="amount"
-            variant="solo"
-            density="compact"
-            :rules="amountRules"
-            required
-            clearable
-          ></v-text-field>
-        </div>
-      </div>
-      <div class="mt-1 add-history-nav">
-        <span class="add-history-sub-title">자산</span>
-        <div class="d-flex add-history-input-width">
-          <v-dialog>
-            <template v-slot:activator="{ props }">
-              <v-btn v-bind="props" icon variant="text" class="btn-add-history-plus mr-1">
-                <i class="bx bx-plus-circle"></i>
-              </v-btn>
-            </template>
-
-            <template v-slot:default="{ isActive }">
-              <v-card class="mx-auto" width="300">
-                <v-card-item>
-                  <v-card-title style="font-size: 1rem">+ 자산 추가</v-card-title>
-                </v-card-item>
-
-                <v-card-text>
-                  <v-form ref="newAssetsRef">
-                    <v-text-field
-                      placeholder="자산명을 입력하세요."
-                      v-model="newAssets"
-                      variant="outlined"
-                      density="compact"
-                      :rules="assetsRules"
-                      required
-                      clearable
-                    ></v-text-field>
-                  </v-form>
-                </v-card-text>
-
-                <div class="d-flex justify-content-end mx-5 mb-4">
-                  <button class="btn-sm-white mr-2" @click="isActive.value = false">CLOSE</button>
-                  <button class="btn-sm-green" @click="addAssetsVaildate(isActive)">SAVE</button>
-                </div>
-              </v-card>
-            </template>
-          </v-dialog>
-          <v-autocomplete
-            v-model="assets"
-            :rules="assetsRules"
-            :items="assetsItems"
-            placeholder="Select..."
-            variant="solo"
-            density="compact"
-            required
-            clearable
-          ></v-autocomplete>
-        </div>
-      </div>
-      <div class="mt-1 add-history-nav">
-        <span class="add-history-sub-title">카테고리</span>
-        <div class="d-flex add-history-input-width">
-          <v-dialog>
-            <template v-slot:activator="{ props }">
-              <v-btn v-bind="props" icon variant="text" class="btn-add-history-plus mr-1">
-                <i class="bx bx-plus-circle"></i>
-              </v-btn>
-            </template>
-
-            <template v-slot:default="{ isActive }">
-              <v-card class="mx-auto" width="300">
-                <v-card-item>
-                  <v-card-title style="font-size: 1rem">+ 카테고리 추가</v-card-title>
-                </v-card-item>
-
-                <v-card-text>
-                  <v-form ref="newCategoryRef">
-                    <v-text-field
-                      placeholder="카테고리명을 입력하세요."
-                      v-model="newCategory"
-                      variant="outlined"
-                      density="compact"
-                      :rules="categoryRules"
-                      required
-                      clearable
-                    ></v-text-field>
-                  </v-form>
-                </v-card-text>
-
-                <div class="d-flex justify-content-end mx-5 mb-4">
-                  <button class="btn-sm-white mr-2" @click="isActive.value = false">CLOSE</button>
-                  <button class="btn-sm-green" @click="addCategoryVaildate(isActive)">SAVE</button>
-                </div>
-              </v-card>
-            </template>
-          </v-dialog>
-          <v-autocomplete
-            v-model="category"
-            :rules="categoryRules"
-            :items="categoryItems"
-            placeholder="Select..."
-            variant="solo"
-            density="compact"
-            required
-            clearable
-          ></v-autocomplete>
-        </div>
-      </div>
-      <div>
-        <p class="add-history-sub-title mb-2">메모</p>
-        <v-textarea
-          v-model="memo"
-          :rules="memoRules"
-          variant="solo"
-          rows="2"
-          clearable
-          counter
-          no-resize
-        ></v-textarea>
-      </div>
+      </v-form>
     </div>
-
-    <div class="d-flex justify-content-evenly mb-3">
-      <v-btn @click="formValidate" color="success" rounded="lg" style="width: 35%">SAVE</v-btn>
-      <v-btn @click="reset" color="warning" rounded="lg" style="width: 35%">RESET</v-btn>
-    </div>
-  </v-form>
+  </transition>
 </template>
 
 <script lang="ts">
@@ -264,7 +277,6 @@ export default defineComponent({
 
     setType(newType: string) {
       this.type = newType;
-      console.log('new TYpe', this.type);
     },
 
     async formValidate() {

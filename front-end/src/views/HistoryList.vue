@@ -60,19 +60,19 @@
       </div>
     </div>
 
-    <div v-show="dataType === '전체'" class="container-box-content">
+    <div v-show="dataType === '전체'" class="container-box-content inner fade-in">
       <div class="history-content" v-for="history in historyDataList" :key="history.date">
         <p class="history-date">{{ formatStrDate(history.date) }}</p>
         <card v-for="item in history.historyItemList" :key="item.hid" :card-item="item"></card>
       </div>
     </div>
-    <div v-show="dataType === '수입'" class="container-box-content">
+    <div v-show="dataType === '수입'" class="container-box-content inner fade-in">
       <div class="history-content" v-for="history in historyDataListIn" :key="history.date">
         <p class="history-date">{{ formatStrDate(history.date) }}</p>
         <card v-for="item in history.historyItemList" :key="item.hid" :card-item="item"></card>
       </div>
     </div>
-    <div v-show="dataType === '지출'" class="container-box-content">
+    <div v-show="dataType === '지출'" class="container-box-content inner fade-in">
       <div class="history-content" v-for="history in historyDataListOut" :key="history.date">
         <p class="history-date">{{ formatStrDate(history.date) }}</p>
         <card v-for="item in history.historyItemList" :key="item.hid" :card-item="item"></card>

@@ -9,14 +9,6 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'App',
-
-  methods: {
-    movePage(new_page: string) {
-      this.$router.push({
-        name: new_page,
-      });
-    },
-  },
 });
 </script>
 

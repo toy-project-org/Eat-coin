@@ -14,6 +14,7 @@
 <script lang="ts">
 import { Pie } from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from 'chart.js';
+import categoryData from '@/assets/data/categoryData';
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
 
@@ -60,11 +61,13 @@ export default {
   data: () => {
     return {
       chartData: {
-        labels: ['식비', '교통비', '생활비', '기타'],
+        labels: categoryData.map(data => data.title),
         datasets: [
           {
-            backgroundColor: ['#F2DEBA', '#FFEFD6', '#0E5E6F', '#3A8891'],
-            data: [40, 20, 80, 10],
+            backgroundColor: ['#F2DEBA', '#FFEFD6', '#0E5E6F', '#3A8891'].sort(
+              () => 0.5 - Math.random(),
+            ),
+            data: categoryData.map(data => data.amount),
             hoverOffset: 4,
             borderWidth: 1,
           },
