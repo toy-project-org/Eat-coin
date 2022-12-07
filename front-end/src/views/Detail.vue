@@ -1,14 +1,4 @@
 <template>
-  <header class="header">
-    <v-btn icon variant="text">
-      <i class="bx bx-menu icon-size-md"></i>
-    </v-btn>
-    <p @click="movePage('Home')" class="header-logo cursor-pointer">EAT COIN</p>
-    <v-btn icon variant="text" @click="movePage('AddHistory')">
-      <i class="bx bx-plus icon-size-md"></i>
-    </v-btn>
-  </header>
-
   <transition name="prev" mode="out-in" appear>
     <div>
       <h2 class="page-title">Detail</h2>
@@ -273,22 +263,16 @@ export default defineComponent({
   },
 
   methods: {
-    movePage(new_page: string) {
-      this.$router.push({
-        name: new_page,
-      });
-    },
-
     beforePage() {
       this.$router.go(-1);
     },
 
-    dateFormat(date: any) {
+    dateFormat(date: Date) {
       const year = date.getFullYear();
       const month = date.getMonth() + 1;
       const day = date.getDate();
 
-      const newYear = year.toString().substring(2);
+      const newYear = year.toString();
       const newMonth = month < 10 ? '0' + month : month;
       const newDay = day < 10 ? '0' + day : day;
 
@@ -300,6 +284,7 @@ export default defineComponent({
       this.type = newType;
     },
 
+    // TODO: Set date and type as required
     async formValidate() {
       const { valid } = await (this.$refs as any).formRef.validate();
       if (valid)

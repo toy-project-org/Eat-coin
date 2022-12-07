@@ -6,6 +6,21 @@
   padding: 0.1px;
 }
 
+.sidebar-nav {
+  position: absolute;
+  width: 100%;
+  background: $bg-color;
+  height: 0;
+  opacity: 0;
+  overflow-y: hidden;
+  transition: $tran-04;
+  z-index: 200;
+}
+.sidebar-nav.action {
+  height: 100%;
+  opacity: 1;
+}
+
 #app {
   box-sizing: border-box;
   font-family: 'consolas';

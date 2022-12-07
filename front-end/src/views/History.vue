@@ -1,14 +1,4 @@
 <template>
-  <header class="header">
-    <v-btn icon variant="text">
-      <i class="bx bx-menu icon-size-md"></i>
-    </v-btn>
-    <p @click="movePage('Home')" class="header-logo cursor-pointer">EAT COIN</p>
-    <v-btn icon variant="text" @click="movePage('AddHistory')">
-      <i class="bx bx-plus icon-size-md"></i>
-    </v-btn>
-  </header>
-
   <h2 class="page-title">History</h2>
   <v-tabs v-model="historyNav" slider-color="green-lighten-2" color="green-lighten-2">
     <div v-for="item in historyNavItems" :key="item" style="width: 33%">
@@ -46,12 +36,6 @@ export default defineComponent({
   },
 
   methods: {
-    movePage(new_page: string) {
-      this.$router.push({
-        name: new_page,
-      });
-    },
-
     // Set page based on router initially when reloaded
     initFirstRoute() {
       let firstRouteName = this.$route.path;

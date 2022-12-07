@@ -1,14 +1,4 @@
 <template>
-  <header class="header">
-    <v-btn icon variant="text">
-      <i class="bx bx-menu icon-size-md"></i>
-    </v-btn>
-    <p @click="movePage('Home')" class="header-logo cursor-pointer">EAT COIN</p>
-    <v-btn @click="movePage('AddHistory')" icon variant="text">
-      <i class="bx bx-plus icon-size-md"></i>
-    </v-btn>
-  </header>
-
   <!-- Balance -->
   <transition name="prev-first" mode="out-in" appear>
     <div class="container-box">
@@ -85,6 +75,7 @@ export default defineComponent({
         out: 50000,
       },
       historyDataList: [] as Array<FormatHistoryItem>,
+      isNavbarShow: false,
     };
   },
 
