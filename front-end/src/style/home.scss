@@ -1,0 +1,16 @@
+@import './_main.scss';
+
+.total-money-in,
+.total-money-out {
+  font-size: $font-md;
+}
+.total-money-in {
+  color: $green-color;
+}
+.total-money-out {
+  color: $red-color;
+}
+
+.balance-invisible {
+  display: none;
+}

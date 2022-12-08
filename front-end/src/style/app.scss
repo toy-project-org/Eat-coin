@@ -1,0 +1,35 @@
+@import './_main.scss';
+
+.wrapper {
+  position: relative;
+  margin: 0px 10px;
+  padding: 0.1px;
+}
+
+.sidebar-nav {
+  position: absolute;
+  width: 100%;
+  background: $bg-color;
+  height: 0;
+  opacity: 0;
+  overflow-y: hidden;
+  transition: $tran-04;
+  z-index: 200;
+}
+.sidebar-nav.action {
+  height: 100%;
+  opacity: 1;
+}
+
+#app {
+  box-sizing: border-box;
+  font-family: 'consolas';
+  margin-top: 60px;
+  width: 100%;
+  max-width: 460px;
+  margin: auto;
+  position: relative;
+  border-right: 1px solid $bg-color;
+  border-left: 1px solid $bg-color;
+  background-color: $bg-color;
+}
