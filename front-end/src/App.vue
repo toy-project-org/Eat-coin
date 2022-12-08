@@ -12,15 +12,15 @@
       </v-btn>
     </header>
 
-    <v-list class="px-5" style="max-height: 500px !important">
+    <v-list class="px-5">
       <v-list-subheader>MENU</v-list-subheader>
 
       <v-list-item
-        @click="[movePage('AddHistory'), setNavbarShow()]"
-        v-for="(item, i) in items"
+        v-for="(item, i) in sidebarItems"
         :key="i"
         :value="item"
         active-color="success"
+        @click="[movePage(sidebarItemsPath[i]), setNavbarShow()]"
       >
         <template v-slot:prepend>
           <v-icon :icon="item.icon"></v-icon>
@@ -60,13 +60,14 @@ export default defineComponent({
   data: () => {
     return {
       isNavbarShow: false,
-      items: [
+      sidebarItems: [
         { text: 'Home', icon: 'mdi-home' },
-        { text: 'History', icon: 'mdi-forum' },
-        { text: 'Add History', icon: 'mdi-plus' },
-        { text: 'Add Assets', icon: 'mdi-plus' },
-        { text: 'Add Category', icon: 'mdi-plus' },
+        { text: 'History', icon: 'mdi-text-box' },
+        { text: 'Add History', icon: 'mdi-text-box-plus' },
+        { text: 'Add Assets', icon: 'mdi-credit-card-plus' },
+        { text: 'Add Category', icon: 'mdi-shape-plus' },
       ],
+      sidebarItemsPath: ['Home', 'HistoryList', 'AddHistory', 'AddHistory', 'AddHistory'],
     };
   },
 
