@@ -1,29 +1,4 @@
 <template>
-  <!-- Duration settings and search -->
-  <div class="d-flex mt-3">
-    <div class="mr-1" style="width: 120px">
-      <v-select
-        v-model="datePeriod"
-        :items="datePeriodItems"
-        density="compact"
-        variant="solo"
-        hide-details
-      ></v-select>
-    </div>
-
-    <v-text-field
-      placeholder="Search templates"
-      :loading="loading"
-      density="compact"
-      variant="solo"
-      color="green-lighten-2"
-      append-inner-icon="mdi-magnify"
-      @click:append-inner="onClick"
-      clearable
-      hide-details
-    ></v-text-field>
-  </div>
-
   <!-- Monthly income and expenditure breakdown -->
   <div class="container-box mt-3">
     <div class="calendar-box p-1 pt-2 mb-1">
@@ -48,8 +23,11 @@
   <div class="container-box mt-3">
     <div class="container-box-header">
       <p class="container-box-title-md">내역 조회</p>
+    </div>
 
-      <div class="mr-3" style="width: 100px">
+    <div class="d-flex mx-3 mb-3">
+      <!-- Select Type -->
+      <div class="mr-1" style="width: 100px">
         <v-select
           v-model="dataType"
           :items="dataTypeItems"
@@ -58,6 +36,19 @@
           hide-details
         ></v-select>
       </div>
+
+      <!-- Monthly details inquiry -->
+      <v-text-field
+        placeholder="Search templates"
+        :loading="loading"
+        density="compact"
+        variant="solo"
+        color="green-lighten-2"
+        append-inner-icon="mdi-magnify"
+        @click:append-inner="onClick"
+        clearable
+        hide-details
+      ></v-text-field>
     </div>
 
     <div v-show="dataType === '전체'" class="container-box-content inner fade-in">
@@ -100,8 +91,6 @@ export default defineComponent({
       currMonthAmount: { in: 10000, out: 500000 },
       currDateMonth: { year: 0, month: 0 },
       currDateMonthStr: { year: '', month: '' },
-      datePeriod: '일주일',
-      datePeriodItems: ['1년', '6개월', '한 달', '일주일'],
       dataType: '전체',
       dataTypeItems: ['전체', '수입', '지출'],
       loaded: false,

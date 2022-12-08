@@ -12,7 +12,7 @@
       </v-btn>
     </header>
 
-    <v-list class="px-5">
+    <v-list class="px-5" style="max-height: 500px !important">
       <v-list-subheader>MENU</v-list-subheader>
 
       <v-list-item
