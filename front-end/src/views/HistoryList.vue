@@ -139,8 +139,6 @@ export default defineComponent({
     formatHistoryData(date: DateMonth) {
       this.initHistoryDataList();
 
-      console.log('curr date', date);
-
       let tmpDataList = mainPost;
       if (date.month == 12) {
         tmpDataList = mainPost12;

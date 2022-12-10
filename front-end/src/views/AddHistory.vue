@@ -288,6 +288,7 @@ export default defineComponent({
       const { valid } = await (this.$refs as any).newAssetsRef.validate();
       if (valid) {
         alert(`New Assets are valid: ${this.newAssets}`);
+        this.assets = this.newAssets;
         this.assetsItems.push(this.newAssets);
         this.newAssets = '';
         isActive.value = false;
@@ -298,6 +299,7 @@ export default defineComponent({
       const { valid } = await (this.$refs as any).newCategoryRef.validate();
       if (valid) {
         alert(`New Category are valid: ${this.newCategory}`);
+        this.category = this.newCategory;
         this.categoryItems.push(this.newCategory);
         this.newCategory = '';
         isActive.value = false;

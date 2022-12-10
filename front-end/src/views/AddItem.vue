@@ -1,5 +1,5 @@
 <template>
-  <transition name="next" mode="out-in" appear>
+  <transition name="next" mode="out-in" appear :key="$route.name">
     <div>
       <h2 class="page-title">{{ name }}</h2>
 
@@ -26,7 +26,7 @@
       </v-form>
 
       <div class="container-box">
-        <div class="container-box-content">
+        <div class="container-box-content fade-in">
           <h3 class="add-history-title mt-4 mb-1">{{ name }} List</h3>
           <add-item-card v-for="(item, idx) in items" :key="idx" :title="item" />
         </div>

@@ -39,7 +39,7 @@
       <card-chart v-else />
     </div>
 
-    <div class="container-box-content mt-5 inner fade-in">
+    <div class="container-box-content mt-5 inner fade-in" :key="usageType">
       <card v-for="(item, idx) in categoryItems" :key="idx" :card-item="item" />
     </div>
   </div>
