@@ -192,8 +192,8 @@
         </div>
 
         <div class="d-flex justify-content-evenly mb-3">
-          <v-btn @click="formValidate" color="success" rounded="lg" style="width: 35%">SAVE</v-btn>
           <v-btn @click="reset" color="warning" rounded="lg" style="width: 35%">RESET</v-btn>
+          <v-btn @click="formValidate" color="success" rounded="lg" style="width: 35%">SAVE</v-btn>
         </div>
       </v-form>
     </div>

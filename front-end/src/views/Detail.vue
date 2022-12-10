@@ -192,8 +192,9 @@
         </div>
 
         <div class="d-flex justify-content-evenly mb-3">
-          <v-btn @click="formValidate" color="success" rounded="lg" style="width: 35%">SAVE</v-btn>
-          <v-btn @click="beforePage" color="grey" rounded="lg" style="width: 35%">Cancel</v-btn>
+          <v-btn color="error" rounded="lg" style="width: 30%">DELETE</v-btn>
+          <v-btn @click="beforePage" color="grey" rounded="lg" style="width: 30%">CANCEL</v-btn>
+          <v-btn @click="formValidate" color="success" rounded="lg" style="width: 30%">SAVE</v-btn>
         </div>
       </v-form>
     </div>

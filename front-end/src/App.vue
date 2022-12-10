@@ -88,6 +88,7 @@ export default defineComponent({
       const active = document.getElementsByClassName('v-list-item--active')[0];
       if (active !== undefined) {
         active.classList.remove('v-list-item--active');
+        active.classList.remove('text-success');
       }
     },
   },
