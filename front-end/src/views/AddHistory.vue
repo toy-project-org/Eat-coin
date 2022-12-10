@@ -89,7 +89,7 @@
                     <v-card-text>
                       <v-form ref="newAssetsRef">
                         <v-text-field
-                          placeholder="자산명을 입력하세요."
+                          placeholder="추가할 자산명을 입력하세요."
                           v-model="newAssets"
                           variant="outlined"
                           density="compact"
@@ -142,7 +142,7 @@
                     <v-card-text>
                       <v-form ref="newCategoryRef">
                         <v-text-field
-                          placeholder="카테고리명을 입력하세요."
+                          placeholder="추가할 카테고리명을 입력하세요."
                           v-model="newCategory"
                           variant="outlined"
                           density="compact"
@@ -263,8 +263,12 @@ export default defineComponent({
       this.type = newType;
     },
 
-    // TODO: Set date and type as required
     async formValidate() {
+      if (this.date === '' || this.date === null || this.type === '') {
+        alert('날짜나 타입을 입력하지 않았습니다..!');
+        return;
+      }
+
       const { valid } = await (this.$refs as any).formRef.validate();
       if (valid)
         alert(

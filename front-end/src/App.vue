@@ -67,7 +67,7 @@ export default defineComponent({
         { text: 'Add Assets', icon: 'mdi-credit-card-plus' },
         { text: 'Add Category', icon: 'mdi-shape-plus' },
       ],
-      sidebarItemsPath: ['Home', 'HistoryList', 'AddHistory', 'AddHistory', 'AddHistory'],
+      sidebarItemsPath: ['Home', 'HistoryList', 'AddHistory', 'AddAssets', 'AddCategory'],
     };
   },
 

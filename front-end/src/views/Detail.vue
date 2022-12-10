@@ -284,8 +284,12 @@ export default defineComponent({
       this.type = newType;
     },
 
-    // TODO: Set date and type as required
     async formValidate() {
+      if (this.date === '' || this.date === null || this.type === '') {
+        alert('날짜나 타입을 입력하지 않았습니다..!');
+        return;
+      }
+
       const { valid } = await (this.$refs as any).formRef.validate();
       if (valid)
         alert(
