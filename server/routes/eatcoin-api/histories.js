@@ -7,9 +7,6 @@ const getDate = require('../../lib/etc');
 
 router.use(morgan("combined"));
 
-const from = ' from histories';
-const where = ' where hid = ?';
-
 // todo: 에러 핸들링!!!
 // cors 찾아보기
 
@@ -18,8 +15,10 @@ router.get('/', function(req, res, next) {
     console.log("find recent");
 
     let list = [];
-    const date = getDate().slice(2);
+    const date = getDate(new Date());
     const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date >= "${date}" order by h.hid asc`;
+
+    console.log('a week ago', date);
 
     db.query(sql, (err, result) => {
         if (err) throw err;
@@ -36,6 +35,9 @@ router.get('/', function(req, res, next) {
                     type : data.type,
                     image : data.image
                 },
+                isfixed : data.isfixed,
+                method : data.method,
+                memo : data.memo,
             };
 
             list.push(history);
@@ -47,8 +49,8 @@ router.get('/', function(req, res, next) {
     });
 });
 
-// 1-2. 특정 내역 디테일 조회
-router.get('/detail/:id', (req, res, next) => {
+// 1-2. 특정 내역 조회
+router.get('/:id', (req, res, next) => {
     console.log("find one");
 
     const list = [];
@@ -85,7 +87,7 @@ router.get('/detail/:id', (req, res, next) => {
 });
 
 // 1-3. 월별 내역 조회
-router.get('/:ym', (req, res, next) => {
+router.get('/month/:ym', (req, res, next) => {
     console.log("find month");
 
     const list = [];
@@ -106,11 +108,14 @@ router.get('/:ym', (req, res, next) => {
                     name : data.name,
                     type : data.type,
                     image : data.image
-                }
+                },
+                isfixed : data.isfixed,
+                method : data.method,
+                memo : data.memo,
             }
             
             list.push(history);
-            
+
         });
 
         console.log(list);
@@ -118,49 +123,28 @@ router.get('/:ym', (req, res, next) => {
     });
 });
 
-// 1-4. 연별 수입/지출 금액 조회
-router.get('/amount/:date', (req, res, next) => {
-    console.log('check amount');
-
-    const date = req.params.date;
-    const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date like "${date}%" order by h.hid asc`;
-
-    db.query(sql, (err, result) => {
-        if (err) throw err;
-
-        const income = result
-        .filter(data => {return data.type == '수입'})
-        .reduce((acc, data) => {return acc += data.amount}, 0);
-
-        const expend = result
-        .filter(data => {return data.type == '지출'})
-        .reduce((acc, data) => {return acc += data.amount}, 0);
-        
-        let { ...amount } = {
-            income,
-            expend,
-        };
-
-        console.log(income, expend);
-        res.json(amount);
-    });
-});
-
 // 2. 내역 추가
 router.post('/', (req, res, next) => {
     console.log("add one");
 
-    const { title, amount, payment_date, category, isfixed, card, memo } = req.body;
-    var sql = 'insert into users(title, amount, payment_date, category, isfixed, card, memo) values(?, ?, ?, ?, ?, ?, ?)';
-    var query = db.format(sql, [title, amount, payment_date, category, isfixed, card, memo]);
+    const { title, amount, payment_date, category, isfixed, method, memo } = req.body;
+    const { name, type, image } = category;
 
-    console.log(req.body);
+    const sql_cid = `select cid from categories where name = '${name}' and type = '${type}'`;
 
-    db.query(query, (err, results, fds) => {
+    db.query(sql_cid, (err, result) => {
         if (err) throw err;
-        
-        console.log(results);
-        res.status(200).json({message : "OK"});    
+
+        console.log(result);
+
+        const cid = result[0].cid;
+        const sql_add = `insert into histories(title, amount, payment_date, category, isfixed, method, memo) values('${title}', ${amount}, '${payment_date}', ${cid}, '${isfixed}', '${method}', '${memo}')`;
+
+        db.query(sql_add, (err, result) => {
+            if (err) throw err;
+
+            res.status(200).json({message : 'OK'});
+        });
     });
 });
 
@@ -168,23 +152,35 @@ router.post('/', (req, res, next) => {
 router.put('/:id', (req, res, next) => {
     console.log("update one");
 
-    const { title, amount, payment_date, category, isfixed, card, memo } = req.body;
-
-    const keys = Object.keys(req.body);
-    console.log(keys);
-
     const { id } = req.params;
-    var search = db.format('select *' + from + where, [id]);
-    var update = db.format('update users set title = ?, amount = ?, payment_date = ?, category = ?, isfixed = ?, card = ?, memo  = ? where hid = ?', [title, amount, payment_date, category, isfixed, card, memo, id]);
+    const { title, amount, payment_date, category, isfixed, method, memo } = req.body;
+    const { name, type, image } = category;
 
-    db.query(search, (err, results, fds) => {
+    console.log(id, req.body);
+
+    const sql_hid = `select * from histories where hid = ${id}`;
+    const sql_cid = `select cid from categories where name = '${name}'`;
+
+    // 해당 목록 있는지 체크
+    db.query(sql_hid, (err, result) => {
         if (err) throw err;
-        console.log(results);
+        console.log(result);
 
-        db.query(update, (err, results, fds) => {
+        // cid 입력을 위해 카테고리 이름으로 아이디 찾음
+        db.query(sql_cid, (err, result) => {
             if (err) throw err;
-            res.status(200).json({ message : "OK"});
-        })
+            
+            console.log(result);
+
+            const cid = result[0].cid;
+            const sql_update = `update histories set title = '${title}', amount = ${amount}, payment_date = '${payment_date}', category = ${cid}, isfixed = '${isfixed}', method = '${method}', memo = '${memo}' where hid = ${id}`;
+            console.log(sql_update);
+            // 찾은 cid와 함께 목록 업데이트
+            db.query(sql_update, (err, result) => {
+                if (err) throw err;
+                res.status(200).json({message : 'OK'});
+            });
+        });
     });
 });
 
@@ -193,14 +189,14 @@ router.delete('/:id', (req, res, next) => {
     console.log("delete one");
 
     const { id } = req.params;
-    var search = db.format('select *' + from + where, [id]);
-    var del = db.format('delete' + from + where, [id]);
+    const search = `select * from histories where hid = ${id}`;
+    const del = `delete from histories where hid = ${id}`;
 
-    db.query(search, (err, results, fds) => {
+    db.query(search, (err, results) => {
         if (err) throw err;
         console.log(results);
 
-        db.query(del, (err, results, fds) => {
+        db.query(del, (err, results) => {
             if (err) throw err;
             res.status(200).json({ massage : "OK"});
         })

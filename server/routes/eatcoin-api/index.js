@@ -4,7 +4,6 @@ var router = express.Router();
 var users = require('./users');
 var menu = require('./menu');
 var login = require('./login');
-var categories = require('./categories');
 var histories = require('./histories');
 var statistics = require('./statistics');
 
@@ -16,7 +15,6 @@ router.get('/', function(req, res, next) {
 router.use('/users', users);
 router.use('/menu', menu);
 // router.use('/login', login);
-router.use('/categories', categories);
 router.use('/histories', histories);
 router.use('/statistics', statistics);
 

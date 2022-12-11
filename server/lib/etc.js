@@ -1,26 +1,11 @@
 let sql;
-const today = new Date();
+// const today = new Date();
 
-makeSelect = (obj, table, where, opt) => {
-    sql = `select * from ${table}`;
-
-    if (where.length > 0) sql += `where ${where}`;
-    if (opt.length > 0) sql += opt;
-
-    return sql;
-}
-
-makeInsert = (obj, table) => {
-    sql = `insert into ${table}`;
-
-    
-}
-
-const date = () => {
+const date = (today) => {
     let y = today.getFullYear();
-    let m = today.getMonth();
+    let m = today.getMonth() + 1;
     let d = today.getDate();
-
+    console.log('today', y, m, d);
     d -= 7;
 
     if (d < 1) {
@@ -39,7 +24,9 @@ const date = () => {
         m = 12;
         y--;
     }
-    
+
+    if (d < 10) d = '0' + d;
+
     return `${y}-${m}-${d}`;
 }
 
