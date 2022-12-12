@@ -7,7 +7,7 @@ const getDate = require('../../lib/etc');
 
 router.use(morgan("combined"));
 
-// todo: 에러 핸들링!!!
+// todo: 에러 핸들링, 로그 파일에 저장하기
 // cors 찾아보기
 
 // 1-1. 최근 내역 조회
@@ -16,7 +16,7 @@ router.get('/', function(req, res, next) {
 
     let list = [];
     const date = getDate(new Date());
-    const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date >= "${date}" order by h.hid asc`;
+    const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date >= "${date}" order by h.payment_date asc`;
 
     console.log('a week ago', date);
 
@@ -92,7 +92,7 @@ router.get('/month/:ym', (req, res, next) => {
 
     const list = [];
     const date = req.params.ym;
-    const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date like "${date}%" order by h.hid asc`;
+    const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date like "${date}%" order by h.payment_date asc`;
 
     db.query(sql, (err, result) => {
         if (err) throw err;
