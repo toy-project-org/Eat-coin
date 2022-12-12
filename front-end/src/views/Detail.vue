@@ -192,8 +192,9 @@
         </div>
 
         <div class="d-flex justify-content-evenly mb-3">
-          <v-btn @click="formValidate" color="success" rounded="lg" style="width: 35%">SAVE</v-btn>
-          <v-btn @click="beforePage" color="grey" rounded="lg" style="width: 35%">Cancel</v-btn>
+          <v-btn color="error" rounded="lg" style="width: 30%">DELETE</v-btn>
+          <v-btn @click="beforePage" color="grey" rounded="lg" style="width: 30%">CANCEL</v-btn>
+          <v-btn @click="formValidate" color="success" rounded="lg" style="width: 30%">SAVE</v-btn>
         </div>
       </v-form>
     </div>
@@ -284,8 +285,12 @@ export default defineComponent({
       this.type = newType;
     },
 
-    // TODO: Set date and type as required
     async formValidate() {
+      if (this.date === '' || this.date === null || this.type === '') {
+        alert('날짜나 타입을 입력하지 않았습니다..!');
+        return;
+      }
+
       const { valid } = await (this.$refs as any).formRef.validate();
       if (valid)
         alert(
@@ -305,6 +310,7 @@ export default defineComponent({
       const { valid } = await (this.$refs as any).newAssetsRef.validate();
       if (valid) {
         alert(`New Assets are valid: ${this.newAssets}`);
+        this.assets = this.newAssets;
         this.assetsItems.push(this.newAssets);
         this.newAssets = '';
         isActive.value = false;
@@ -315,6 +321,7 @@ export default defineComponent({
       const { valid } = await (this.$refs as any).newCategoryRef.validate();
       if (valid) {
         alert(`New Category are valid: ${this.newCategory}`);
+        this.category = this.newCategory;
         this.categoryItems.push(this.newCategory);
         this.newCategory = '';
         isActive.value = false;

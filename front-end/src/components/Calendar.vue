@@ -10,7 +10,7 @@
         <li>Fri</li>
         <li>Sat</li>
       </ul>
-      <ul class="days">
+      <ul class="days fade-in" :key="currMonth">
         <li v-for="prevDay in firstDayOfMonth" :key="prevDay"></li>
         <li
           class="day"

@@ -6,7 +6,7 @@
         <div class="container-box-content">
           <!-- Date -->
           <h3 class="add-history-title mt-3">Date</h3>
-          <Datepicker v-model="date" :format="dateFormat" class="fade-in"></Datepicker>
+          <Datepicker v-model="date" :format="dateFormat" class="fade-in" />
 
           <!-- Account Content -->
           <h3 class="add-history-title mt-3">Content</h3>
@@ -89,7 +89,7 @@
                     <v-card-text>
                       <v-form ref="newAssetsRef">
                         <v-text-field
-                          placeholder="자산명을 입력하세요."
+                          placeholder="추가할 자산명을 입력하세요."
                           v-model="newAssets"
                           variant="outlined"
                           density="compact"
@@ -142,7 +142,7 @@
                     <v-card-text>
                       <v-form ref="newCategoryRef">
                         <v-text-field
-                          placeholder="카테고리명을 입력하세요."
+                          placeholder="추가할 카테고리명을 입력하세요."
                           v-model="newCategory"
                           variant="outlined"
                           density="compact"
@@ -192,8 +192,8 @@
         </div>
 
         <div class="d-flex justify-content-evenly mb-3">
-          <v-btn @click="formValidate" color="success" rounded="lg" style="width: 35%">SAVE</v-btn>
           <v-btn @click="reset" color="warning" rounded="lg" style="width: 35%">RESET</v-btn>
+          <v-btn @click="formValidate" color="success" rounded="lg" style="width: 35%">SAVE</v-btn>
         </div>
       </v-form>
     </div>
@@ -263,10 +263,13 @@ export default defineComponent({
       this.type = newType;
     },
 
-    // TODO: Set date and type as required
     async formValidate() {
-      const { valid } = await (this.$refs as any).formRef.validate();
-      if (valid)
+      let { valid } = await (this.$refs as any).formRef.validate();
+      if (this.date === '' || this.date === null || this.type === '') {
+        valid = false;
+      }
+
+      if (valid) {
         alert(
           `Form is valid
           이전날짜: ${this.date}
@@ -278,12 +281,16 @@ export default defineComponent({
           카테고리: ${this.category}
           메모: ${this.memo}`,
         );
+      } else {
+        alert('입력하지 않은 입력값이 존재합니다.');
+      }
     },
 
     async addAssetsVaildate(isActive: any) {
       const { valid } = await (this.$refs as any).newAssetsRef.validate();
       if (valid) {
         alert(`New Assets are valid: ${this.newAssets}`);
+        this.assets = this.newAssets;
         this.assetsItems.push(this.newAssets);
         this.newAssets = '';
         isActive.value = false;
@@ -294,6 +301,7 @@ export default defineComponent({
       const { valid } = await (this.$refs as any).newCategoryRef.validate();
       if (valid) {
         alert(`New Category are valid: ${this.newCategory}`);
+        this.category = this.newCategory;
         this.categoryItems.push(this.newCategory);
         this.newCategory = '';
         isActive.value = false;

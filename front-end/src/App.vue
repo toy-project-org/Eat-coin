@@ -12,7 +12,7 @@
       </v-btn>
     </header>
 
-    <v-list class="px-5">
+    <v-list class="px-5" style="max-height: 500px !important">
       <v-list-subheader>MENU</v-list-subheader>
 
       <v-list-item
@@ -67,7 +67,7 @@ export default defineComponent({
         { text: 'Add Assets', icon: 'mdi-credit-card-plus' },
         { text: 'Add Category', icon: 'mdi-shape-plus' },
       ],
-      sidebarItemsPath: ['Home', 'HistoryList', 'AddHistory', 'AddHistory', 'AddHistory'],
+      sidebarItemsPath: ['Home', 'HistoryList', 'AddHistory', 'AddAssets', 'AddCategory'],
     };
   },
 
@@ -88,6 +88,7 @@ export default defineComponent({
       const active = document.getElementsByClassName('v-list-item--active')[0];
       if (active !== undefined) {
         active.classList.remove('v-list-item--active');
+        active.classList.remove('text-success');
       }
     },
   },

@@ -32,7 +32,6 @@ $tran-05: all 0.5s ease;
 
 * {
   font-family: 'Poppins', sans-serif;
-  color: $font-color;
   font-size: $font-md;
 }
 
@@ -57,6 +56,9 @@ ul {
 }
 a {
   text-decoration: none;
+  color: $font-color;
+}
+a:hover {
   color: $font-color;
 }
 a:visited {
@@ -105,7 +107,8 @@ button {
 .btn-add-history-plus {
   @include btn-active(40px, 1.5rem, #808386);
 }
-.btn-calendar-arrow {
+.btn-calendar-arrow,
+.btn-card-menu {
   @include btn-active(35px, 1.2rem, $font-color);
 }
 
@@ -172,6 +175,14 @@ button {
 }
 .v-messages__message {
   font-size: $font-sm;
+}
+
+.v-list {
+  max-height: 210px !important;
+}
+
+.v-list-item-title {
+  font-size: $font-md !important;
 }
 
 .history-content {

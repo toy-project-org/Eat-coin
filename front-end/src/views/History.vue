@@ -49,7 +49,6 @@ export default defineComponent({
     $route(to, from) {
       this.historyNav = to.path.substring(9);
 
-      // console.log(to.meta.page, from.meta.page);
       if (to.meta.page == null || from.meta.page == null) {
         this.transitionName = 'next';
       } else {

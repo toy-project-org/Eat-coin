@@ -1,29 +1,4 @@
 <template>
-  <!-- Duration settings and search -->
-  <div class="d-flex mt-3">
-    <div class="mr-1" style="width: 120px">
-      <v-select
-        v-model="datePeriod"
-        :items="datePeriodItems"
-        density="compact"
-        variant="solo"
-        hide-details
-      ></v-select>
-    </div>
-
-    <v-text-field
-      placeholder="Search templates"
-      :loading="loading"
-      density="compact"
-      variant="solo"
-      color="green-lighten-2"
-      append-inner-icon="mdi-magnify"
-      @click:append-inner="onClick"
-      clearable
-      hide-details
-    ></v-text-field>
-  </div>
-
   <!-- Monthly income and expenditure breakdown -->
   <div class="container-box mt-3">
     <div class="calendar-box p-1 pt-2 mb-1">
@@ -48,8 +23,11 @@
   <div class="container-box mt-3">
     <div class="container-box-header">
       <p class="container-box-title-md">내역 조회</p>
+    </div>
 
-      <div class="mr-3" style="width: 100px">
+    <div class="d-flex mx-3 mb-3">
+      <!-- Select Type -->
+      <div class="mr-1" style="width: 100px">
         <v-select
           v-model="dataType"
           :items="dataTypeItems"
@@ -58,22 +36,39 @@
           hide-details
         ></v-select>
       </div>
+
+      <!-- Monthly details inquiry -->
+      <v-text-field
+        placeholder="Search templates"
+        :loading="loading"
+        density="compact"
+        variant="solo"
+        color="green-lighten-2"
+        append-inner-icon="mdi-magnify"
+        @click:append-inner="onClick"
+        clearable
+        hide-details
+      ></v-text-field>
     </div>
 
-    <div v-show="dataType === '전체'" class="container-box-content inner fade-in">
-      <div class="history-content" v-for="history in historyDataList" :key="history.date">
+    <div v-show="dataType === '전체'" class="container-box-content inner">
+      <div class="history-content fade-in" v-for="history in historyDataList" :key="history.date">
         <p class="history-date">{{ formatStrDate(history.date) }}</p>
         <card v-for="item in history.historyItemList" :key="item.hid" :card-item="item"></card>
       </div>
     </div>
-    <div v-show="dataType === '수입'" class="container-box-content inner fade-in">
-      <div class="history-content" v-for="history in historyDataListIn" :key="history.date">
+    <div v-show="dataType === '수입'" class="container-box-content inner">
+      <div class="history-content fade-in" v-for="history in historyDataListIn" :key="history.date">
         <p class="history-date">{{ formatStrDate(history.date) }}</p>
         <card v-for="item in history.historyItemList" :key="item.hid" :card-item="item"></card>
       </div>
     </div>
-    <div v-show="dataType === '지출'" class="container-box-content inner fade-in">
-      <div class="history-content" v-for="history in historyDataListOut" :key="history.date">
+    <div v-show="dataType === '지출'" class="container-box-content inner">
+      <div
+        class="history-content fade-in"
+        v-for="history in historyDataListOut"
+        :key="history.date"
+      >
         <p class="history-date">{{ formatStrDate(history.date) }}</p>
         <card v-for="item in history.historyItemList" :key="item.hid" :card-item="item"></card>
       </div>
@@ -83,9 +78,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { FormatHistoryItem } from '@/types/project';
+import { DateMonth, FormatHistoryItem } from '@/types/project';
 import Card from '@/components/Card.vue';
 import mainPost from '../assets/data/main';
+import mainPost11 from '../assets/data/main11';
+import mainPost12 from '../assets/data/main12';
 import MixinCommon from '@/common/mixin';
 
 export default defineComponent({
@@ -100,8 +97,6 @@ export default defineComponent({
       currMonthAmount: { in: 10000, out: 500000 },
       currDateMonth: { year: 0, month: 0 },
       currDateMonthStr: { year: '', month: '' },
-      datePeriod: '일주일',
-      datePeriodItems: ['1년', '6개월', '한 달', '일주일'],
       dataType: '전체',
       dataTypeItems: ['전체', '수입', '지출'],
       loaded: false,
@@ -114,7 +109,7 @@ export default defineComponent({
 
   created() {
     this.initDateMonth();
-    this.formatHistoryData();
+    this.formatHistoryData(this.currDateMonth);
   },
 
   methods: {
@@ -135,8 +130,23 @@ export default defineComponent({
       this.currDateMonthStr = this.formatYearAndMonthHeader(this.currDateMonth);
     },
 
-    formatHistoryData() {
-      mainPost.map(data => {
+    initHistoryDataList() {
+      this.historyDataList = [];
+      this.historyDataListIn = [];
+      this.historyDataListOut = [];
+    },
+
+    formatHistoryData(date: DateMonth) {
+      this.initHistoryDataList();
+
+      let tmpDataList = mainPost;
+      if (date.month == 12) {
+        tmpDataList = mainPost12;
+      } else if (date.month == 11) {
+        tmpDataList = mainPost11;
+      }
+
+      tmpDataList.map(data => {
         this.addHistoryData(this.historyDataList, data);
 
         if (data.category.type === '수입') {
@@ -150,6 +160,9 @@ export default defineComponent({
     changeYearAndMonth(m: number) {
       this.setYearAndMonth(this.currDateMonth, m);
       this.currDateMonthStr = this.formatYearAndMonthHeader(this.currDateMonth);
+
+      this.dataType = '전체';
+      this.formatHistoryData(this.currDateMonth);
     },
   },
 });
