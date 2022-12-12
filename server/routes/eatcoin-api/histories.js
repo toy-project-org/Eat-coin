@@ -132,6 +132,8 @@ router.post('/', (req, res, next) => {
 
     const sql_cid = `select cid from categories where name = '${name}' and type = '${type}'`;
 
+    console.log(req);
+    console.log(req.data);
     console.log(req.body);
 
     db.query(sql_cid, (err, result) => {
