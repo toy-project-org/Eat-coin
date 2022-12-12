@@ -55,7 +55,7 @@ router.get('/:id', (req, res, next) => {
 
     const list = [];
     const id = req.params.id;
-    const sql = `select * from (histories as h inner join categories as c on h.category = c.cid) inner join details as d on c.cid = d.did where h.hid = "${id}" order by h.hid asc`;
+    const sql = `select * from histories as h inner join categories as c on h.category = c.cid where h.hid >= ${id}`;
 
     db.query(sql, (err, result) => {
         if (err) throw err;
