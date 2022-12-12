@@ -6,7 +6,7 @@
         <div class="container-box-content">
           <!-- Date -->
           <h3 class="add-history-title mt-3">Date</h3>
-          <Datepicker v-model="date" :format="dateFormat" class="fade-in"></Datepicker>
+          <Datepicker v-model="date" :format="dateFormat" class="fade-in" />
 
           <!-- Account Content -->
           <h3 class="add-history-title mt-3">Content</h3>
@@ -264,13 +264,12 @@ export default defineComponent({
     },
 
     async formValidate() {
+      let { valid } = await (this.$refs as any).formRef.validate();
       if (this.date === '' || this.date === null || this.type === '') {
-        alert('날짜나 타입을 입력하지 않았습니다..!');
-        return;
+        valid = false;
       }
 
-      const { valid } = await (this.$refs as any).formRef.validate();
-      if (valid)
+      if (valid) {
         alert(
           `Form is valid
           이전날짜: ${this.date}
@@ -282,6 +281,9 @@ export default defineComponent({
           카테고리: ${this.category}
           메모: ${this.memo}`,
         );
+      } else {
+        alert('입력하지 않은 입력값이 존재합니다.');
+      }
     },
 
     async addAssetsVaildate(isActive: any) {
