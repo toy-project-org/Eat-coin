@@ -73,44 +73,12 @@
           <div class="mt-1 add-history-nav">
             <span class="add-history-sub-title">자산</span>
             <div class="d-flex add-history-input-width fade-in">
-              <v-dialog>
-                <template v-slot:activator="{ props }">
-                  <v-btn v-bind="props" icon variant="text" class="btn-add-history-plus mr-1">
-                    <i class="bx bx-plus-circle"></i>
-                  </v-btn>
-                </template>
-
-                <template v-slot:default="{ isActive }">
-                  <v-card class="mx-auto" width="300">
-                    <v-card-item>
-                      <v-card-title style="font-size: 1rem">+ 자산 추가</v-card-title>
-                    </v-card-item>
-
-                    <v-card-text>
-                      <v-form ref="newAssetsRef">
-                        <v-text-field
-                          placeholder="자산명을 입력하세요."
-                          v-model="newAssets"
-                          variant="outlined"
-                          density="compact"
-                          :rules="assetsRules"
-                          required
-                          clearable
-                        ></v-text-field>
-                      </v-form>
-                    </v-card-text>
-
-                    <div class="d-flex justify-content-end mx-5 mb-4">
-                      <button class="btn-sm-white mr-2" @click="isActive.value = false">
-                        CLOSE
-                      </button>
-                      <button class="btn-sm-green" @click="addAssetsVaildate(isActive)">
-                        SAVE
-                      </button>
-                    </div>
-                  </v-card>
-                </template>
-              </v-dialog>
+              <ItemModal
+                :type="'자산'"
+                :icon="'mdi-plus-circle-outline'"
+                :data-list="assetsItems"
+                @addNewItem="addNewItem"
+              />
               <v-autocomplete
                 v-model="assets"
                 :rules="assetsRules"
@@ -126,44 +94,12 @@
           <div class="mt-1 add-history-nav">
             <span class="add-history-sub-title">카테고리</span>
             <div class="d-flex add-history-input-width fade-in">
-              <v-dialog>
-                <template v-slot:activator="{ props }">
-                  <v-btn v-bind="props" icon variant="text" class="btn-add-history-plus mr-1">
-                    <i class="bx bx-plus-circle"></i>
-                  </v-btn>
-                </template>
-
-                <template v-slot:default="{ isActive }">
-                  <v-card class="mx-auto" width="300">
-                    <v-card-item>
-                      <v-card-title style="font-size: 1rem">+ 카테고리 추가</v-card-title>
-                    </v-card-item>
-
-                    <v-card-text>
-                      <v-form ref="newCategoryRef">
-                        <v-text-field
-                          placeholder="카테고리명을 입력하세요."
-                          v-model="newCategory"
-                          variant="outlined"
-                          density="compact"
-                          :rules="categoryRules"
-                          required
-                          clearable
-                        ></v-text-field>
-                      </v-form>
-                    </v-card-text>
-
-                    <div class="d-flex justify-content-end mx-5 mb-4">
-                      <button class="btn-sm-white mr-2" @click="isActive.value = false">
-                        CLOSE
-                      </button>
-                      <button class="btn-sm-green" @click="addCategoryVaildate(isActive)">
-                        SAVE
-                      </button>
-                    </div>
-                  </v-card>
-                </template>
-              </v-dialog>
+              <ItemModal
+                :type="'카테고리'"
+                :icon="'mdi-plus-circle-outline'"
+                :data-list="categoryItems"
+                @addNewItem="addNewItem"
+              />
               <v-autocomplete
                 v-model="category"
                 :rules="categoryRules"
@@ -205,13 +141,12 @@
 import * as api from '@/api/app';
 import { defineComponent } from 'vue';
 import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
-import axios from 'axios';
+import ItemModal from '@/components/ItemModal.vue';
 
 export default defineComponent({
   name: 'Detail',
 
-  components: { Datepicker },
+  components: { Datepicker, ItemModal },
 
   data() {
     return {
@@ -231,6 +166,7 @@ export default defineComponent({
       ],
       assets: '',
       newAssets: '',
+      assetsDialog: false,
       assetsItems: ['하나신용카드', '하나체크카드', '국민카드', '신한카드'],
       assetsRules: [
         (v: string) => !!v || 'Assets are required',
@@ -238,6 +174,7 @@ export default defineComponent({
       ],
       category: '',
       newCategory: '',
+      categoryDialog: false,
       categoryItems: ['식비', '교통비', '생활비', '기타'],
       categoryRules: [
         (v: string) => !!v || 'Category is required',
@@ -253,6 +190,16 @@ export default defineComponent({
   },
 
   methods: {
+    addNewItem(title: string, newData: string) {
+      if (title === '자산') {
+        this.assetsItems.push(newData);
+        this.assets = newData;
+      } else {
+        this.categoryItems.push(newData);
+        this.category = newData;
+      }
+    },
+
     async getHistoryDetailData() {
       const detailId = this.$route.params.id;
       const { data } = await api.getHistoryDetail(detailId);
@@ -295,7 +242,7 @@ export default defineComponent({
         return;
       }
 
-      const { valid } = await (this.$refs as any).formRef.validate();
+      const { valid } = await (this.$refs as HTMLFormElement).formRef.validate();
       if (valid)
         alert(
           `Form is valid
@@ -308,28 +255,6 @@ export default defineComponent({
             카테고리: ${this.category}
             메모: ${this.memo}`,
         );
-    },
-
-    async addAssetsVaildate(isActive: any) {
-      const { valid } = await (this.$refs as any).newAssetsRef.validate();
-      if (valid) {
-        alert(`New Assets are valid: ${this.newAssets}`);
-        this.assets = this.newAssets;
-        this.assetsItems.push(this.newAssets);
-        this.newAssets = '';
-        isActive.value = false;
-      }
-    },
-
-    async addCategoryVaildate(isActive: any) {
-      const { valid } = await (this.$refs as any).newCategoryRef.validate();
-      if (valid) {
-        alert(`New Category are valid: ${this.newCategory}`);
-        this.category = this.newCategory;
-        this.categoryItems.push(this.newCategory);
-        this.newCategory = '';
-        isActive.value = false;
-      }
     },
 
     deleteHistory() {

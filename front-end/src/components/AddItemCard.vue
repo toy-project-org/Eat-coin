@@ -5,25 +5,37 @@
     </div>
     <p class="card-title">{{ title }}</p>
 
-    <div class="mr-1">
-      <v-btn icon variant="text" class="btn-card-menu">
-        <v-icon>mdi-pencil-outline</v-icon>
-      </v-btn>
-      <v-btn icon variant="text" class="btn-card-menu">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
+    <div>
+      <ItemModal
+        :type="type"
+        :icon="'mdi-pencil-outline'"
+        :editOriginData="title"
+        @newItem="editNewItem"
+      />
+      <ItemModal :type="type" :icon="'mdi-close'" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import ItemModal from './ItemModal.vue';
 
 export default defineComponent({
   name: 'AddItemCard',
 
+  components: { ItemModal },
+
   props: {
+    type: { type: String, required: true },
     title: { type: String, required: true },
+    idx: { type: Number, required: true },
+  },
+
+  methods: {
+    editNewItem(title: string, newData: string) {
+      this.$emit('editNewItem', newData, this.idx);
+    },
   },
 });
 </script>
