@@ -102,7 +102,7 @@ export default defineComponent({
     },
 
     async formatHistoryData() {
-      const historyOneWeekData = await api.getAppList();
+      const historyOneWeekData = await api.getHistoryList();
 
       historyOneWeekData.data.map((data: HistoryItem) => {
         this.addHistoryData(this.historyDataList, data);
