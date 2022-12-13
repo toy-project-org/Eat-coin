@@ -42,10 +42,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { FormatHistoryItem } from '@/types/project';
+import { FormatHistoryItem, HistoryItem } from '@/types/project';
 import Card from '@/components/Card.vue';
-import mainPost from '../assets/data/main';
 import MixinCommon from '@/common/mixin';
+import * as api from '@/api/app';
 
 const STORAGE_KEY = 'show-balance';
 const storage = {
@@ -101,8 +101,10 @@ export default defineComponent({
       storage.save(this.balance.show);
     },
 
-    formatHistoryData() {
-      mainPost.map(data => {
+    async formatHistoryData() {
+      const historyOneWeekData = await api.getAppList();
+
+      historyOneWeekData.data.map((data: HistoryItem) => {
         this.addHistoryData(this.historyDataList, data);
       });
     },

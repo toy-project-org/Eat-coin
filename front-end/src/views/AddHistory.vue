@@ -201,9 +201,10 @@
 </template>
 
 <script lang="ts">
+import * as api from '@/api/app';
 import { defineComponent } from 'vue';
 import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
+import axios from 'axios';
 
 export default defineComponent({
   name: 'AddHistory',
@@ -245,6 +246,10 @@ export default defineComponent({
     };
   },
 
+  created() {
+    // console.log('')
+  },
+
   methods: {
     dateFormat(date: Date) {
       const year = date.getFullYear();
@@ -270,17 +275,33 @@ export default defineComponent({
       }
 
       if (valid) {
-        alert(
-          `Form is valid
-          이전날짜: ${this.date}
-          날짜: ${this.newDate}
-          타입: ${this.type}
-          내역: ${this.title}
-          금액: ${this.amount}
-          자산: ${this.assets}
-          카테고리: ${this.category}
-          메모: ${this.memo}`,
-        );
+        // alert(
+        //   `Form is valid
+        //   이전날짜: ${this.date}
+        //   날짜: ${this.newDate}
+        //   타입: ${this.type}
+        //   내역: ${this.title}
+        //   금액: ${this.amount}
+        //   자산: ${this.assets}
+        //   카테고리: ${this.category}
+        //   메모: ${this.memo}`,
+        // );
+        let addHistoryData = {
+          title: this.title,
+          amount: Number(this.amount),
+          payment_date: this.newDate,
+          method: this.assets,
+          memo: this.memo,
+          isfixed: null,
+          category: {
+            name: this.category,
+            type: this.type,
+            image: 'image',
+          },
+        };
+        console.log('ada', addHistoryData);
+
+        api.addHistory(addHistoryData);
       } else {
         alert('입력하지 않은 입력값이 존재합니다.');
       }

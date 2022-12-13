@@ -192,7 +192,7 @@
         </div>
 
         <div class="d-flex justify-content-evenly mb-3">
-          <v-btn color="error" rounded="lg" style="width: 30%">DELETE</v-btn>
+          <v-btn @click="deleteHistory" color="error" rounded="lg" style="width: 30%">DELETE</v-btn>
           <v-btn @click="beforePage" color="grey" rounded="lg" style="width: 30%">CANCEL</v-btn>
           <v-btn @click="formValidate" color="success" rounded="lg" style="width: 30%">SAVE</v-btn>
         </div>
@@ -202,10 +202,11 @@
 </template>
 
 <script lang="ts">
-// import * as api from '@/api/app';
+import * as api from '@/api/app';
 import { defineComponent } from 'vue';
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import axios from 'axios';
 
 export default defineComponent({
   name: 'Detail',
@@ -247,23 +248,26 @@ export default defineComponent({
     };
   },
 
-  init() {
-    // api.getAppList({ code }).then(res => {
-    // });
-  },
-
   created() {
-    let day = new Date(`${this.date}`);
-    this.date = day.toString();
-    this.type = '수입';
-    this.title = '교촌치킨';
-    this.amount = '10000';
-    this.assets = '하나신용카드';
-    this.category = '식비';
-    this.memo = '맛있게 배불띠~~';
+    this.getHistoryDetailData();
   },
 
   methods: {
+    async getHistoryDetailData() {
+      const detailId = this.$route.params.id;
+      const { data } = await api.getHistoryDetail(detailId);
+
+      console.log(data);
+      this.date = new Date(`${data[0].payment_date}`).toString();
+      this.type = data[0].category.type;
+      // this.autoUpdate = data[0].isfixed;
+      this.title = data[0].title;
+      this.amount = data[0].amount;
+      this.assets = data[0].method;
+      this.category = data[0].category.name;
+      this.memo = data[0].memo;
+    },
+
     beforePage() {
       this.$router.go(-1);
     },
@@ -326,6 +330,11 @@ export default defineComponent({
         this.newCategory = '';
         isActive.value = false;
       }
+    },
+
+    deleteHistory() {
+      const id = this.$route.params.id;
+      api.deleteHistory(id);
     },
   },
 });

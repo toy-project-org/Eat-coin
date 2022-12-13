@@ -24,3 +24,14 @@ export const post = (url: any, params?: any) => {
     data: params,
   });
 };
+
+export const delete1 = (url: any) => {
+  return axios({
+    method: 'delete',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    url: url,
+  });
+};
