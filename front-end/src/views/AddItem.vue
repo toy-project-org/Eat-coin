@@ -1,15 +1,13 @@
 <template>
   <transition name="next" mode="out-in" appear :key="$route.name">
     <div>
-      <h2 class="page-title">{{ type }}</h2>
-
       <v-form class="container-box pb-4" ref="formRef">
         <div class="container-box-content">
-          <h3 class="add-history-title mt-4 mb-1">Add {{ type }}</h3>
+          <h3 class="add-history-title mt-4 mb-1">{{ typeTitle }} 추가</h3>
           <v-text-field
             class="mx-1"
             v-model="newItem"
-            placeholder="추가할 데이터를 입력하세요."
+            placeholder="추가할 데이터를 입력해주세요."
             variant="underlined"
             density="compact"
             :rules="rules"
@@ -20,14 +18,14 @@
 
         <div class="d-flex justify-content-evenly">
           <v-btn @click="addItemVaildate" color="success" rounded="lg" style="width: 90%">
-            SAVE
+            저장
           </v-btn>
         </div>
       </v-form>
 
       <div class="container-box">
         <div class="container-box-content fade-in">
-          <h3 class="add-history-title mt-4 mb-1">{{ type }} List</h3>
+          <h3 class="add-history-title mt-4 mb-1">{{ typeTitle }} 목록</h3>
           <add-item-card
             v-for="(item, idx) in items"
             :key="idx"
@@ -53,6 +51,7 @@ export default defineComponent({
 
   data: () => {
     return {
+      typeTitle: '',
       type: '',
       newItem: '',
       items: [] as string[],
@@ -62,6 +61,7 @@ export default defineComponent({
 
   created() {
     this.initSetting();
+    this.typeTitle = this.type === 'Assets' ? '자산' : '카테고리';
   },
 
   methods: {
@@ -106,6 +106,7 @@ export default defineComponent({
   watch: {
     $route() {
       this.initSetting();
+      this.typeTitle = this.type === 'Assets' ? '자산' : '카테고리';
     },
   },
 });

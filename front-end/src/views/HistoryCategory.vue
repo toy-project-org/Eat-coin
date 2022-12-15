@@ -14,8 +14,16 @@
     </div>
 
     <div class="p-3 pt-0">
-      <p class="total-money-in">수입 {{ formatAmount(currMonthAmount.in) }}</p>
-      <p class="total-money-out">지출 {{ formatAmount(currMonthAmount.out) }}</p>
+      <div class="total-money-in d-flex align-center fade-in">
+        수입
+        <p class="emphasis-money ml-2">{{ formatAmount(currMonthAmount.in) }}</p>
+        원
+      </div>
+      <div class="total-money-out d-flex align-center fade-in">
+        지출
+        <p class="emphasis-money ml-2">{{ formatAmount(currMonthAmount.out) }}</p>
+        원
+      </div>
     </div>
   </div>
 

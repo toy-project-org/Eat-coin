@@ -14,25 +14,33 @@
     </div>
 
     <div class="p-3 pt-0">
-      <p class="total-money-in">수입 {{ formatAmount(currMonthAmount.in) }}</p>
-      <p class="total-money-out">지출 {{ formatAmount(currMonthAmount.out) }}</p>
+      <div class="total-money-in d-flex align-center fade-in">
+        수입
+        <p class="emphasis-money ml-2">{{ formatAmount(currMonthAmount.in) }}</p>
+        원
+      </div>
+      <div class="total-money-out d-flex align-center fade-in">
+        지출
+        <p class="emphasis-money ml-2">{{ formatAmount(currMonthAmount.out) }}</p>
+        원
+      </div>
     </div>
   </div>
 
   <!-- Output depending on type -->
   <div class="container-box mt-3">
     <div class="container-box-header">
-      <p class="container-box-title-md">내역 조회</p>
+      <p class="container-box-title">내역 조회</p>
     </div>
 
     <div class="d-flex mx-3 mb-3">
       <!-- Select Type -->
-      <div class="mr-1" style="width: 100px">
+      <div class="mr-1" style="width: 90px">
         <v-select
           v-model="dataType"
           :items="dataTypeItems"
-          density="compact"
           variant="solo"
+          density="compact"
           hide-details
         ></v-select>
       </div>

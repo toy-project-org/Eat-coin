@@ -13,8 +13,6 @@
     </header>
 
     <v-list class="px-5" style="max-height: 500px !important">
-      <v-list-subheader>MENU</v-list-subheader>
-
       <v-list-item
         v-for="(item, i) in sidebarItems"
         :key="i"
@@ -61,11 +59,11 @@ export default defineComponent({
     return {
       isNavbarShow: false,
       sidebarItems: [
-        { text: 'Home', icon: 'mdi-home' },
-        { text: 'History', icon: 'mdi-text-box' },
-        { text: 'Add History', icon: 'mdi-text-box-plus' },
-        { text: 'Assets Management', icon: 'mdi-credit-card-plus' },
-        { text: 'Category Management', icon: 'mdi-shape-plus' },
+        { text: '홈', icon: 'mdi-home' },
+        { text: '내역 조회', icon: 'mdi-text-box' },
+        { text: '내역 추가', icon: 'mdi-text-box-plus' },
+        { text: '자산 관리', icon: 'mdi-credit-card-plus' },
+        { text: '카테고리 관리', icon: 'mdi-shape-plus' },
       ],
       sidebarItemsPath: ['Home', 'HistoryList', 'AddHistory', 'AddAssets', 'AddCategory'],
     };

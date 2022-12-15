@@ -1,5 +1,14 @@
 @import './_main.scss';
 
+.emphasis {
+  font-family: 'AppleSDGothicNeoB';
+  font-size: $font-llg;
+}
+
+.emphasis-money {
+  font-size: $font-llg;
+}
+
 .total-money-in,
 .total-money-out {
   font-size: $font-md;

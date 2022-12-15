@@ -12,19 +12,27 @@
       </v-btn>
     </div>
 
-    <div class="container text-center py-1">
+    <div class="text-center p-1">
       <div class="row">
         <div class="col">
-          <p class="total-money-in">수입</p>
-          <p class="total-money-in">+{{ formatAmount(currMonthAmount.in) }}</p>
+          <div class="total-money-in fade-in">
+            수입
+            <p>
+              <span class="emphasis-money">+ {{ formatAmount(currMonthAmount.in) }}</span> 원
+            </p>
+          </div>
         </div>
         <div class="col">
-          <p class="total-money-out">지출</p>
-          <p class="total-money-out">-{{ formatAmount(currMonthAmount.out) }}</p>
+          <div class="total-money-out fade-in">
+            지출
+            <p>
+              <span class="emphasis-money">- {{ formatAmount(currMonthAmount.out) }}</span> 원
+            </p>
+          </div>
         </div>
       </div>
 
-      <div class="my-3">
+      <div class="my-3 mx-1">
         <calendar
           :currYear="currDateMonth.year"
           :currMonth="currDateMonth.month"

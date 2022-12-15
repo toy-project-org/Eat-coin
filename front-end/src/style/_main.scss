@@ -19,6 +19,7 @@ $card-height: 50px;
 $icon-size: 35px;
 
 // font size
+$font-llg: 1.2rem;
 $font-lg: 1rem; // 16px
 $font-md: 0.875rem; // 14px
 $font-sm: 0.75rem; // 12px
@@ -30,8 +31,26 @@ $tran-03: all 0.3s ease;
 $tran-04: all 0.4s ease;
 $tran-05: all 0.5s ease;
 
+@font-face {
+  font-family: 'AppleSDGothicNeoT';
+  src: url('@/assets/fonts/AppleSDGothicNeoT.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'AppleSDGothicNeoR';
+  src: url('@/assets/fonts/AppleSDGothicNeoR.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'AppleSDGothicNeoM';
+  src: url('@/assets/fonts/AppleSDGothicNeoM.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'AppleSDGothicNeoB';
+  src: url('@/assets/fonts/AppleSDGothicNeoB.ttf') format('truetype');
+}
+
 * {
-  font-family: 'Poppins', sans-serif;
+  // font-family: 'Poppins', sans-serif;
+  font-family: 'AppleSDGothicNeoM', sans-serif;
   font-size: $font-md;
 }
 
@@ -82,9 +101,9 @@ button {
   z-index: 100;
 
   .header-logo {
+    font-family: 'AppleSDGothicNeoB';
     line-height: $main-header-height;
     font-size: $font-lg;
-    font-weight: 600;
   }
 }
 

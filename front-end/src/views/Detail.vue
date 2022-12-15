@@ -1,15 +1,14 @@
 <template>
   <transition name="prev" mode="out-in" appear>
     <div>
-      <h2 class="page-title">Detail</h2>
       <v-form class="container-box pb-1" ref="formRef">
         <div class="container-box-content">
           <!-- Date -->
-          <h3 class="add-history-title mt-3">Date</h3>
+          <h3 class="add-history-title mt-3">날짜</h3>
           <Datepicker v-model="date" :format="dateFormat" class="fade-in"></Datepicker>
 
           <!-- Account Content -->
-          <h3 class="add-history-title mt-3">Content</h3>
+          <h3 class="add-history-title mt-3">내역</h3>
           <nav class="add-history-nav mb-5 fade-in">
             <v-btn
               variant="flat"
@@ -83,7 +82,7 @@
                 v-model="assets"
                 :rules="assetsRules"
                 :items="assetsItems"
-                placeholder="Select..."
+                placeholder="자산을 입력해주세요."
                 variant="solo"
                 density="compact"
                 required
@@ -104,7 +103,7 @@
                 v-model="category"
                 :rules="categoryRules"
                 :items="categoryItems"
-                placeholder="Select..."
+                placeholder="카테고리를 입력해주세요."
                 variant="solo"
                 density="compact"
                 required
@@ -128,9 +127,9 @@
         </div>
 
         <div class="d-flex justify-content-evenly mb-3">
-          <v-btn @click="deleteHistory" color="error" rounded="lg" style="width: 30%">DELETE</v-btn>
-          <v-btn @click="beforePage" color="grey" rounded="lg" style="width: 30%">CANCEL</v-btn>
-          <v-btn @click="formValidate" color="success" rounded="lg" style="width: 30%">SAVE</v-btn>
+          <v-btn @click="deleteHistory" color="error" rounded="lg" style="width: 30%">삭제</v-btn>
+          <v-btn @click="beforePage" color="grey" rounded="lg" style="width: 30%">취소</v-btn>
+          <v-btn @click="formValidate" color="success" rounded="lg" style="width: 30%">저장</v-btn>
         </div>
       </v-form>
     </div>
@@ -156,32 +155,32 @@ export default defineComponent({
       autoUpdate: true,
       title: '',
       titleRules: [
-        (v: string) => !!v || 'Title is required',
-        (v: string) => v.length <= 12 || 'Less than 12 characters',
+        (v: string) => !!v || '최소한 글자 하나를 포함해야 합니다.',
+        (v: string) => v.length <= 12 || '12자 이하로 작성해주세요.',
       ],
       amount: '',
       amountRules: [
-        (v: string) => !!v || 'Amount is required',
-        (v: string) => /^[0-9]*$/.test(v) || 'Only number',
+        (v: string) => !!v || '최소한 숫자 하나를 포함해야 합니다.',
+        (v: string) => /^[0-9]*$/.test(v) || '숫자만 입력이 가능합니다.',
       ],
       assets: '',
       newAssets: '',
       assetsDialog: false,
       assetsItems: ['하나신용카드', '하나체크카드', '국민카드', '신한카드'],
       assetsRules: [
-        (v: string) => !!v || 'Assets are required',
-        (v: string) => v.length <= 12 || 'Less than 12 characters',
+        (v: string) => !!v || '최소한 글자 하나를 포함해야 합니다.',
+        (v: string) => v.length <= 12 || '12자 이하로 작성해주세요.',
       ],
       category: '',
       newCategory: '',
       categoryDialog: false,
       categoryItems: ['식비', '교통비', '생활비', '기타'],
       categoryRules: [
-        (v: string) => !!v || 'Category is required',
-        (v: string) => v.length <= 12 || 'Less than 12 characters',
+        (v: string) => !!v || '최소한 글자 하나를 포함해야 합니다.',
+        (v: string) => v.length <= 12 || '12자 이하로 작성해주세요.',
       ],
       memo: '',
-      memoRules: [(v: string) => v == null || v.length <= 30 || 'Less than 30 characters'],
+      memoRules: [(v: string) => v == null || v.length <= 30 || '30자 이하로 작성해주세요.'],
     };
   },
 
@@ -237,13 +236,12 @@ export default defineComponent({
     },
 
     async formValidate() {
+      let { valid } = await (this.$refs as HTMLFormElement).formRef.validate();
       if (this.date === '' || this.date === null || this.type === '') {
-        alert('날짜나 타입을 입력하지 않았습니다..!');
-        return;
+        valid = false;
       }
 
-      const { valid } = await (this.$refs as HTMLFormElement).formRef.validate();
-      if (valid)
+      if (valid) {
         alert(
           `Form is valid
             이전날짜: ${this.date}
@@ -255,6 +253,9 @@ export default defineComponent({
             카테고리: ${this.category}
             메모: ${this.memo}`,
         );
+      } else {
+        alert('입력하지 않은 입력값이 존재합니다.');
+      }
     },
 
     deleteHistory() {

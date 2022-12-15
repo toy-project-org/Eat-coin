@@ -5,9 +5,9 @@
     </div>
     <p class="card-title">{{ cardItem.title }}</p>
     <p v-if="cardItem.category.type === '수입'" class="card-amount-plus">
-      +{{ formatAmount(cardItem.amount) }}
+      +{{ formatAmount(cardItem.amount) }} 원
     </p>
-    <p v-else class="card-amount-minus">-{{ formatAmount(cardItem.amount) }}</p>
+    <p v-else class="card-amount-minus">-{{ formatAmount(cardItem.amount) }} 원</p>
   </div>
 </template>
 

@@ -8,15 +8,17 @@
 
     <v-card class="mx-auto" width="300">
       <v-card-item>
-        <v-card-title v-if="editOriginData" style="font-size: 1rem">{{ type }} 수정</v-card-title>
-        <v-card-title v-else style="font-size: 1rem">{{ type }} 추가</v-card-title>
+        <v-card-title v-if="editOriginData" style="font-size: 1rem">
+          {{ typeTitle }} 수정
+        </v-card-title>
+        <v-card-title v-else style="font-size: 1rem">{{ typeTitle }} 추가</v-card-title>
       </v-card-item>
 
       <v-card-text>
         <v-form ref="newDataRef">
           <v-text-field
             v-if="type === 'Assets'"
-            placeholder="자산을 입력하세요."
+            placeholder="자산을 입력해주세요."
             v-model="newData"
             variant="outlined"
             density="compact"
@@ -26,7 +28,7 @@
           ></v-text-field>
           <v-text-field
             v-else
-            placeholder="카테고리를 입력하세요."
+            placeholder="카테고리를 입력해주세요."
             v-model="newData"
             variant="outlined"
             density="compact"
@@ -38,8 +40,8 @@
       </v-card-text>
 
       <div class="d-flex justify-content-end mx-5 mb-4">
-        <button class="btn-sm-white mr-2" @click="dialog = false">CLOSE</button>
-        <button class="btn-sm-green" @click="dataVaildate()">SAVE</button>
+        <button class="btn-sm-white mr-2" @click="dialog = false">취소</button>
+        <button class="btn-sm-green" @click="dataVaildate()">저장</button>
       </div>
     </v-card>
   </v-dialog>
@@ -60,11 +62,12 @@ export default defineComponent({
 
   data: () => {
     return {
+      typeTitle: '',
       newData: '',
       dialog: false,
       dataRules: [
-        (v: string) => !!v || 'Data is required',
-        (v: string) => v.length <= 12 || 'Less than 12 characters',
+        (v: string) => !!v || '최소한 글자 하나를 포함해야 합니다.',
+        (v: string) => v.length <= 12 || '12자 이하로 작성해주세요.',
       ],
     };
   },
@@ -73,6 +76,7 @@ export default defineComponent({
     if (this.editOriginData) {
       this.newData = this.editOriginData;
     }
+    this.typeTitle = this.type === 'Assets' ? '자산' : '카테고리';
   },
 
   methods: {
