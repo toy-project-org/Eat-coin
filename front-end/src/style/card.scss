@@ -58,3 +58,34 @@
     color: $green-color;
   }
 }
+
+.card-container-add {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  box-shadow: rgba(99, 99, 99, 0.15) 0px 2px 8px 0px;
+
+  border: 1.5px dashed #808386;
+  border-radius: 10px;
+  margin: 5px 0;
+  height: $card-height;
+  transition: $tran-03;
+  cursor: pointer;
+
+  i {
+    color: #808386;
+  }
+
+  .card-title {
+    font-family: 'AppleSDGothicNeoB';
+    color: #808386;
+    font-size: $font-md;
+    line-height: $card-height;
+  }
+}
+
+.card-container-add:active {
+  transform: scale(0.95);
+  background-color: rgba(99, 99, 99, 0.15);
+}

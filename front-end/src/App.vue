@@ -65,7 +65,13 @@ export default defineComponent({
         { text: '자산 관리', icon: 'mdi-credit-card-plus' },
         { text: '카테고리 관리', icon: 'mdi-shape-plus' },
       ],
-      sidebarItemsPath: ['Home', 'HistoryList', 'AddHistory', 'AddAssets', 'AddCategory'],
+      sidebarItemsPath: [
+        'Home',
+        'HistoryList',
+        'AddHistory',
+        'AssetsManagement',
+        'CategoryManagement',
+      ],
     };
   },
 

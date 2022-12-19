@@ -151,14 +151,55 @@ button {
   }
 
   .container-box-title {
+    font-family: 'AppleSDGothicNeoR';
     font-size: $font-lg;
-    font-weight: 500;
     margin-left: 1rem;
   }
 
   .container-box-content {
     padding: 0 12px 10px;
   }
+
+  .container-box-center {
+    padding: 2.5rem 0;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.add-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  background-color: $icon-color;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+}
+.add-icon::before {
+  content: '';
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+  background-color: $container-color;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+.add-icon-plus {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
 }
 
 @mixin btn-sm($bg-color) {
@@ -232,6 +273,10 @@ button {
   animation: enterFromRight 900ms both cubic-bezier(0.165, 0.84, 0.44, 1);
   z-index: 1;
 }
+.down-enter-to {
+  animation: enterFromDown 900ms both cubic-bezier(0.165, 0.84, 0.44, 1);
+  z-index: 1;
+}
 
 .prev-enter-active .inner,
 .prev-leave-active .inner,
@@ -272,6 +317,14 @@ button {
 @keyframes enterFromRight {
   from {
     transform: translateX(90%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes enterFromDown {
+  from {
+    transform: translateY(90%);
   }
   to {
     transform: translateX(0);
