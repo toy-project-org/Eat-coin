@@ -47,7 +47,7 @@
 
       <!-- Monthly details inquiry -->
       <v-text-field
-        placeholder="Search templates"
+        placeholder="조회할 내역을 검색하세요."
         :loading="loading"
         density="compact"
         variant="solo"

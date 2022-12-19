@@ -8,7 +8,7 @@
           <Datepicker v-model="date" :format="dateFormat" class="fade-in" />
 
           <!-- Account Content -->
-          <h3 class="add-history-title mt-3">내역</h3>
+          <h3 class="add-history-title mt-3">내용</h3>
           <nav class="add-history-nav mb-5 fade-in">
             <v-btn
               variant="flat"
@@ -47,6 +47,7 @@
             <span class="add-history-sub-title">내역</span>
             <div class="add-history-input-width fade-in">
               <v-text-field
+                placeholder="내용을 입력하세요. (예: 생일 선물)"
                 v-model="title"
                 variant="solo"
                 density="compact"
@@ -60,6 +61,7 @@
             <span class="add-history-sub-title">금액</span>
             <div class="add-history-input-width fade-in">
               <v-text-field
+                placeholder="금액을 입력하세요. (예: 30000)"
                 v-model="amount"
                 variant="solo"
                 density="compact"
@@ -114,6 +116,7 @@
           <div>
             <p class="add-history-sub-title mb-2">메모</p>
             <v-textarea
+              placeholder="메모를 입력하세요."
               class="fade-in"
               v-model="memo"
               :rules="memoRules"
@@ -154,12 +157,12 @@ export default defineComponent({
       autoUpdate: true,
       title: '',
       titleRules: [
-        (v: string) => !!v || '최소한 글자 하나를 포함해야 합니다.',
+        (v: string) => !!v || '한 글자 이상 작성해주세요.',
         (v: string) => v.length <= 12 || '12자 이하로 작성해주세요.',
       ],
       amount: '',
       amountRules: [
-        (v: string) => !!v || '최소한 숫자 하나를 포함해야 합니다.',
+        (v: string) => !!v || '한 글자 이상 작성해주세요.',
         (v: string) => /^[0-9]*$/.test(v) || '숫자만 입력이 가능합니다.',
       ],
       assets: '',
@@ -167,7 +170,7 @@ export default defineComponent({
       assetsDialog: false,
       assetsItems: ['하나신용카드', '하나체크카드', '국민카드', '신한카드'],
       assetsRules: [
-        (v: string) => !!v || '최소한 글자 하나를 포함해야 합니다.',
+        (v: string) => !!v || '한 글자 이상 작성해주세요.',
         (v: string) => v.length <= 12 || '12자 이하로 작성해주세요.',
       ],
       category: '',
@@ -175,7 +178,7 @@ export default defineComponent({
       categoryDialog: false,
       categoryItems: ['식비', '교통비', '생활비', '기타'],
       categoryRules: [
-        (v: string) => !!v || '최소한 글자 하나를 포함해야 합니다.',
+        (v: string) => !!v || '한 글자 이상 작성해주세요.',
         (v: string) => v.length <= 12 || '12자 이하로 작성해주세요.',
       ],
       memo: '',

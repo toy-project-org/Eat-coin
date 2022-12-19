@@ -66,7 +66,7 @@ export default defineComponent({
       newData: '',
       dialog: false,
       dataRules: [
-        (v: string) => !!v || '최소한 글자 하나를 포함해야 합니다.',
+        (v: string) => !!v || '한 글자 이상 작성해주세요.',
         (v: string) => v.length <= 12 || '12자 이하로 작성해주세요.',
       ],
     };
