@@ -16,7 +16,7 @@ router.get('/', function(req, res, next) {
 
     let list = [];
     const date = getDate(new Date());
-    const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date >= "${date}" order by h.payment_date asc`;
+    const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date >= "${date}" order by h.payment_date desc`;
 
     console.log('a week ago', date);
 
@@ -92,7 +92,7 @@ router.get('/month/:ym', (req, res, next) => {
 
     const list = [];
     const date = req.params.ym;
-    const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date like "${date}%" order by h.payment_date asc`;
+    const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date like "${date}%" order by h.payment_date desc`;
 
     db.query(sql, (err, result) => {
         if (err) throw err;
@@ -132,8 +132,6 @@ router.post('/', (req, res, next) => {
 
     const sql_cid = `select cid from categories where name = '${name}' and type = '${type}'`;
 
-    console.log(req);
-    console.log(req.data);
     console.log(req.body);
 
     db.query(sql_cid, (err, result) => {
