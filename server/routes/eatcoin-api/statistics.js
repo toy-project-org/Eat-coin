@@ -89,7 +89,7 @@ router.get('/asset/:ym', (req, res) => {
 
   const list = [];
   const sql_asset = `select * from asset`;
-  const sql_hist = `select amount, method from histories where payment_date like '${date}%'`;
+  const sql_hist = `select amount, method from histories where payment_date like '${date}%' order by name`;
 
   console.log(sql_hist);
   db.query(sql_asset, (err, result) => {
