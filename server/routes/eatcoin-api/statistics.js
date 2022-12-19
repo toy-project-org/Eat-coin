@@ -23,23 +23,56 @@ router.get('/amount/:date', (req, res, next) => {
   const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date like "${date}%" order by h.hid asc`;
 
   db.query(sql, (err, result) => {
-      if (err) throw err;
+    if (err) throw err;
 
-      const income = result
-      .filter(data => {return data.type == '수입'})
-      .reduce((acc, data) => {return acc += data.amount}, 0);
+    const income = result
+    .filter(data => {return data.type == '수입'})
+    .reduce((acc, data) => {return acc += data.amount}, 0);
 
-      const expend = result
-      .filter(data => {return data.type == '지출'})
-      .reduce((acc, data) => {return acc += data.amount}, 0);
-      
-      let { ...amount } = {
-          income,
-          expend,
-      };
+    const expend = result
+    .filter(data => {return data.type == '지출'})
+    .reduce((acc, data) => {return acc += data.amount}, 0);
+    
+    let { ...amount } = {
+        income,
+        expend,
+    };
 
-      console.log(income, expend);
-      res.json(amount);
+    console.log(income, expend);
+    res.json(amount);
+  });
+});
+
+// 1-2. 수입/지출 한달 일별 금액 통계
+router.get('/amount/detail/:date', (req, res, next) => {
+  console.log('check amount for a month');
+
+  const date = req.params.date;
+  //const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date like "${date}%" order by payment_date asc`;
+  //const sql_date = `select distinct payment_date from histories as h inner join categories as c on h.category = c.cid where payment_date like "${date}%" order by payment_date asc`;
+
+  const list = [];
+  const sql = `select payment_date, type, sum(amount) from histories as h inner join categories as c on h.category = c.cid where payment_date like "${date}}%" group by payment_date, type order by payment_date`;
+
+
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+
+    const income = result
+    .filter(data => {return data.type == '수입'})
+    .reduce((acc, data) => {return acc += data.amount}, 0);
+
+    const expend = result
+    .filter(data => {return data.type == '지출'})
+    .reduce((acc, data) => {return acc += data.amount}, 0);
+    
+    let { ...amount } = {
+        income,
+        expend,
+    };
+
+    console.log(income, expend);
+    res.json(amount);
   });
 });
 
@@ -119,6 +152,7 @@ router.get('/asset/:ym', (req, res) => {
     });
   });
 });
+
 
 // 3. 카테고리별 통계
 router.get('/category', (req, res) => {
