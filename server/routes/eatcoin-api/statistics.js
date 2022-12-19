@@ -58,6 +58,10 @@ router.get('/amount/detail/:date', (req, res, next) => {
   db.query(sql, (err, result) => {
     if (err) throw err;
 
+    
+
+
+
     const income = result
     .filter(data => {return data.type == '수입'})
     .reduce((acc, data) => {return acc += data.amount}, 0);
