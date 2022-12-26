@@ -205,4 +205,45 @@ router.delete('/:id', (req, res, next) => {
     });
 });
 
+// 5. (삭제됨) 키워드 검색 todo: 공백만 들어오면 검색 안 하게 처리
+// router.get('/search/:ym/:keyword', (req, res) => {
+//     const { ym , keyword } = req.params
+//     const today = new Date();
+
+//     const search = `select * from histories as h inner join categories as c on h.category = c.cid where h.payment_date like '${ym}%' and h.title like '%${keyword}%'`;
+//     const list = [];
+
+//     console.log('search keyword:: ', keyword);
+    
+//     db.query(search, (err, result) => {
+//         if (err) throw err;
+//         console.log(result);
+
+//         result.map((data) => {
+//             let { ...history } = {
+//                 hid : data.hid,
+//                 title : data.title,
+//                 amount : data.amount,
+//                 payment_date : data.payment_date,
+//                 category : {
+//                     cid : data.cid,
+//                     name : data.name,
+//                     type : data.type,
+//                     image : data.image
+//                 },
+//                 isfixed : data.isfixed,
+//                 method : data.method,
+//                 memo : data.memo,
+//             };
+
+//             list.push(history);
+
+//         });
+
+//         console.log(list);
+//         res.status(200).json(list);
+
+//     });
+// });
+
 module.exports = router;
