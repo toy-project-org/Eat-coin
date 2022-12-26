@@ -52,31 +52,43 @@ router.get('/amount/detail/:date', (req, res, next) => {
   //const sql_date = `select distinct payment_date from histories as h inner join categories as c on h.category = c.cid where payment_date like "${date}%" order by payment_date asc`;
 
   const list = [];
-  const sql = `select payment_date, type, sum(amount) from histories as h inner join categories as c on h.category = c.cid where payment_date like "${date}}%" group by payment_date, type order by payment_date`;
-
+  const sql = `select payment_date as date, sum(if(c.type = '지출', h.amount, 0)) as expend, sum(if(c.type = '수입', h.amount, 0)) as income from histories as h inner join categories as c on h.category = c.cid where payment_date like "${date}%" group by h.payment_date order by h.payment_date`;
 
   db.query(sql, (err, result) => {
     if (err) throw err;
-
     
+    console.log(result);
+
+    result.map(data => {
+
+      let { ...amount } = {
+        date : data.date,
+        income : data.income,
+        expend : data.expend,
+      };
+
+      list.push(amount);
+    });
+
+    console.log(list);
+    res.status(200).json(list);
 
 
+    // const income = result
+    // .filter(data => {return data.type == '수입'})
+    // .reduce((acc, data) => {return acc += data.amount}, 0);
 
-    const income = result
-    .filter(data => {return data.type == '수입'})
-    .reduce((acc, data) => {return acc += data.amount}, 0);
-
-    const expend = result
-    .filter(data => {return data.type == '지출'})
-    .reduce((acc, data) => {return acc += data.amount}, 0);
+    // const expend = result
+    // .filter(data => {return data.type == '지출'})
+    // .reduce((acc, data) => {return acc += data.amount}, 0);
     
-    let { ...amount } = {
-        income,
-        expend,
-    };
+    // let { ...amount } = {
+    //     income,
+    //     expend,
+    // };
 
-    console.log(income, expend);
-    res.json(amount);
+    // console.log(income, expend);
+    // res.json(amount);
   });
 });
 
