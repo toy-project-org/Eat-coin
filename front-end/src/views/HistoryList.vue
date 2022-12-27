@@ -47,26 +47,33 @@
 
       <!-- Monthly details inquiry -->
       <v-text-field
+        v-model="searchWord"
         placeholder="조회할 내역을 검색하세요."
-        :loading="loading"
         density="compact"
         variant="solo"
         color="green-lighten-2"
         append-inner-icon="mdi-magnify"
-        @click:append-inner="onClick"
         clearable
         hide-details
       ></v-text-field>
     </div>
 
     <div v-show="dataType === '전체'" class="container-box-content inner">
-      <div class="history-content fade-in" v-for="history in historyDataList" :key="history.date">
+      <div
+        class="history-content fade-in"
+        v-for="(history, idx) in historyDataList"
+        :key="`${idx}${history.date}`"
+      >
         <p class="history-date">{{ formatStrDate(history.date) }}</p>
         <card v-for="item in history.historyItemList" :key="item.hid" :card-item="item"></card>
       </div>
     </div>
     <div v-show="dataType === '수입'" class="container-box-content inner">
-      <div class="history-content fade-in" v-for="history in historyDataListIn" :key="history.date">
+      <div
+        class="history-content fade-in"
+        v-for="(history, idx) in historyDataListIn"
+        :key="`${idx}${history.date}`"
+      >
         <p class="history-date">{{ formatStrDate(history.date) }}</p>
         <card v-for="item in history.historyItemList" :key="item.hid" :card-item="item"></card>
       </div>
@@ -74,8 +81,8 @@
     <div v-show="dataType === '지출'" class="container-box-content inner">
       <div
         class="history-content fade-in"
-        v-for="history in historyDataListOut"
-        :key="history.date"
+        v-for="(history, idx) in historyDataListOut"
+        :key="`${idx}${history.date}`"
       >
         <p class="history-date">{{ formatStrDate(history.date) }}</p>
         <card v-for="item in history.historyItemList" :key="item.hid" :card-item="item"></card>
@@ -86,12 +93,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { DateMonth, FormatHistoryItem } from '@/types/project';
+import { DateMonthStr, FormatHistoryItem, HistoryDetailItem } from '@/types/project';
 import Card from '@/components/Card.vue';
-import mainPost from '../assets/data/main';
-import mainPost11 from '../assets/data/main11';
-import mainPost12 from '../assets/data/main12';
 import MixinCommon from '@/common/mixin';
+import * as api from '@/api/app';
 
 export default defineComponent({
   name: 'HistoryList',
@@ -107,8 +112,10 @@ export default defineComponent({
       currDateMonthStr: { year: '', month: '' },
       dataType: '전체',
       dataTypeItems: ['전체', '수입', '지출'],
-      loaded: false,
-      loading: false,
+      searchWord: '',
+      originHistoryDataList: [] as Array<FormatHistoryItem>,
+      originHistoryDataListIn: [] as Array<FormatHistoryItem>,
+      originHistoryDataListOut: [] as Array<FormatHistoryItem>,
       historyDataList: [] as Array<FormatHistoryItem>,
       historyDataListIn: [] as Array<FormatHistoryItem>,
       historyDataListOut: [] as Array<FormatHistoryItem>,
@@ -117,19 +124,19 @@ export default defineComponent({
 
   created() {
     this.initDateMonth();
-    this.formatHistoryData(this.currDateMonth);
+    this.formatHistoryData(this.currDateMonthStr).then(() => {
+      this.originHistoryDataList = [...this.historyDataList];
+      this.originHistoryDataListIn = [...this.historyDataListIn];
+      this.originHistoryDataListOut = [...this.historyDataListOut];
+    });
+
+    this.setMonthInAndOut(this.currDateMonth).then(({ data }) => {
+      this.currMonthAmount.in = data.income;
+      this.currMonthAmount.out = data.expend;
+    });
   },
 
   methods: {
-    onClick() {
-      this.loading = true;
-
-      setTimeout(() => {
-        this.loading = false;
-        this.loaded = true;
-      }, 2000);
-    },
-
     initDateMonth() {
       const date = new Date();
       this.currDateMonth.year = date.getFullYear();
@@ -144,15 +151,14 @@ export default defineComponent({
       this.historyDataListOut = [];
     },
 
-    formatHistoryData(date: DateMonth) {
+    async formatHistoryData(date: DateMonthStr) {
       this.initHistoryDataList();
 
-      let tmpDataList = mainPost;
-      if (date.month == 12) {
-        tmpDataList = mainPost12;
-      } else if (date.month == 11) {
-        tmpDataList = mainPost11;
-      }
+      const dateParam = `${date.year}-${date.month}`;
+      const response = await api.getMonthHistory(dateParam);
+
+      let tmpDataList = [] as HistoryDetailItem[];
+      tmpDataList = response.data;
 
       tmpDataList.map(data => {
         this.addHistoryData(this.historyDataList, data);
@@ -170,7 +176,44 @@ export default defineComponent({
       this.currDateMonthStr = this.formatYearAndMonthHeader(this.currDateMonth);
 
       this.dataType = '전체';
-      this.formatHistoryData(this.currDateMonth);
+      this.formatHistoryData(this.currDateMonthStr).then(() => {
+        this.originHistoryDataList = [...this.historyDataList];
+        this.originHistoryDataListIn = [...this.historyDataListIn];
+        this.originHistoryDataListOut = [...this.historyDataListOut];
+      });
+
+      this.setMonthInAndOut(this.currDateMonth).then(({ data }) => {
+        this.currMonthAmount.in = data.income;
+        this.currMonthAmount.out = data.expend;
+      });
+    },
+
+    setSearchWordList(originList: Array<FormatHistoryItem>) {
+      if (this.searchWord === '') {
+        return [...originList];
+      } else {
+        let searchHistoryDataList = [] as Array<FormatHistoryItem>;
+        originList.forEach((history: FormatHistoryItem) => {
+          history.historyItemList.forEach((data: HistoryDetailItem) => {
+            if (data.title.includes(this.searchWord)) {
+              this.addHistoryData(searchHistoryDataList, data);
+            }
+          });
+        });
+        return searchHistoryDataList;
+      }
+    },
+  },
+
+  watch: {
+    searchWord() {
+      if (this.dataType == '전체') {
+        this.historyDataList = this.setSearchWordList(this.originHistoryDataList);
+      } else if (this.dataType == '지출') {
+        this.historyDataListOut = this.setSearchWordList(this.originHistoryDataListOut);
+      } else {
+        this.historyDataListIn = this.setSearchWordList(this.originHistoryDataListIn);
+      }
     },
   },
 });
