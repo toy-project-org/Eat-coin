@@ -93,6 +93,7 @@ export default defineComponent({
       this.currMonthAmount.in = data.income;
       this.currMonthAmount.out = data.expend;
     });
+    this.setSelectedDate(this.selectedDate);
   },
 
   methods: {
