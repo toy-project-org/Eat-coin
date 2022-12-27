@@ -89,3 +89,10 @@
   transform: scale(0.95);
   background-color: rgba(99, 99, 99, 0.15);
 }
+
+.card-not-date-container {
+  @extend %flex-row-space-btw;
+  align-items: center;
+  margin: 5px 0;
+  height: $card-height;
+}

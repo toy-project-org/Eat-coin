@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import MixinCommon from '@/common/mixin';
-import { HistoryItem } from '@/types/project';
+import { HistoryDetailItem, HistoryItem } from '@/types/project';
 import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
@@ -22,7 +22,7 @@ export default defineComponent({
   mixins: [MixinCommon],
 
   props: {
-    cardItem: { type: Object as PropType<HistoryItem>, required: true },
+    cardItem: { type: Object as PropType<HistoryItem | HistoryDetailItem>, required: true },
   },
 
   methods: {
