@@ -186,7 +186,16 @@ export default defineComponent({
     };
   },
 
+  created() {
+    const today = new Date();
+    this.date = this.dateFormat(today);
+  },
+
   methods: {
+    beforePage() {
+      this.$router.go(-1);
+    },
+
     addNewItem(title: string, newData: string) {
       if (title === 'Assets') {
         this.assetsItems.push(newData);
@@ -234,10 +243,9 @@ export default defineComponent({
           memo: this.memo,
           isfixed: null,
         };
-        console.log('Add History Data', addHistoryData);
 
-        // Add 한 다음의 행동
-        api.addHistory(addHistoryData);
+        await api.addHistory(addHistoryData);
+        this.beforePage();
       } else {
         alert('입력하지 않은 입력값이 존재합니다.');
       }

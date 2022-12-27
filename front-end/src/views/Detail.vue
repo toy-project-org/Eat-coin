@@ -152,7 +152,7 @@ export default defineComponent({
 
   data() {
     return {
-      date: '2022-12-01',
+      date: '',
       newDate: '',
       type: '',
       autoUpdate: true,
@@ -206,7 +206,6 @@ export default defineComponent({
       const detailId = this.$route.params.id;
       const { data } = await api.getHistoryDetail(detailId);
 
-      console.log(data);
       this.date = new Date(`${data[0].payment_date}`).toString();
       this.type = data[0].category.type;
       // this.autoUpdate = data[0].isfixed;
@@ -245,25 +244,34 @@ export default defineComponent({
       }
 
       if (valid) {
-        alert(
-          `Form is valid
-            이전날짜: ${this.date}
-            날짜: ${this.newDate}
-            타입: ${this.type}
-            내역: ${this.title}
-            금액: ${this.amount}
-            자산: ${this.assets}
-            카테고리: ${this.category}
-            메모: ${this.memo}`,
-        );
+        let addHistoryData = {
+          title: this.title,
+          amount: Number(this.amount),
+          payment_date: this.newDate,
+          category: {
+            name: this.category,
+            type: this.type,
+            image: 'image',
+          },
+          method: this.assets,
+          memo: this.memo,
+          isfixed: null,
+        };
+
+        const id = this.$route.params.id;
+        await api.editHistory(id, addHistoryData);
+        this.beforePage();
       } else {
         alert('입력하지 않은 입력값이 존재합니다.');
       }
     },
 
-    deleteHistory() {
-      const id = this.$route.params.id;
-      api.deleteHistory(id);
+    async deleteHistory() {
+      if (confirm('정말 삭제하시겠습니까??')) {
+        const id = this.$route.params.id;
+        await api.deleteHistory(id);
+        this.beforePage();
+      }
     },
   },
 });
