@@ -37,7 +37,7 @@ export const _delete = (url: string) => {
   });
 };
 
-export const put = (url: string, params?: any) => {
+export const put = (url: string, params: any) => {
   return axios({
     method: 'put',
     headers: {
