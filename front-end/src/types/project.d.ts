@@ -34,8 +34,8 @@ export interface HistoryDetailItem {
 }
 
 export interface FormatHistoryItem {
-  date: string;
-  historyItemList: Array<HistoryItem>;
+  date: string /** xxxx-xx-xx */;
+  historyItemList: Array<HistoryDetailItem>;
 }
 
 export interface SelectedDate {

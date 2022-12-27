@@ -88,6 +88,11 @@ export default defineComponent({
   created() {
     this.initDateMonth();
     this.categoryItems = categoryData;
+
+    this.setMonthInAndOut(this.currDateMonth).then(({ data }) => {
+      this.currMonthAmount.in = data.income;
+      this.currMonthAmount.out = data.expend;
+    });
   },
 
   methods: {
@@ -102,6 +107,11 @@ export default defineComponent({
     changeYearAndMonth(m: number) {
       this.setYearAndMonth(this.currDateMonth, m);
       this.currDateMonthStr = this.formatYearAndMonthHeader(this.currDateMonth);
+
+      this.setMonthInAndOut(this.currDateMonth).then(({ data }) => {
+        this.currMonthAmount.in = data.income;
+        this.currMonthAmount.out = data.expend;
+      });
     },
   },
 
