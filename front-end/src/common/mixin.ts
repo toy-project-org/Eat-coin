@@ -1,4 +1,5 @@
-import { DateMonth, FormatHistoryItem, HistoryItem, SelectedDate } from '@/types/project';
+import { DateMonth, FormatHistoryItem, HistoryDetailItem, SelectedDate } from '@/types/project';
+import * as api from '@/api/app';
 
 const MixinCommon = {
   data() {
@@ -51,10 +52,10 @@ const MixinCommon = {
       return newDateFormat;
     },
 
-    addNewDate(data: HistoryItem) {
+    addNewDate(data: HistoryDetailItem) {
       const addHistoryDate = {
         date: '',
-        historyItemList: [] as Array<HistoryItem>,
+        historyItemList: [] as Array<HistoryDetailItem>,
       };
       addHistoryDate.date = data.payment_date;
       addHistoryDate.historyItemList.push(data);
@@ -62,7 +63,7 @@ const MixinCommon = {
       return addHistoryDate;
     },
 
-    addHistoryData(list: Array<FormatHistoryItem>, data: HistoryItem) {
+    addHistoryData(list: Array<FormatHistoryItem>, data: HistoryDetailItem) {
       const formatDataList = list.find(formatData => formatData.date === data.payment_date);
 
       if (formatDataList === undefined) {
@@ -70,6 +71,12 @@ const MixinCommon = {
       } else {
         formatDataList.historyItemList.push(data);
       }
+    },
+
+    async setMonthInAndOut(date: DateMonth) {
+      const formatMonth = date.month < 10 ? `0${date.month}` : `${date.month}`;
+      const dateParam = `${date.year}-${formatMonth}`;
+      return await api.getMonthAmount(dateParam);
     },
   },
 };

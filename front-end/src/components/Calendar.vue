@@ -20,8 +20,13 @@
           @click="setSelectedDate(day)"
         >
           <p class="day-number mb-1">{{ day }}</p>
-          <p class="day-in">{{ formatAmount(dayAmountList.in) }}</p>
-          <p class="day-out">{{ formatAmount(dayAmountList.out) }}</p>
+
+          <p v-if="Number(dayAmountList[day].income) !== 0" class="day-in">
+            +{{ formatAmount(Number(dayAmountList[day].income)) }}
+          </p>
+          <p v-if="Number(dayAmountList[day].expend) !== 0" class="day-out">
+            -{{ formatAmount(Number(dayAmountList[day].expend)) }}
+          </p>
         </li>
       </ul>
     </div>
@@ -31,6 +36,14 @@
 <script lang="ts">
 import MixinCommon from '@/common/mixin';
 import { defineComponent } from 'vue';
+import * as api from '@/api/app';
+
+interface dayAmount {
+  date: string;
+  income: string;
+  expend: string;
+}
+
 export default defineComponent({
   name: 'Calendar',
 
@@ -43,7 +56,7 @@ export default defineComponent({
 
   data: () => {
     return {
-      dayAmountList: { in: 10000, out: 500 },
+      dayAmountList: [] as Array<{ income: string; expend: string }>,
       selectedDate: { year: 0, month: 0, day: 0 },
       firstDayOfMonth: 0,
       lastDateOfMonth: 0,
@@ -53,6 +66,7 @@ export default defineComponent({
 
   created() {
     this.drawCalendar();
+    this.setMonthAmount();
   },
 
   methods: {
@@ -71,6 +85,22 @@ export default defineComponent({
         this.currMonth === this.selectedDate.month
         ? 'select-day'
         : '';
+    },
+
+    async setMonthAmount() {
+      this.dayAmountList.length = 32;
+      for (let i = 0; i < 32; i++) {
+        this.dayAmountList[i] = { income: '0', expend: '0' };
+      }
+
+      const formatMonth = this.currMonth < 10 ? `0${this.currMonth}` : `${this.currMonth}`;
+      const dateParam = `${this.currYear}-${formatMonth}`;
+
+      const dayAmountList = await api.getDayAmount(dateParam);
+      dayAmountList.data.forEach((element: dayAmount) => {
+        const day = Number(element.date.substring(8));
+        this.dayAmountList[day] = { income: element.income, expend: element.expend };
+      });
     },
 
     setSelectedDate(day: number) {
@@ -96,6 +126,7 @@ export default defineComponent({
   watch: {
     currMonth() {
       this.drawCalendar();
+      this.setMonthAmount();
     },
   },
 });
