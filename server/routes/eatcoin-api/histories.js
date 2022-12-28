@@ -7,7 +7,7 @@ const getDate = require('../../lib/etc');
 
 router.use(morgan("combined"));
 
-// todo: 에러 핸들링!!!
+// todo: 에러 핸들링, 로그 파일에 저장하기
 // cors 찾아보기
 
 // 1-1. 최근 내역 조회
@@ -16,7 +16,7 @@ router.get('/', function(req, res, next) {
 
     let list = [];
     const date = getDate(new Date());
-    const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date >= "${date}" order by h.hid asc`;
+    const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date >= "${date}" order by h.payment_date desc`;
 
     console.log('a week ago', date);
 
@@ -55,7 +55,7 @@ router.get('/:id', (req, res, next) => {
 
     const list = [];
     const id = req.params.id;
-    const sql = `select * from (histories as h inner join categories as c on h.category = c.cid) inner join details as d on c.cid = d.did where h.hid = "${id}" order by h.hid asc`;
+    const sql = `select * from histories as h inner join categories as c on h.category = c.cid where h.hid = ${id}`;
 
     db.query(sql, (err, result) => {
         if (err) throw err;
@@ -92,7 +92,7 @@ router.get('/month/:ym', (req, res, next) => {
 
     const list = [];
     const date = req.params.ym;
-    const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date like "${date}%" order by h.hid asc`;
+    const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date like "${date}%" order by h.payment_date desc`;
 
     db.query(sql, (err, result) => {
         if (err) throw err;
@@ -131,6 +131,8 @@ router.post('/', (req, res, next) => {
     const { name, type, image } = category;
 
     const sql_cid = `select cid from categories where name = '${name}' and type = '${type}'`;
+
+    console.log(req.body);
 
     db.query(sql_cid, (err, result) => {
         if (err) throw err;
@@ -202,5 +204,46 @@ router.delete('/:id', (req, res, next) => {
         })
     });
 });
+
+// 5. (삭제됨) 키워드 검색 todo: 공백만 들어오면 검색 안 하게 처리
+// router.get('/search/:ym/:keyword', (req, res) => {
+//     const { ym , keyword } = req.params
+//     const today = new Date();
+
+//     const search = `select * from histories as h inner join categories as c on h.category = c.cid where h.payment_date like '${ym}%' and h.title like '%${keyword}%'`;
+//     const list = [];
+
+//     console.log('search keyword:: ', keyword);
+    
+//     db.query(search, (err, result) => {
+//         if (err) throw err;
+//         console.log(result);
+
+//         result.map((data) => {
+//             let { ...history } = {
+//                 hid : data.hid,
+//                 title : data.title,
+//                 amount : data.amount,
+//                 payment_date : data.payment_date,
+//                 category : {
+//                     cid : data.cid,
+//                     name : data.name,
+//                     type : data.type,
+//                     image : data.image
+//                 },
+//                 isfixed : data.isfixed,
+//                 method : data.method,
+//                 memo : data.memo,
+//             };
+
+//             list.push(history);
+
+//         });
+
+//         console.log(list);
+//         res.status(200).json(list);
+
+//     });
+// });
 
 module.exports = router;
