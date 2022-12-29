@@ -22,7 +22,6 @@ router.get('/', (req, res) => {
             let { ...cate } = {
                 cid : data.cid,
                 name : data.name,
-                type : data.type,
                 image : data.image,
             };
 
@@ -48,7 +47,6 @@ router.get('/:id', (req, res) => {
         let { ...cate } = {
             cid : result[0].cid,
             name : result[0].name,
-            type : result[0].type,
             image : result[0].image,
         };
 
