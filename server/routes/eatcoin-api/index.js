@@ -19,7 +19,7 @@ router.use('/menu', menu);
 // router.use('/login', login);
 router.use('/histories', histories);
 router.use('/statistics', statistics);
-router.use('/categories', categories);
-router.use('/assets', assets);
+// router.use('/categories', categories);
+// router.use('/assets', assets);
 
 module.exports = router;
