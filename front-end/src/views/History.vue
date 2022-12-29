@@ -1,9 +1,8 @@
 <template>
-  <h2 class="page-title">History</h2>
   <v-tabs v-model="historyNav" slider-color="green-lighten-2" color="green-lighten-2">
-    <div v-for="item in historyNavItems" :key="item" style="width: 33%">
-      <router-link :to="`/history/${item}`">
-        <v-tab :value="item" style="width: 100%">{{ item }}</v-tab>
+    <div v-for="(item, idx) in historyNavItems" :key="idx" style="width: 33%">
+      <router-link :to="`/history/${item.id}`">
+        <v-tab :value="item.id" style="width: 100%">{{ item.name }}</v-tab>
       </router-link>
     </div>
   </v-tabs>
@@ -26,7 +25,20 @@ export default defineComponent({
   data: () => {
     return {
       historyNav: 'list',
-      historyNavItems: ['list', 'calendar', 'category'],
+      historyNavItems: [
+        {
+          id: 'list',
+          name: '목록',
+        },
+        {
+          id: 'calendar',
+          name: '달력',
+        },
+        {
+          id: 'category',
+          name: '카테고리',
+        },
+      ],
       transitionName: '',
     };
   },

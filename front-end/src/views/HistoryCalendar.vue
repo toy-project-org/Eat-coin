@@ -12,19 +12,27 @@
       </v-btn>
     </div>
 
-    <div class="container text-center py-1">
+    <div class="text-center p-1">
       <div class="row">
         <div class="col">
-          <p class="total-money-in">수입</p>
-          <p class="total-money-in">+{{ formatAmount(currMonthAmount.in) }}</p>
+          <div class="total-money-in fade-in">
+            수입
+            <p>
+              <span class="emphasis-money">+ {{ formatAmount(currMonthAmount.in) }}</span> 원
+            </p>
+          </div>
         </div>
         <div class="col">
-          <p class="total-money-out">지출</p>
-          <p class="total-money-out">-{{ formatAmount(currMonthAmount.out) }}</p>
+          <div class="total-money-out fade-in">
+            지출
+            <p>
+              <span class="emphasis-money">- {{ formatAmount(currMonthAmount.out) }}</span> 원
+            </p>
+          </div>
         </div>
       </div>
 
-      <div class="my-3">
+      <div class="my-3 mx-1">
         <calendar
           :currYear="currDateMonth.year"
           :currMonth="currDateMonth.month"
@@ -35,25 +43,17 @@
   </div>
 
   <div class="container-box mt-3">
-    <div class="container-box-content">
-      <div class="history-content mt-3 inner fade-in">
+    <div class="container-box-content inner">
+      <div class="history-content mt-3 fade-in" :key="`${selectedDate.month}-${selectedDate.day}`">
         <p class="history-date">{{ formatBasicDate(selectedDate) }}</p>
-        <card
-          v-for="item in 3"
-          :key="item"
-          :card-item="{
-            hid: 1,
-            title: `삼첩분식${item}`,
-            amount: 18000,
-            payment_date: '22-10-01',
-            category: {
-              cid: 1,
-              name: '식비',
-              type: '지출',
-              image: 'http://~~',
-            },
-          }"
-        ></card>
+        <section v-if="historyItemList.length > 0">
+          <card v-for="item in historyItemList" :key="item.hid" :card-item="item"></card>
+        </section>
+        <section v-else>
+          <div class="card-not-date-container">
+            <p style="margin-left: 10px">데이터 없당~~ 🤪</p>
+          </div>
+        </section>
       </div>
     </div>
   </div>
@@ -62,9 +62,11 @@
 <script lang="ts">
 import Calendar from '@/components/Calendar.vue';
 import Card from '@/components/Card.vue';
-import { SelectedDate } from '@/types/project';
+import { HistoryDetailItem, SelectedDate } from '@/types/project';
 import { defineComponent } from 'vue';
 import MixinCommon from '@/common/mixin';
+import * as api from '@/api/app';
+
 export default defineComponent({
   name: 'HistoryCalendar',
 
@@ -81,11 +83,17 @@ export default defineComponent({
       currDateMonth: { year: 0, month: 0 },
       currDateMonthStr: { year: '', month: '' },
       selectedDate: { year: 0, month: 0, day: 0 },
+      historyItemList: [] as Array<HistoryDetailItem>,
     };
   },
 
   created() {
     this.initDate();
+    this.setMonthInAndOut(this.currDateMonth).then(({ data }) => {
+      this.currMonthAmount.in = data.income;
+      this.currMonthAmount.out = data.expend;
+    });
+    this.setSelectedDate(this.selectedDate);
   },
 
   methods: {
@@ -103,10 +111,21 @@ export default defineComponent({
     changeYearAndMonth(m: number) {
       this.setYearAndMonth(this.currDateMonth, m);
       this.currDateMonthStr = this.formatYearAndMonthHeader(this.currDateMonth);
+
+      this.setMonthInAndOut(this.currDateMonth).then(({ data }) => {
+        this.currMonthAmount.in = data.income;
+        this.currMonthAmount.out = data.expend;
+      });
     },
 
-    setSelectedDate(selectedDate: SelectedDate) {
-      // api 연결하게 되면 해당 내역 가져오기
+    async setSelectedDate(selectedDate: SelectedDate) {
+      const formatMonth =
+        selectedDate.month < 10 ? `0${selectedDate.month}` : `${selectedDate.month}`;
+      const formatDay = selectedDate.day < 10 ? `0${selectedDate.day}` : `${selectedDate.day}`;
+
+      const selectedDateParam = `${selectedDate.year}-${formatMonth}-${formatDay}`;
+      const response = await api.getDateHistory(selectedDateParam);
+      this.historyItemList = response.data;
       this.selectedDate = selectedDate;
     },
   },

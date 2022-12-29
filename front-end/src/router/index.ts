@@ -6,7 +6,8 @@ import HistoryList from '../views/HistoryList.vue';
 import HistoryCalendar from '../views/HistoryCalendar.vue';
 import HistoryCategory from '../views/HistoryCategory.vue';
 import Detail from '../views/Detail.vue';
-import AddItem from '../views/AddItem.vue';
+import ItemManagement from '../views/ItemManagement.vue';
+import AddItem from '../components/AddItem.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -51,6 +52,16 @@ const routes: Array<RouteRecordRaw> = [
     component: AddHistory,
   },
   {
+    path: '/assets-management',
+    name: 'AssetsManagement',
+    component: ItemManagement,
+  },
+  {
+    path: '/category-management',
+    name: 'CategoryManagement',
+    component: ItemManagement,
+  },
+  {
     path: '/add-assets',
     name: 'AddAssets',
     component: AddItem,
@@ -58,6 +69,16 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/add-category',
     name: 'AddCategory',
+    component: AddItem,
+  },
+  {
+    path: '/edit-assets/:id',
+    name: 'EditAssets',
+    component: AddItem,
+  },
+  {
+    path: '/edit-category/:id',
+    name: 'EditCategory',
     component: AddItem,
   },
   {

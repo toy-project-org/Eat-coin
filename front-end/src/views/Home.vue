@@ -3,7 +3,7 @@
   <transition name="prev-first" mode="out-in" appear>
     <div class="container-box">
       <div class="container-box-header">
-        <p class="container-box-title">Balance</p>
+        <p class="container-box-title"><span class="emphasis">일 년</span>간 총 자산</p>
         <v-btn icon variant="text" class="mr-1" @click="showBalance">
           <i v-if="balance.show" class="bx bx-show icon-size-md"></i>
           <i v-else class="bx bx-low-vision icon-size-md"></i>
@@ -11,11 +11,19 @@
       </div>
 
       <div v-if="balance.show" class="p-3 pt-0">
-        <p class="total-money-in fade-in">수입 {{ formatAmount(balance.in) }}</p>
-        <p class="total-money-out fade-in">지출 {{ formatAmount(balance.out) }}</p>
+        <div class="total-money-in d-flex align-center fade-in">
+          수입
+          <p class="emphasis-money ml-2">{{ formatAmount(balance.in) }}</p>
+          원
+        </div>
+        <div class="total-money-out d-flex align-center fade-in">
+          지출
+          <p class="emphasis-money ml-2">{{ formatAmount(balance.out) }}</p>
+          원
+        </div>
       </div>
       <div v-else class="p-3 pt-0">
-        <p class="fade-in" style="height: 42px">... 비밀이지롱 ~~</p>
+        <p class="fade-in" style="height: 57.5px">...쉿! 비밀이지롱 ~~ 🤫</p>
       </div>
     </div>
   </transition>
@@ -24,7 +32,7 @@
   <transition name="prev" mode="out-in" appear>
     <div class="container-box">
       <div class="container-box-header">
-        <span class="container-box-title">History</span>
+        <span class="container-box-title"><span class="emphasis">일주일</span>간 내역</span>
         <v-btn icon variant="text" @click="movePage('HistoryList')" class="mr-1">
           <i class="bx bx-chevron-right icon-size-md"></i>
         </v-btn>
@@ -42,10 +50,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { FormatHistoryItem } from '@/types/project';
+import { FormatHistoryItem, HistoryDetailItem } from '@/types/project';
 import Card from '@/components/Card.vue';
-import mainPost from '../assets/data/main';
 import MixinCommon from '@/common/mixin';
+import * as api from '@/api/app';
 
 const STORAGE_KEY = 'show-balance';
 const storage = {
@@ -69,10 +77,11 @@ export default defineComponent({
 
   data: () => {
     return {
+      currYear: 0,
       balance: {
         show: true,
-        in: 100000000,
-        out: 50000,
+        in: 0,
+        out: 0,
       },
       historyDataList: [] as Array<FormatHistoryItem>,
       isNavbarShow: false,
@@ -80,11 +89,22 @@ export default defineComponent({
   },
 
   created() {
+    this.initTotalInOut();
     this.initShowBalance();
     this.formatHistoryData();
   },
 
   methods: {
+    initTotalInOut() {
+      const date = new Date();
+      this.currYear = date.getFullYear();
+
+      api.getYearAmount(this.currYear).then(({ data }) => {
+        this.balance.in = data.income;
+        this.balance.out = data.expend;
+      });
+    },
+
     movePage(new_page: string) {
       this.$router.push({
         name: new_page,
@@ -101,8 +121,10 @@ export default defineComponent({
       storage.save(this.balance.show);
     },
 
-    formatHistoryData() {
-      mainPost.map(data => {
+    async formatHistoryData() {
+      const historyOneWeekData = await api.getHistoryList();
+
+      historyOneWeekData.data.map((data: HistoryDetailItem) => {
         this.addHistoryData(this.historyDataList, data);
       });
     },

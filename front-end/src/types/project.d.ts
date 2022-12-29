@@ -17,9 +17,25 @@ export interface HistoryItem {
   };
 }
 
+export interface HistoryDetailItem {
+  hid?: number;
+  title: string;
+  amount: number;
+  payment_date: string;
+  category: {
+    cid?: number;
+    name: string;
+    type: string;
+    image: string;
+  };
+  method: string;
+  memo: string;
+  isfixed: string | null;
+}
+
 export interface FormatHistoryItem {
-  date: string;
-  historyItemList: Array<HistoryItem>;
+  date: string /** xxxx-xx-xx */;
+  historyItemList: Array<HistoryDetailItem>;
 }
 
 export interface SelectedDate {

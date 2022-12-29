@@ -19,6 +19,7 @@ $card-height: 50px;
 $icon-size: 35px;
 
 // font size
+$font-llg: 1.2rem;
 $font-lg: 1rem; // 16px
 $font-md: 0.875rem; // 14px
 $font-sm: 0.75rem; // 12px
@@ -30,8 +31,26 @@ $tran-03: all 0.3s ease;
 $tran-04: all 0.4s ease;
 $tran-05: all 0.5s ease;
 
+@font-face {
+  font-family: 'AppleSDGothicNeoT';
+  src: url('@/assets/fonts/AppleSDGothicNeoT.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'AppleSDGothicNeoR';
+  src: url('@/assets/fonts/AppleSDGothicNeoR.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'AppleSDGothicNeoM';
+  src: url('@/assets/fonts/AppleSDGothicNeoM.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'AppleSDGothicNeoB';
+  src: url('@/assets/fonts/AppleSDGothicNeoB.ttf') format('truetype');
+}
+
 * {
-  font-family: 'Poppins', sans-serif;
+  // font-family: 'Poppins', sans-serif;
+  font-family: 'AppleSDGothicNeoM', sans-serif;
   font-size: $font-md;
 }
 
@@ -82,9 +101,9 @@ button {
   z-index: 100;
 
   .header-logo {
+    font-family: 'AppleSDGothicNeoB';
     line-height: $main-header-height;
     font-size: $font-lg;
-    font-weight: 600;
   }
 }
 
@@ -132,14 +151,55 @@ button {
   }
 
   .container-box-title {
+    font-family: 'AppleSDGothicNeoR';
     font-size: $font-lg;
-    font-weight: 500;
     margin-left: 1rem;
   }
 
   .container-box-content {
     padding: 0 12px 10px;
   }
+
+  .container-box-center {
+    padding: 2.5rem 0;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.add-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  background-color: $icon-color;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+}
+.add-icon::before {
+  content: '';
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+  background-color: $container-color;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+.add-icon-plus {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
 }
 
 @mixin btn-sm($bg-color) {
@@ -213,6 +273,10 @@ button {
   animation: enterFromRight 900ms both cubic-bezier(0.165, 0.84, 0.44, 1);
   z-index: 1;
 }
+.down-enter-to {
+  animation: enterFromDown 900ms both cubic-bezier(0.165, 0.84, 0.44, 1);
+  z-index: 1;
+}
 
 .prev-enter-active .inner,
 .prev-leave-active .inner,
@@ -253,6 +317,14 @@ button {
 @keyframes enterFromRight {
   from {
     transform: translateX(90%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes enterFromDown {
+  from {
+    transform: translateY(90%);
   }
   to {
     transform: translateX(0);
