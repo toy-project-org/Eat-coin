@@ -58,12 +58,51 @@ router.get('/:id', (req, res) => {
 })
 
 // 2, 카테고리 추가
-router.post((req, res) => {
+router.post('/', (req, res) => {
     console.log("add category");
 
-    const sql = ``;
+    const { name, image } = req.body;
+    const sql = `insert into categories(name, image) values('${name}', '${image}')`;
+
+    db.query(sql, (err, result) => {
+        if (err) throw err;
+
+        console.log(result);
+        res.status(200).json({ message : "OK" });
+    });
+
 })
 
 // 3. 카테고리 수정
+router.put('/:id', (req, res) => {
+    console.log("Edit category");
+
+    const id = req.params.id;
+    const { name, image } = req.body;
+    const sql = `update categories set name = '${name}', image = '${image}' where cid = ${id}`;
+
+    db.query(sql, (err, result) => {
+        if (err) throw err;
+
+        console.log(result);
+
+        res.status(200).json({message : "OK"});
+    })
+})
 
 // 4. 카테고리 삭제 (하위에 데이터 있으면 기타 카테고리로 이동)
+router.delete('/:id', (req, res) => {
+    console.log("Delete category");
+
+    const id = req.params.id;
+    const sql = `delete from categories where cid = ${id}`;
+
+    db.query(sql, (err, result) => {
+        if (err) throw err;
+
+        console.log(result);
+        res.status(200).json({message : "OK"});
+    })
+})
+
+module.exports = router;
