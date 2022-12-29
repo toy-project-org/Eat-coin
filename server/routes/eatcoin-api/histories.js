@@ -29,10 +29,10 @@ router.get('/', function(req, res, next) {
                 title : data.title,
                 amount : data.amount,
                 payment_date : data.payment_date,
+                type : data.type,
                 category : {
                     cid : data.cid,
                     name : data.name,
-                    type : data.type,
                     image : data.image
                 },
                 isfixed : data.isfixed,
@@ -66,10 +66,10 @@ router.get('/:id', (req, res, next) => {
                 title : data.title,
                 amount : data.amount,
                 payment_date : data.payment_date,
+                type : data.type,
                 category : {
                     cid : data.cid,
                     name : data.name,
-                    type : data.type,
                     image : data.image
                 },
                 isfixed : data.isfixed,
@@ -103,10 +103,10 @@ router.get('/month/:ym', (req, res, next) => {
                 title : data.title,
                 amount : data.amount,
                 payment_date : data.payment_date,
+                type : data.type,
                 category : {
                     cid : data.cid,
                     name : data.name,
-                    type : data.type,
                     image : data.image
                 },
                 isfixed : data.isfixed,
@@ -127,8 +127,8 @@ router.get('/month/:ym', (req, res, next) => {
 router.post('/', (req, res, next) => {
     console.log("add one");
 
-    const { title, amount, payment_date, category, isfixed, method, memo } = req.body;
-    const { name, type, image } = category;
+    const { title, amount, payment_date, type,category, isfixed, method, memo } = req.body;
+    const { name, image } = category;
 
     const sql_cid = `select cid from categories where name = '${name}'`;
 
@@ -140,7 +140,7 @@ router.post('/', (req, res, next) => {
         console.log(result);
 
         const cid = result[0].cid;
-        const sql_add = `insert into histories(title, amount, payment_date, category, isfixed, method, memo) values('${title}', ${amount}, '${payment_date}', ${cid}, '${isfixed}', '${method}', '${memo}')`;
+        const sql_add = `insert into histories(title, amount, payment_date, type, category, isfixed, method, memo) values('${title}', ${amount}, '${payment_date}', '${type}', ${cid}, '${isfixed}', '${method}', '${memo}')`;
 
         db.query(sql_add, (err, result) => {
             if (err) throw err;
@@ -155,8 +155,8 @@ router.put('/:id', (req, res, next) => {
     console.log("update one");
 
     const { id } = req.params;
-    const { title, amount, payment_date, category, isfixed, method, memo } = req.body;
-    const { name, type, image } = category;
+    const { title, amount, payment_date, type, category, isfixed, method, memo } = req.body;
+    const { name, image } = category;
 
     console.log(id, req.body);
 
@@ -175,7 +175,7 @@ router.put('/:id', (req, res, next) => {
             console.log(result);
 
             const cid = result[0].cid;
-            const sql_update = `update histories set title = '${title}', amount = ${amount}, payment_date = '${payment_date}', category = ${cid}, isfixed = '${isfixed}', method = '${method}', memo = '${memo}' where hid = ${id}`;
+            const sql_update = `update histories set title = '${title}', amount = ${amount}, payment_date = '${payment_date}', type = '${type}', category = ${cid}, isfixed = '${isfixed}', method = '${method}', memo = '${memo}' where hid = ${id}`;
             console.log(sql_update);
             // 찾은 cid와 함께 목록 업데이트
             db.query(sql_update, (err, result) => {
