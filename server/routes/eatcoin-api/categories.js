@@ -16,7 +16,10 @@ router.get('/', (req, res) => {
     const list = [];
 
     db.query(sql, (err, result) => {
-        if (err) throw err;
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal Server Error');
+        }
 
         result.map(data => {
             let { ...cate } = {
@@ -42,7 +45,10 @@ router.get('/:id', (req, res) => {
     const list = [];
 
     db.query(sql, (err, result) => {
-        if (err) throw err;
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal Server Error');
+        }
 
         let { ...cate } = {
             cid : result[0].cid,
@@ -63,7 +69,10 @@ router.post('/', (req, res) => {
     const sql = `insert into categories(name, image) values('${name}', '${image}')`;
 
     db.query(sql, (err, result) => {
-        if (err) throw err;
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal Server Error');
+        }
 
         console.log(result);
         res.status(200).json({ message : "OK" });
@@ -80,7 +89,10 @@ router.put('/:id', (req, res) => {
     const sql = `update categories set name = '${name}', image = '${image}' where cid = ${id}`;
 
     db.query(sql, (err, result) => {
-        if (err) throw err;
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal Server Error');
+        }
 
         console.log(result);
 
@@ -96,7 +108,10 @@ router.delete('/:id', (req, res) => {
     const sql = `delete from categories where cid = ${id}`;
 
     db.query(sql, (err, result) => {
-        if (err) throw err;
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal Server Error');
+        }
 
         console.log(result);
         res.status(200).json({message : "OK"});

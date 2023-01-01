@@ -21,7 +21,10 @@ router.get('/', function(req, res, next) {
     console.log('a week ago', date);
 
     db.query(sql, (err, result) => {
-        if (err) throw err;
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal Server Error');
+        }
 
         result.map((data) => {
             let { ...history } = {
@@ -58,7 +61,10 @@ router.get('/:id', (req, res, next) => {
     const sql = `select * from histories as h inner join categories as c on h.category = c.cid where h.hid = ${id}`;
 
     db.query(sql, (err, result) => {
-        if (err) throw err;
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal Server Error');
+        }
 
         result.map((data) => {
             let { ...detail } = {
@@ -95,7 +101,10 @@ router.get('/month/:ym', (req, res, next) => {
     const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date like "${date}%" order by h.payment_date desc, h.hid desc`;
 
     db.query(sql, (err, result) => {
-        if (err) throw err;
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal Server Error');
+        }
 
         result.map((data) => {
             let { ...history } = {
@@ -135,7 +144,10 @@ router.post('/', (req, res, next) => {
     console.log(req.body);
 
     db.query(sql_cid, (err, result) => {
-        if (err) throw err;
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal Server Error');
+        }
 
         console.log(result);
 
@@ -165,7 +177,11 @@ router.put('/:id', (req, res, next) => {
 
     // 해당 목록 있는지 체크
     db.query(sql_hid, (err, result) => {
-        if (err) throw err;
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal Server Error');
+        }
+
         console.log(result);
 
         // cid 입력을 위해 카테고리 이름으로 아이디 찾음
@@ -195,7 +211,11 @@ router.delete('/:id', (req, res, next) => {
     const del = `delete from histories where hid = ${id}`;
 
     db.query(search, (err, results) => {
-        if (err) throw err;
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal Server Error');
+        }
+        
         console.log(results);
 
         db.query(del, (err, results) => {
