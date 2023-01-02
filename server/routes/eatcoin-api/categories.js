@@ -31,6 +31,7 @@ router.get('/', (req, res) => {
             list.push(cate);
         })
 
+        console.log(list);
         res.status(200).json(list);
 
     })
@@ -56,6 +57,7 @@ router.get('/:id', (req, res) => {
             image : result[0].image,
         };
 
+        console.log(cate);
         res.status(200).json(cate);
 
     })
