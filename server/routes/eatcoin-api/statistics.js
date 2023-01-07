@@ -1,6 +1,7 @@
 const { json } = require('body-parser');
 const express = require('express');
 const morgan = require('morgan');
+const { listeners } = require('../../lib/config');
 const router = express.Router();
 const db = require('../../lib/config');
 const getDate = require('../../lib/etc');
@@ -23,7 +24,10 @@ router.get('/amount/:date', (req, res, next) => {
   const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date like "${date}%" order by h.hid asc`;
 
   db.query(sql, (err, result) => {
-    if (err) throw err;
+    if (err) {
+      console.log(err);
+      res.status(500).send('Internal Server Error');
+    }
 
     const income = result
     .filter(data => {return data.type == '수입'})
@@ -41,6 +45,7 @@ router.get('/amount/:date', (req, res, next) => {
     console.log(income, expend);
     res.json(amount);
   });
+
 });
 
 // 1-2. 수입/지출 한달 일별 금액 통계
@@ -48,14 +53,14 @@ router.get('/amount/detail/:date', (req, res, next) => {
   console.log('check amount for a month');
 
   const date = req.params.date;
-  //const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date like "${date}%" order by payment_date asc`;
-  //const sql_date = `select distinct payment_date from histories as h inner join categories as c on h.category = c.cid where payment_date like "${date}%" order by payment_date asc`;
-
   const list = [];
-  const sql = `select payment_date as date, sum(if(c.type = '지출', h.amount, 0)) as expend, sum(if(c.type = '수입', h.amount, 0)) as income from histories as h inner join categories as c on h.category = c.cid where payment_date like "${date}%" group by h.payment_date order by h.payment_date`;
+  const sql = `select payment_date as date, sum(if(h.type = '지출', h.amount, 0)) as expend, sum(if(h.type = '수입', h.amount, 0)) as income from histories as h inner join categories as c on h.category = c.cid where payment_date like "${date}%" group by h.payment_date order by h.payment_date`;
 
   db.query(sql, (err, result) => {
-    if (err) throw err;
+    if (err) {
+      console.log(err);
+      res.status(500).send('Internal Server Error');
+    }
     
     console.log(result);
 
@@ -72,23 +77,6 @@ router.get('/amount/detail/:date', (req, res, next) => {
 
     console.log(list);
     res.status(200).json(list);
-
-
-    // const income = result
-    // .filter(data => {return data.type == '수입'})
-    // .reduce((acc, data) => {return acc += data.amount}, 0);
-
-    // const expend = result
-    // .filter(data => {return data.type == '지출'})
-    // .reduce((acc, data) => {return acc += data.amount}, 0);
-    
-    // let { ...amount } = {
-    //     income,
-    //     expend,
-    // };
-
-    // console.log(income, expend);
-    // res.json(amount);
   });
 });
 
@@ -101,32 +89,25 @@ router.get('/asset', (req, res) => {
   console.log(today);
 
   const list = [];
-  const sql_asset = `select * from asset`;
-  const sql_hist = `select amount, method from histories where payment_date like '${today}%'`;
+  const sql = `select a.name, a,image, ifnull(sum(h.amount), 0) as sum from histories as h right outer join asset as a on h.method = a.name and type = '지출' and payment_date like '${today}%' group by a.name order by sum desc, name asc`;
+  
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Internal Server Error');
+    }
 
-  db.query(sql_asset, (err, result) => {
-    if (err) throw err;
+    result.map(data => {
+      let { ...info } = {
+        asset : data.name,
+        account : data.sum,
+      }
+      list.push(info);
+    })
 
-    db.query(sql_hist, (err, result2) => {
-      if (err) throw err;
-
-      result.map((assets) => {
-        const sum = result2
-        .filter(hists => {return hists.method == assets.name})
-        .reduce((acc, data) => {return acc += data.amount}, 0);
-        
-        let { ...info } = {
-          asset : assets.name,
-          account : sum,
-        }
-
-        list.push(info);
-      });
-
-      console.log(list);
-      res.status(200).json(list);
-    });
-  });
+    console.log(list);
+    res.status(200).json(list);
+  })
 });
 
 // 2-1. 특정 년월 자산 통계
@@ -137,46 +118,62 @@ router.get('/asset/:ym', (req, res) => {
   console.log(date);
 
   const list = [];
-  const sql_asset = `select * from asset`;
-  const sql_hist = `select amount, method from histories where payment_date like '${date}%' order by name`;
+  const sql = `select a.name, a.image, ifnull(sum(h.amount), 0) as sum from histories as h right outer join asset as a on h.method = a.name and type = '지출' and payment_date like '${date}%' group by a.name order by sum desc, name asc`;
+  
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Internal Server Error');
+    }
 
-  console.log(sql_hist);
-  db.query(sql_asset, (err, result) => {
-    if (err) throw err;
-    
-    console.log(result);
-    db.query(sql_hist, (err, result2) => {
-      if (err) throw err;
+    result.map(data => {
+      let { ...info } = {
+        asset : data.name,
+        account : data.sum,
+        image : data.image,
+      }
 
-      console.log(result2);
+      list.push(info);
 
-      result.map((assets) => {
-        const sum = result2
-        .filter(hists => {return hists.method == assets.name})
-        .reduce((acc, data) => {return acc += data.amount}, 0);
-        
-        let { ...info } = {
-          asset : assets.name,
-          account : sum,
-        }
+    })
 
-        list.push(info);
-      });
-
-      console.log(list);
-      res.status(200).json(list);
-    });
-  });
+    console.log(list);
+    res.status(200).json(list);
+  })
 });
 
 
 // 3. 카테고리별 통계
-router.get('/category', (req, res) => {
+router.get('/category/:ym', (req, res) => {
   console.log(`check category statistics`);
 
+  const ym = req.params.ym;
   const list = [];
-  const sql_cate = `select * from categories`;
-  const sql_hist = `select amount, category from histories`;
+
+  const sql = `select category, c.name, c.image, sum(h.amount) as sum from histories as h inner join categories as c where h.category = c.cid and type = '지출' and payment_date like '${ym}%' group by category`;
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Internal Server Error');
+    }
+
+    console.log(result);
+
+    result.map(data => {
+      let { ...info } = {
+        category : data.name,
+        account : data.sum,
+        image : data.image,
+      }
+
+      list.push(info);
+
+    });
+
+    res.status(200).json(list);
+
+  });
 
 })
 
