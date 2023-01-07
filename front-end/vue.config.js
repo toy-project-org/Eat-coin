@@ -4,8 +4,9 @@ module.exports = defineConfig({
   devServer: {
     port: 9081,
     proxy: {
-      '^/eatcoin-api/histories': {
-        target: 'http://localhost:3000',
+      '^/eatcoin-api': {
+        target: 'http://54.90.208.39:3000',
+        // target: 'http://localhost:3000',
         changeOrigin: true,
       },
     },

@@ -1,4 +1,4 @@
-import { HistoryDetailItem } from '@/types/project';
+import { HistoryDetailItem, CategoryItemPost } from '@/types/project';
 import axios from 'axios';
 axios.defaults.withCredentials = true;
 
@@ -14,7 +14,7 @@ export const get = (url: string, params?: any) => {
   });
 };
 
-export const post = (url: string, params: HistoryDetailItem) => {
+export const post = (url: string, params: HistoryDetailItem | CategoryItemPost) => {
   return axios({
     method: 'post',
     headers: {

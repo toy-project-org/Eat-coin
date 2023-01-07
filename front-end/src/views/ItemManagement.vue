@@ -4,15 +4,7 @@
       <div class="container-box">
         <div class="container-box-content fade-in">
           <h3 class="add-history-title mt-4 mb-1">{{ typeTitle }} 목록</h3>
-          <!-- TODO: idx를 배열의 index가 아닌 실제 id로 변경 -->
-          <item-management-card
-            v-for="(item, idx) in items"
-            :key="idx"
-            :type="type"
-            :title="item"
-            :idx="idx"
-            @editNewItem="editNewItem"
-          />
+          <item-management-card v-for="(item, idx) in items" :key="idx" :type="type" :item="item" />
 
           <div class="card-container-add" @click="addMovePage()">
             <i class="bx bx-plus icon-size-md mr-1"></i>
@@ -26,7 +18,9 @@
 
 <script lang="ts">
 import ItemManagementCard from '@/components/ItemManagementCard.vue';
+import { AssetsItem, CategoryBasicItem, CategoryItem } from '@/types/project';
 import { defineComponent } from 'vue';
+import * as api from '@/api/app';
 
 export default defineComponent({
   name: 'ItemManagement',
@@ -37,7 +31,7 @@ export default defineComponent({
     return {
       typeTitle: '',
       type: '',
-      items: [] as string[],
+      items: [] as CategoryBasicItem[],
     };
   },
 
@@ -57,17 +51,28 @@ export default defineComponent({
       });
     },
 
-    editNewItem(newData: string, idx: number) {
-      this.items.splice(idx, 1, newData);
-    },
-
-    initSetting() {
+    async initSetting() {
       const routeName = this.$route.name as string;
       this.type = routeName.substring(0, routeName.length - 10);
+      this.items = [] as CategoryBasicItem[];
       if (this.type === 'Assets') {
-        this.items = ['하나신용카드', '하나체크카드', '국민카드', '신한카드'];
+        const { data } = await api.getAssetsList();
+        data.forEach((assetsData: AssetsItem) => {
+          this.items.push({
+            id: assetsData.aid,
+            name: assetsData.name,
+            image: assetsData.image,
+          });
+        });
       } else {
-        this.items = ['식비', '교통비', '생활비', '기타'];
+        const { data } = await api.getCategoryList();
+        data.forEach((categoryData: CategoryItem) => {
+          this.items.push({
+            id: categoryData.cid,
+            name: categoryData.name,
+            image: categoryData.image,
+          });
+        });
       }
     },
   },

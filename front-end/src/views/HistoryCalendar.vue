@@ -79,7 +79,7 @@ export default defineComponent({
 
   data: () => {
     return {
-      currMonthAmount: { in: 10000, out: 500000 },
+      currMonthAmount: { in: 0, out: 0 },
       currDateMonth: { year: 0, month: 0 },
       currDateMonthStr: { year: '', month: '' },
       selectedDate: { year: 0, month: 0, day: 0 },

@@ -143,6 +143,7 @@ import * as api from '@/api/app';
 import { defineComponent } from 'vue';
 import Datepicker from '@vuepic/vue-datepicker';
 import ItemModal from '@/components/ItemModal.vue';
+import { AssetsItem, CategoryItem } from '@/types/project';
 
 export default defineComponent({
   name: 'AddHistory',
@@ -168,7 +169,7 @@ export default defineComponent({
       assets: '',
       newAssets: '',
       assetsDialog: false,
-      assetsItems: ['하나신용카드', '하나체크카드', '국민카드', '신한카드'],
+      assetsItems: [] as string[],
       assetsRules: [
         (v: string) => !!v || '한 글자 이상 작성해주세요.',
         (v: string) => v.length <= 12 || '12자 이하로 작성해주세요.',
@@ -176,7 +177,7 @@ export default defineComponent({
       category: '',
       newCategory: '',
       categoryDialog: false,
-      categoryItems: ['식비', '교통비', '생활비', '기타'],
+      categoryItems: [] as string[],
       categoryRules: [
         (v: string) => !!v || '한 글자 이상 작성해주세요.',
         (v: string) => v.length <= 12 || '12자 이하로 작성해주세요.',
@@ -189,9 +190,21 @@ export default defineComponent({
   created() {
     const today = new Date();
     this.date = this.dateFormat(today);
+    this.initAssetsList();
+    this.initCategoryList();
   },
 
   methods: {
+    async initAssetsList() {
+      const { data } = await api.getAssetsList();
+      this.assetsItems = data.map((asset: AssetsItem) => asset.name);
+    },
+
+    async initCategoryList() {
+      const { data } = await api.getCategoryList();
+      this.categoryItems = data.map((category: CategoryItem) => category.name);
+    },
+
     beforePage() {
       this.$router.go(-1);
     },
@@ -234,10 +247,10 @@ export default defineComponent({
           title: this.title,
           amount: Number(this.amount),
           payment_date: this.newDate,
+          type: this.type,
           category: {
             name: this.category,
-            type: this.type,
-            image: 'image',
+            image: 'mdi-guitar-acoustic',
           },
           method: this.assets,
           memo: this.memo,

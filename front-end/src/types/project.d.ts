@@ -9,10 +9,10 @@ export interface HistoryItem {
   title: string;
   amount: number;
   payment_date: string;
+  type: string;
   category: {
     cid: number;
     name: string;
-    type: string;
     image: string;
   };
 }
@@ -22,10 +22,10 @@ export interface HistoryDetailItem {
   title: string;
   amount: number;
   payment_date: string;
+  type: string;
   category: {
     cid?: number;
     name: string;
-    type: string;
     image: string;
   };
   method: string;
@@ -54,9 +54,55 @@ export interface DateMonthStr {
   month: string;
 }
 
+export interface ChartItems {
+  title: string;
+  amount: number;
+}
+
+export interface CategoryBasicItem {
+  id?: number;
+  name: string;
+  image: string;
+}
+
+export interface CategoryItem {
+  cid?: number;
+  name: string;
+  image: string;
+}
+
+export interface AssetsItem {
+  aid?: number;
+  name: string;
+  image: string;
+}
+
+export interface CategoryItemPost {
+  name: string;
+  image: string;
+}
+
+export interface CategoryMonthItem {
+  category: string;
+  account: string;
+  image: string;
+}
+
+export interface AssetsMonthItem {
+  asset: string;
+  account: string;
+  image: string;
+}
+
+export interface ChartMonthItem {
+  title: string;
+  account: string;
+  image: string;
+}
+
 declare module '@vue/runtime-core' {
   interface State {
-    test_1: number;
+    test: string;
   }
 
   interface ComponentCustomProperties {

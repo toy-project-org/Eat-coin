@@ -1,10 +1,10 @@
 <template>
   <div class="card-container" @click="movePage('Detail')">
     <div class="card-icon">
-      <p class="card-icon-title">{{ cardItem.title[0] }}</p>
+      <v-icon color="white">{{ cardItem.category.image }}</v-icon>
     </div>
     <p class="card-title">{{ cardItem.title }}</p>
-    <p v-if="cardItem.category.type === '수입'" class="card-amount-plus">
+    <p v-if="cardItem.type === '수입'" class="card-amount-plus">
       +{{ formatAmount(cardItem.amount) }} 원
     </p>
     <p v-else class="card-amount-minus">-{{ formatAmount(cardItem.amount) }} 원</p>

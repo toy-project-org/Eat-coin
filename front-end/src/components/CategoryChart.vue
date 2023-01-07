@@ -11,11 +11,10 @@
   />
 </template>
 
-<script lang="ts">
+<script>
 import { Pie } from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from 'chart.js';
-import categoryData from '@/assets/data/categoryData';
-
+import * as api from '@/api/app';
 ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
 
 export default {
@@ -56,18 +55,26 @@ export default {
       type: Array,
       default: () => [],
     },
+    currDateMonthStr: {
+      type: Object,
+      required: true,
+    },
+    usageType: {
+      type: String,
+      required: true,
+    },
   },
 
   data: () => {
     return {
       chartData: {
-        labels: categoryData.map(data => data.title),
+        labels: [],
         datasets: [
           {
             backgroundColor: ['#F2DEBA', '#FFEFD6', '#0E5E6F', '#3A8891'].sort(
               () => 0.5 - Math.random(),
             ),
-            data: categoryData.map(data => data.amount),
+            data: [],
             hoverOffset: 4,
             borderWidth: 1,
           },
@@ -78,6 +85,22 @@ export default {
         maintainAspectRatio: false,
       },
     };
+  },
+
+  async mounted() {
+    if (this.usageType === '카테고리') {
+      const { data } = await api.getCategoryMonthList(
+        `${this.currDateMonthStr.year}-${this.currDateMonthStr.month}`,
+      );
+      this.chartData.labels = data.map(data => data.category);
+      this.chartData.datasets[0].data = data.map(data => data.account);
+    } else {
+      const { data } = await api.getAssetsMonthList(
+        `${this.currDateMonthStr.year}-${this.currDateMonthStr.month}`,
+      );
+      this.chartData.labels = data.map(data => data.asset);
+      this.chartData.datasets[0].data = data.map(data => data.account);
+    }
   },
 };
 </script>

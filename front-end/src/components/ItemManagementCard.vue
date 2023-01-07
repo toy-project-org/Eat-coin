@@ -1,18 +1,11 @@
 <template>
   <div class="card-container">
     <div class="card-icon">
-      <v-icon color="white">mdi-card-text</v-icon>
-      <!-- <p class="card-icon-title">{{ title[0] }}</p> -->
+      <v-icon color="white">{{ item.image }}</v-icon>
     </div>
-    <p class="card-title">{{ title }}</p>
+    <p class="card-title">{{ item.name }}</p>
 
     <div>
-      <!-- <ItemModal
-        :type="type"
-        :icon="'mdi-pencil-outline'"
-        :editOriginData="title"
-        @newItem="editNewItem"
-      /> -->
       <v-btn icon variant="text" class="btn-add-history-plus mr-1" @click="addMovePage()">
         <v-icon>mdi-pencil-outline</v-icon>
       </v-btn>
@@ -21,22 +14,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-// import ItemModal from './ItemModal.vue';
+import { CategoryBasicItem } from '@/types/project';
+import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
   name: 'ItemManagementCard',
 
-  // components: { ItemModal },
-
   props: {
+    item: { type: Object as PropType<CategoryBasicItem>, required: true },
     type: { type: String, required: true },
-    title: { type: String, required: true },
-    idx: { type: Number, required: true },
   },
 
   created() {
-    console.log('idx', this.idx, this.type);
+    console.log('idx', this.type, this.item);
   },
 
   methods: {
@@ -47,13 +37,9 @@ export default defineComponent({
     movePage(new_page: string) {
       this.$router.push({
         name: new_page,
-        params: { id: this.idx },
+        params: { id: this.item.id },
       });
     },
-
-    // editNewItem(title: string, newData: string) {
-    //   this.$emit('editNewItem', newData, this.idx);
-    // },
   },
 });
 </script>

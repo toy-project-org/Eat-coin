@@ -130,7 +130,9 @@ button {
 .btn-card-menu {
   @include btn-active(35px, 1.2rem, $font-color);
 }
-
+.btn-icon-active {
+  @include btn-active(40px, 1.2rem, $font-color);
+}
 .page-title {
   font-size: $font-lg;
   font-weight: 500;
@@ -142,7 +144,6 @@ button {
   border-radius: 10px;
   padding-top: 2px;
   margin-bottom: 10px;
-  // box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 
   .container-box-header {
     @extend %flex-row-space-btw;
@@ -177,6 +178,9 @@ button {
   width: 70px;
   height: 70px;
   border-radius: 50%;
+
+  transition: $tran-02;
+  cursor: pointer;
 }
 .add-icon::before {
   content: '';
@@ -201,7 +205,9 @@ button {
   height: 20px;
   border-radius: 50%;
 }
-
+.add-icon:active {
+  scale: 1.1;
+}
 @mixin btn-sm($bg-color) {
   background-color: $bg-color;
   border-radius: 5px;
@@ -258,6 +264,19 @@ button {
 
 .icon-size-md {
   font-size: 1.5rem;
+}
+
+.select-icon-title {
+  font-size: $font-lg;
+}
+.select-icon-title-bg {
+  position: absolute;
+  top: 21px;
+  left: -1px;
+  height: 12px;
+  width: 90px;
+  background-color: $container-color;
+  z-index: -1;
 }
 
 /* Transition - Slide(Next and Prev) */
