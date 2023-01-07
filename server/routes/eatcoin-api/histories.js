@@ -1,6 +1,7 @@
 const { json } = require('body-parser');
 const express = require('express');
 const morgan = require('morgan');
+const { query } = require('../../lib/config');
 const router = express.Router();
 const db = require('../../lib/config');
 const getDate = require('../../lib/etc');
@@ -136,30 +137,66 @@ router.get('/month/:ym', (req, res, next) => {
 router.post('/', (req, res, next) => {
     console.log("add one");
 
-    const { title, amount, payment_date, type,category, isfixed, method, memo } = req.body;
+    const { title, amount, payment_date, type, category, isfixed, method, memo } = req.body;
     const { name, image } = category;
 
     const sql_cid = `select cid from categories where name = '${name}'`;
+    const sql_add_cid = `insert into categories(name, image) values('${name}', 'mdi-dots-horizontal-circle')`
 
     console.log(req.body);
 
-    db.query(sql_cid, (err, result) => {
-        if (err) {
-            console.log(err);
-            res.status(500).send('Internal Server Error');
+    function findCid() {
+        return new Promise(resolve => {
+            db.query(sql_cid, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Internal Server Error');
+                }
+                console.log(`find ${name}`, result);
+                resolve(result);
+            })
+        })
+    }
+    
+    function addCid() {
+        return new Promise(resolve => {
+            db.query(sql_add_cid, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Internal Server Error');
+                }
+                console.log(`add ${name}`, result);
+                resolve(result.insertId);
+            })
+        })
+    }
+
+    async function addHist() {
+        let cid;
+        const find = await findCid(cid);
+        
+        if (find.length == 0) {
+            console.log(`not found ${name}`);
+            cid = await addCid();
+        } else {
+            console.log(`exist ${name}`, find);
+            cid = find[0].cid;
         }
 
-        console.log(result);
-
-        const cid = result[0].cid;
+        console.log('add hist');
         const sql_add = `insert into histories(title, amount, payment_date, type, category, isfixed, method, memo) values('${title}', ${amount}, '${payment_date}', '${type}', ${cid}, '${isfixed}', '${method}', '${memo}')`;
-
         db.query(sql_add, (err, result) => {
-            if (err) throw err;
+            if (err) {
+                console.log(err);
+                res.status(500).send('Internal Server Error');
+            }
 
-            res.status(200).json({message : 'OK'});
-        });
-    });
+            console.log('add hist success', result);
+            res.status(200).json({ message : 'OK' });
+        })
+    }
+
+    addHist();
 });
 
 // 3. 내역 수정
@@ -215,7 +252,7 @@ router.delete('/:id', (req, res, next) => {
             console.log(err);
             res.status(500).send('Internal Server Error');
         }
-        
+
         console.log(results);
 
         db.query(del, (err, results) => {
@@ -224,46 +261,5 @@ router.delete('/:id', (req, res, next) => {
         })
     });
 });
-
-// 5. (삭제됨) 키워드 검색 todo: 공백만 들어오면 검색 안 하게 처리
-// router.get('/search/:ym/:keyword', (req, res) => {
-//     const { ym , keyword } = req.params
-//     const today = new Date();
-
-//     const search = `select * from histories as h inner join categories as c on h.category = c.cid where h.payment_date like '${ym}%' and h.title like '%${keyword}%'`;
-//     const list = [];
-
-//     console.log('search keyword:: ', keyword);
-    
-//     db.query(search, (err, result) => {
-//         if (err) throw err;
-//         console.log(result);
-
-//         result.map((data) => {
-//             let { ...history } = {
-//                 hid : data.hid,
-//                 title : data.title,
-//                 amount : data.amount,
-//                 payment_date : data.payment_date,
-//                 category : {
-//                     cid : data.cid,
-//                     name : data.name,
-//                     type : data.type,
-//                     image : data.image
-//                 },
-//                 isfixed : data.isfixed,
-//                 method : data.method,
-//                 memo : data.memo,
-//             };
-
-//             list.push(history);
-
-//         });
-
-//         console.log(list);
-//         res.status(200).json(list);
-
-//     });
-// });
 
 module.exports = router;
