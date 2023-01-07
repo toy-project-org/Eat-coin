@@ -139,7 +139,7 @@ router.delete('/:id', (req, res) => {
         })
     }
 
-    async function delHist() {
+    async function delCate() {
         const find = await findHist();
 
         if (find.length != 0) {
@@ -155,7 +155,7 @@ router.delete('/:id', (req, res) => {
 
             if (result.length == 0) {
                 console.log('not found category');
-                res.status(400).send(`[Not found] cid = ${cid}`);
+                res.status(400).send(`[Not found] cid = ${id}`);
             }
 
             console.log('delete', result);
@@ -163,7 +163,7 @@ router.delete('/:id', (req, res) => {
         })
     }
 
-    delHist();
+    delCate();
 })
 
 module.exports = router;
