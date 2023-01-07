@@ -1,6 +1,14 @@
 let sql;
 // const today = new Date();
 
+const getToday = (today) => {
+    const y = today.getFullYear();
+    const m = today.getMonth() + 1;
+    const d = today.getDate();
+    
+    return `${y}-${m}-${d}`;
+}
+
 const date = (today) => {
     let y = today.getFullYear();
     let m = today.getMonth() + 1;
