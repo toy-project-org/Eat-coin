@@ -102,27 +102,6 @@ router.put('/:id', (req, res) => {
     })
 })
 
-// 4. 자산 삭제
-// router.delete('/:id', (req, res) => {
-//     console.log("Delete asset");
-
-//     const id = req.params.id;
-//     const sql = `delete from asset where aid = ${id}`;
-
-
-    
-
-//     db.query(sql, (err, result) => {
-//         if (err) {
-//             console.log(err);
-//             res.status(500).send('Internal Server Error');
-//         }
-
-//         console.log(result);
-//         res.status(200).json({message : "OK"});
-//     })
-// })
-
 router.delete('/:id', (req, res) => {
     console.log("Delete asset");
 
