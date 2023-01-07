@@ -118,12 +118,12 @@ router.get('/asset/:ym', (req, res) => {
   console.log(date);
 
   const list = [];
-  const sql = `select a.name, a.image, aifnull(sum(h.amount), 0) as sum from histories as h right outer join asset as a on h.method = a.name and type = '지출' and payment_date like '${date}%' group by a.name order by sum desc, name asc`;
+  const sql = `select a.name, a.image, ifnull(sum(h.amount), 0) as sum from histories as h right outer join asset as a on h.method = a.name and type = '지출' and payment_date like '${date}%' group by a.name order by sum desc, name asc`;
   
   db.query(sql, (err, result) => {
     if (err) {
       console.log(err);
-      res.status(500).send('Internal Server Errror');
+      res.status(500).send('Internal Server Error');
     }
 
     result.map(data => {
@@ -134,7 +134,7 @@ router.get('/asset/:ym', (req, res) => {
       }
 
       list.push(info);
-      
+
     })
 
     console.log(list);
