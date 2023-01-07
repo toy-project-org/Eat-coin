@@ -211,32 +211,101 @@ router.put('/:id', (req, res, next) => {
 
     const sql_hid = `select * from histories where hid = ${id}`;
     const sql_cid = `select cid from categories where name = '${name}'`;
+    const sql_add_cid = `insert into categories(name, image) values('${name}', 'mdi-dots-horizontal-circle')`
 
-    // 해당 목록 있는지 체크
-    db.query(sql_hid, (err, result) => {
-        if (err) {
-            console.log(err);
-            res.status(500).send('Internal Server Error');
+    function findHist() {
+        return new Promise(resolve => {
+            db.query(sql_hid, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Internal Server Error');
+                }
+
+                console.log(`find hist`, result);
+                resolve(result);
+            })
+        })
+    }
+
+    function findCid() {
+        return new Promise(resolve => {
+            db.query(sql_cid, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Internal Server Error');
+                }
+                console.log(`find ${name}`, result);
+                resolve(result);
+            })
+        })
+    }
+    
+    function addCid() {
+        return new Promise(resolve => {
+            db.query(sql_add_cid, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Internal Server Error');
+                }
+                console.log(`add ${name}`, result);
+                resolve(result.insertId);
+            })
+        })
+    }
+
+    async function editHist() {
+        let cid;
+        let find = await findHist();
+
+        if (find.length == 0) {
+            console.log('Not found');
+            res.status(500).send('history is not found');
         }
 
-        console.log(result);
+        find = await findCid();
 
-        // cid 입력을 위해 카테고리 이름으로 아이디 찾음
-        db.query(sql_cid, (err, result) => {
-            if (err) throw err;
-            
-            console.log(result);
+        if (find.length == 0) cid = await addCid();
+        else cid = find[0].cid;
 
-            const cid = result[0].cid;
-            const sql_update = `update histories set title = '${title}', amount = ${amount}, payment_date = '${payment_date}', type = '${type}', category = ${cid}, isfixed = '${isfixed}', method = '${method}', memo = '${memo}' where hid = ${id}`;
-            console.log(sql_update);
-            // 찾은 cid와 함께 목록 업데이트
-            db.query(sql_update, (err, result) => {
-                if (err) throw err;
-                res.status(200).json({message : 'OK'});
-            });
+        const sql_update = `update histories set title = '${title}', amount = ${amount}, payment_date = '${payment_date}', type = '${type}', category = ${cid}, isfixed = '${isfixed}', method = '${method}', memo = '${memo}' where hid = ${id}`;
+
+        db.query(sql_update, (err, result) => {
+            if (err) {
+                console.log(err);
+                res.status(500).send('Internal Server Error');
+            }
+
+            res.status(200).json({message : 'OK'});
         });
-    });
+    }
+
+    editHist();
+
+    // // 해당 목록 있는지 체크
+    // db.query(sql_hid, (err, result) => {
+    //     if (err) {
+    //         console.log(err);
+    //         res.status(500).send('Internal Server Error');
+    //     }
+
+    //     console.log(result);
+
+    //     // cid 입력을 위해 카테고리 이름으로 아이디 찾음
+    //     db.query(sql_cid, (err, result) => {
+    //         if (err) throw err;
+            
+    //         console.log(result);
+
+    //         const cid = result[0].cid;
+    //         const sql_update = `update histories set title = '${title}', amount = ${amount}, payment_date = '${payment_date}', type = '${type}', category = ${cid}, isfixed = '${isfixed}', method = '${method}', memo = '${memo}' where hid = ${id}`;
+    //         console.log(sql_update);
+    //         // 찾은 cid와 함께 목록 업데이트
+    //         db.query(sql_update, (err, result) => {
+    //             if (err) throw err;
+    //             res.status(200).json({message : 'OK'});
+    //         });
+    //     });
+    // });
 });
 
 // 4. 내역 삭제
