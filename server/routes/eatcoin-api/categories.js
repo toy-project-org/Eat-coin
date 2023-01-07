@@ -107,17 +107,63 @@ router.delete('/:id', (req, res) => {
     console.log("Delete category");
 
     const id = req.params.id;
-    const sql = `delete from categories where cid = ${id}`;
+    const sql_find = `select * from histories where category = ${id}`;
+    const sql_update = `update histories set category = 0 where category = ${id}`;
+    const sql_del = `delete from categories where cid = ${id}`;
 
-    db.query(sql, (err, result) => {
-        if (err) {
-            console.log(err);
-            res.status(500).send('Internal Server Error');
+    function findHist() {
+        return new Promise(resolve => {
+            db.query(sql_find, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Internal Server Error');
+                }
+
+                console.log('find hist', result);
+                resolve(result);
+            })
+        })
+    }
+
+    function updateHist() {
+        return new Promise(resolve => {
+            db.query(sql_update, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Internal Server Error');
+                }
+
+                console.log('update!');
+                resolve(result);
+            })
+        })
+    }
+
+    async function delHist() {
+        const find = await findHist();
+
+        if (find.length != 0) {
+            await updateHist();
+            console.log(`move category to etc`);
         }
 
-        console.log(result);
-        res.status(200).json({message : "OK"});
-    })
+        db.query(sql_del, (err, result) => {
+            if (err) {
+                console.log(err);
+                res.status(500).send('Internal Server Error');
+            }
+
+            if (result.length == 0) {
+                console.log('not found category');
+                res.status(400).send(`[Not found] cid = ${cid}`);
+            }
+
+            console.log('delete', result);
+            res.status(200).send({message : 'OK'});
+        })
+    }
+
+    delHist();
 })
 
 module.exports = router;

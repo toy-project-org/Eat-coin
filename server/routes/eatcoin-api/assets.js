@@ -103,21 +103,87 @@ router.put('/:id', (req, res) => {
 })
 
 // 4. 자산 삭제
+// router.delete('/:id', (req, res) => {
+//     console.log("Delete asset");
+
+//     const id = req.params.id;
+//     const sql = `delete from asset where aid = ${id}`;
+
+
+    
+
+//     db.query(sql, (err, result) => {
+//         if (err) {
+//             console.log(err);
+//             res.status(500).send('Internal Server Error');
+//         }
+
+//         console.log(result);
+//         res.status(200).json({message : "OK"});
+//     })
+// })
+
 router.delete('/:id', (req, res) => {
     console.log("Delete asset");
 
     const id = req.params.id;
-    const sql = `delete from asset where aid = ${id}`;
+    const sql_find = `select name from asset where aid = ${id}`;
+    const sql_update = `update histories set method = '기타' where method = ?`;
+    const sql_del = `delete from asset where aid = ${id}`;
 
-    db.query(sql, (err, result) => {
-        if (err) {
-            console.log(err);
-            res.status(500).send('Internal Server Error');
+    function findHist() {
+        return new Promise(resolve => {
+            db.query(sql_find, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Internal Server Error');
+                }
+
+                console.log('find hist', result);
+                resolve(result);
+            })
+        })
+    }
+
+    function updateHist(name) {
+        return new Promise(resolve => {
+            db.query(sql_update, name, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Internal Server Error');
+                }
+
+                console.log('update!');
+                resolve(result);
+            })
+        })
+    }
+
+    async function delAsset() {
+        const find = await findHist();
+
+        if (find.length != 0) {
+            await updateHist(find[0].name);
+            console.log(`move asset to etc`);
         }
 
-        console.log(result);
-        res.status(200).json({message : "OK"});
-    })
+        db.query(sql_del, (err, result) => {
+            if (err) {
+                console.log(err);
+                res.status(500).send('Internal Server Error');
+            }
+
+            if (result.length == 0) {
+                console.log('not found asset');
+                res.status(400).send(`[Not found] aid = ${id}`);
+            }
+
+            console.log('delete', result);
+            res.status(200).send({message : 'OK'});
+        })
+    }
+
+    delAsset();
 })
 
 module.exports = router;
