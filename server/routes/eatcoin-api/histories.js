@@ -280,32 +280,6 @@ router.put('/:id', (req, res, next) => {
     }
 
     editHist();
-
-    // // 해당 목록 있는지 체크
-    // db.query(sql_hid, (err, result) => {
-    //     if (err) {
-    //         console.log(err);
-    //         res.status(500).send('Internal Server Error');
-    //     }
-
-    //     console.log(result);
-
-    //     // cid 입력을 위해 카테고리 이름으로 아이디 찾음
-    //     db.query(sql_cid, (err, result) => {
-    //         if (err) throw err;
-            
-    //         console.log(result);
-
-    //         const cid = result[0].cid;
-    //         const sql_update = `update histories set title = '${title}', amount = ${amount}, payment_date = '${payment_date}', type = '${type}', category = ${cid}, isfixed = '${isfixed}', method = '${method}', memo = '${memo}' where hid = ${id}`;
-    //         console.log(sql_update);
-    //         // 찾은 cid와 함께 목록 업데이트
-    //         db.query(sql_update, (err, result) => {
-    //             if (err) throw err;
-    //             res.status(200).json({message : 'OK'});
-    //         });
-    //     });
-    // });
 });
 
 // 4. 내역 삭제
