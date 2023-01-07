@@ -89,12 +89,12 @@ router.get('/asset', (req, res) => {
   console.log(today);
 
   const list = [];
-  const sql = `select a.name, ifnull(sum(h.amount), 0) as sum from histories as h right outer join asset as a on h.method = a.name and type = '지출' and payment_date like '${today}%' group by a.name order by sum desc, name asc`;
+  const sql = `select a.name, a,image, ifnull(sum(h.amount), 0) as sum from histories as h right outer join asset as a on h.method = a.name and type = '지출' and payment_date like '${today}%' group by a.name order by sum desc, name asc`;
   
   db.query(sql, (err, result) => {
     if (err) {
       console.log(err);
-      res.status(500).send('Internal Server Errror');
+      res.status(500).send('Internal Server Error');
     }
 
     result.map(data => {
