@@ -259,7 +259,7 @@ router.put('/:id', (req, res, next) => {
 
         if (find.length == 0) {
             console.log('Not found');
-            res.status(500).send('history is not found');
+            res.status(400).send(`[Not found] cid = ${cid}`);
         }
 
         find = await findCid();
