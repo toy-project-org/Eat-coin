@@ -1,6 +1,7 @@
 const { json } = require('body-parser');
 const express = require('express');
 const morgan = require('morgan');
+const { listeners } = require('../../lib/config');
 const router = express.Router();
 const db = require('../../lib/config');
 const getDate = require('../../lib/etc');
@@ -88,38 +89,25 @@ router.get('/asset', (req, res) => {
   console.log(today);
 
   const list = [];
-  const sql_asset = `select * from asset`;
-  const sql_hist = `select amount, method from histories where payment_date like '${today}%'`;
-
-  db.query(sql_asset, (err, result) => {
+  const sql = `select a.name, ifnull(sum(h.amount), 0) as sum from histories as h right outer join asset as a on h.method = a.name and type = '지출' and payment_date like '${today}%' group by a.name order by sum desc, name asc`;
+  
+  db.query(sql, (err, result) => {
     if (err) {
       console.log(err);
-      res.status(500).send('Internal Server Error');
+      res.status(500).send('Internal Server Errror');
     }
 
-    db.query(sql_hist, (err, result2) => {
-      if (err) {
-        console.log(err);
-        res.status(500).send('Internal Server Error');
+    result.map(data => {
+      let { ...info } = {
+        asset : data.name,
+        account : data.sum,
       }
+      list.push(info);
+    })
 
-      result.map((assets) => {
-        const sum = result2
-        .filter(hists => {return hists.method == assets.name})
-        .reduce((acc, data) => {return acc += data.amount}, 0);
-        
-        let { ...info } = {
-          asset : assets.name,
-          account : sum,
-        }
-
-        list.push(info);
-      });
-
-      console.log(list);
-      res.status(200).json(list);
-    });
-  });
+    console.log(list);
+    res.status(200).json(list);
+  })
 });
 
 // 2-1. 특정 년월 자산 통계
@@ -130,24 +118,23 @@ router.get('/asset/:ym', (req, res) => {
   console.log(date);
 
   const list = [];
-  const sql = `select a.aid, sum(amount) as sum, method, a.image from histories as h inner join asset as a where h.method = a.name and payment_date like '${date}%' group by method`;
-
+  const sql = `select a.name, ifnull(sum(h.amount), 0) as sum from histories as h right outer join asset as a on h.method = a.name and type = '지출' and payment_date like '${date}%' group by a.name order by sum desc, name asc`;
+  
   db.query(sql, (err, result) => {
     if (err) {
       console.log(err);
-      res.status(500).send('Internal Server Error');
+      res.status(500).send('Internal Server Errror');
     }
 
     result.map(data => {
       let { ...info } = {
-        asset : data.method,
+        asset : data.name,
         account : data.sum,
-        image : data.image,
       }
-
       list.push(info);
     })
 
+    console.log(list);
     res.status(200).json(list);
   })
 });
