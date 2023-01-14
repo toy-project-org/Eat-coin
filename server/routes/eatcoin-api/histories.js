@@ -1,6 +1,7 @@
 const { json } = require('body-parser');
 const express = require('express');
 const morgan = require('morgan');
+const { query } = require('../../lib/config');
 const router = express.Router();
 const db = require('../../lib/config');
 const getDate = require('../../lib/etc');
@@ -16,12 +17,15 @@ router.get('/', function(req, res, next) {
 
     let list = [];
     const date = getDate(new Date());
-    const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date >= "${date}" order by h.payment_date desc`;
+    const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date >= "${date}" order by h.payment_date desc, h.hid desc`;
 
     console.log('a week ago', date);
 
     db.query(sql, (err, result) => {
-        if (err) throw err;
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal Server Error');
+        }
 
         result.map((data) => {
             let { ...history } = {
@@ -29,10 +33,10 @@ router.get('/', function(req, res, next) {
                 title : data.title,
                 amount : data.amount,
                 payment_date : data.payment_date,
+                type : data.type,
                 category : {
                     cid : data.cid,
                     name : data.name,
-                    type : data.type,
                     image : data.image
                 },
                 isfixed : data.isfixed,
@@ -58,7 +62,10 @@ router.get('/:id', (req, res, next) => {
     const sql = `select * from histories as h inner join categories as c on h.category = c.cid where h.hid = ${id}`;
 
     db.query(sql, (err, result) => {
-        if (err) throw err;
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal Server Error');
+        }
 
         result.map((data) => {
             let { ...detail } = {
@@ -66,10 +73,10 @@ router.get('/:id', (req, res, next) => {
                 title : data.title,
                 amount : data.amount,
                 payment_date : data.payment_date,
+                type : data.type,
                 category : {
                     cid : data.cid,
                     name : data.name,
-                    type : data.type,
                     image : data.image
                 },
                 isfixed : data.isfixed,
@@ -92,10 +99,13 @@ router.get('/month/:ym', (req, res, next) => {
 
     const list = [];
     const date = req.params.ym;
-    const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date like "${date}%" order by h.payment_date desc`;
+    const sql = `select * from histories as h inner join categories as c on h.category = c.cid where payment_date like "${date}%" order by h.payment_date desc, h.hid desc`;
 
     db.query(sql, (err, result) => {
-        if (err) throw err;
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal Server Error');
+        }
 
         result.map((data) => {
             let { ...history } = {
@@ -103,10 +113,10 @@ router.get('/month/:ym', (req, res, next) => {
                 title : data.title,
                 amount : data.amount,
                 payment_date : data.payment_date,
+                type : data.type,
                 category : {
                     cid : data.cid,
                     name : data.name,
-                    type : data.type,
                     image : data.image
                 },
                 isfixed : data.isfixed,
@@ -127,27 +137,66 @@ router.get('/month/:ym', (req, res, next) => {
 router.post('/', (req, res, next) => {
     console.log("add one");
 
-    const { title, amount, payment_date, category, isfixed, method, memo } = req.body;
-    const { name, type, image } = category;
+    const { title, amount, payment_date, type, category, isfixed, method, memo } = req.body;
+    const { name, image } = category;
 
-    const sql_cid = `select cid from categories where name = '${name}' and type = '${type}'`;
+    const sql_cid = `select cid from categories where name = '${name}'`;
+    const sql_add_cid = `insert into categories(name, image) values('${name}', 'mdi-dots-horizontal-circle')`
 
     console.log(req.body);
 
-    db.query(sql_cid, (err, result) => {
-        if (err) throw err;
+    function findCid() {
+        return new Promise(resolve => {
+            db.query(sql_cid, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Internal Server Error');
+                }
+                console.log(`find ${name}`, result);
+                resolve(result);
+            })
+        })
+    }
+    
+    function addCid() {
+        return new Promise(resolve => {
+            db.query(sql_add_cid, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Internal Server Error');
+                }
+                console.log(`add ${name}`, result);
+                resolve(result.insertId);
+            })
+        })
+    }
 
-        console.log(result);
+    async function addHist() {
+        let cid;
+        const find = await findCid(cid);
+        
+        if (find.length == 0) {
+            console.log(`not found ${name}`);
+            cid = await addCid();
+        } else {
+            console.log(`exist ${name}`, find);
+            cid = find[0].cid;
+        }
 
-        const cid = result[0].cid;
-        const sql_add = `insert into histories(title, amount, payment_date, category, isfixed, method, memo) values('${title}', ${amount}, '${payment_date}', ${cid}, '${isfixed}', '${method}', '${memo}')`;
-
+        console.log('add hist');
+        const sql_add = `insert into histories(title, amount, payment_date, type, category, isfixed, method, memo) values('${title}', ${amount}, '${payment_date}', '${type}', ${cid}, '${isfixed}', '${method}', '${memo}')`;
         db.query(sql_add, (err, result) => {
-            if (err) throw err;
+            if (err) {
+                console.log(err);
+                res.status(500).send('Internal Server Error');
+            }
 
-            res.status(200).json({message : 'OK'});
-        });
-    });
+            console.log('add hist success', result);
+            res.status(200).json({ message : 'OK' });
+        })
+    }
+
+    addHist();
 });
 
 // 3. 내역 수정
@@ -155,35 +204,82 @@ router.put('/:id', (req, res, next) => {
     console.log("update one");
 
     const { id } = req.params;
-    const { title, amount, payment_date, category, isfixed, method, memo } = req.body;
-    const { name, type, image } = category;
+    const { title, amount, payment_date, type, category, isfixed, method, memo } = req.body;
+    const { name, image } = category;
 
     console.log(id, req.body);
 
     const sql_hid = `select * from histories where hid = ${id}`;
     const sql_cid = `select cid from categories where name = '${name}'`;
+    const sql_add_cid = `insert into categories(name, image) values('${name}', 'mdi-dots-horizontal-circle')`
 
-    // 해당 목록 있는지 체크
-    db.query(sql_hid, (err, result) => {
-        if (err) throw err;
-        console.log(result);
+    function findHist() {
+        return new Promise(resolve => {
+            db.query(sql_hid, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Internal Server Error');
+                }
 
-        // cid 입력을 위해 카테고리 이름으로 아이디 찾음
-        db.query(sql_cid, (err, result) => {
-            if (err) throw err;
-            
-            console.log(result);
+                console.log(`find hist`, result);
+                resolve(result);
+            })
+        })
+    }
 
-            const cid = result[0].cid;
-            const sql_update = `update histories set title = '${title}', amount = ${amount}, payment_date = '${payment_date}', category = ${cid}, isfixed = '${isfixed}', method = '${method}', memo = '${memo}' where hid = ${id}`;
-            console.log(sql_update);
-            // 찾은 cid와 함께 목록 업데이트
-            db.query(sql_update, (err, result) => {
-                if (err) throw err;
-                res.status(200).json({message : 'OK'});
-            });
+    function findCid() {
+        return new Promise(resolve => {
+            db.query(sql_cid, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Internal Server Error');
+                }
+                console.log(`find ${name}`, result);
+                resolve(result);
+            })
+        })
+    }
+    
+    function addCid() {
+        return new Promise(resolve => {
+            db.query(sql_add_cid, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Internal Server Error');
+                }
+                console.log(`add ${name}`, result);
+                resolve(result.insertId);
+            })
+        })
+    }
+
+    async function editHist() {
+        let cid;
+        let find = await findHist();
+
+        if (find.length == 0) {
+            console.log('Not found');
+            res.status(400).send(`[Not found] cid = ${cid}`);
+        }
+
+        find = await findCid();
+
+        if (find.length == 0) cid = await addCid();
+        else cid = find[0].cid;
+
+        const sql_update = `update histories set title = '${title}', amount = ${amount}, payment_date = '${payment_date}', type = '${type}', category = ${cid}, isfixed = '${isfixed}', method = '${method}', memo = '${memo}' where hid = ${id}`;
+
+        db.query(sql_update, (err, result) => {
+            if (err) {
+                console.log(err);
+                res.status(500).send('Internal Server Error');
+            }
+
+            res.status(200).json({message : 'OK'});
         });
-    });
+    }
+
+    editHist();
 });
 
 // 4. 내역 삭제
@@ -195,7 +291,11 @@ router.delete('/:id', (req, res, next) => {
     const del = `delete from histories where hid = ${id}`;
 
     db.query(search, (err, results) => {
-        if (err) throw err;
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal Server Error');
+        }
+
         console.log(results);
 
         db.query(del, (err, results) => {
@@ -204,46 +304,5 @@ router.delete('/:id', (req, res, next) => {
         })
     });
 });
-
-// 5. (삭제됨) 키워드 검색 todo: 공백만 들어오면 검색 안 하게 처리
-// router.get('/search/:ym/:keyword', (req, res) => {
-//     const { ym , keyword } = req.params
-//     const today = new Date();
-
-//     const search = `select * from histories as h inner join categories as c on h.category = c.cid where h.payment_date like '${ym}%' and h.title like '%${keyword}%'`;
-//     const list = [];
-
-//     console.log('search keyword:: ', keyword);
-    
-//     db.query(search, (err, result) => {
-//         if (err) throw err;
-//         console.log(result);
-
-//         result.map((data) => {
-//             let { ...history } = {
-//                 hid : data.hid,
-//                 title : data.title,
-//                 amount : data.amount,
-//                 payment_date : data.payment_date,
-//                 category : {
-//                     cid : data.cid,
-//                     name : data.name,
-//                     type : data.type,
-//                     image : data.image
-//                 },
-//                 isfixed : data.isfixed,
-//                 method : data.method,
-//                 memo : data.memo,
-//             };
-
-//             list.push(history);
-
-//         });
-
-//         console.log(list);
-//         res.status(200).json(list);
-
-//     });
-// });
 
 module.exports = router;
