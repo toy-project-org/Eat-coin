@@ -1,4 +1,4 @@
-import { HistoryDetailItem } from '@/types/project';
+import { CategoryItemPost, HistoryDetailItem } from '@/types/project';
 import * as req from './AxiosRequest';
 
 /** History */
@@ -41,4 +41,54 @@ export const getYearAmount = (year: number /** xxxx */) => {
 
 export const getDayAmount = (date: string /** xxxx-xx */) => {
   return req.get(`/eatcoin-api/statistics/amount/detail/${date}`);
+};
+
+/** Category */
+export const getCategoryList = () => {
+  return req.get(`/eatcoin-api/categories`);
+};
+
+export const getCategoryItem = (id: string | string[]) => {
+  return req.get(`/eatcoin-api/categories/${id}`);
+};
+
+export const addCategoryItem = (data: CategoryItemPost) => {
+  return req.post(`/eatcoin-api/categories`, data);
+};
+
+export const editCategoryItem = (id: string | string[], data: CategoryItemPost) => {
+  return req.put(`/eatcoin-api/categories/${id}`, data);
+};
+
+export const deleteCategoryItem = (id: string | string[]) => {
+  return req._delete(`/eatcoin-api/categories/${id}`);
+};
+
+export const getCategoryMonthList = (date: string /** xxxx-xx */) => {
+  return req.get(`/eatcoin-api/statistics/category/${date}`);
+};
+
+/** Assets */
+export const getAssetsList = () => {
+  return req.get(`/eatcoin-api/assets`);
+};
+
+export const getAssetsItem = (id: string | string[]) => {
+  return req.get(`/eatcoin-api/assets/${id}`);
+};
+
+export const addAssetsItem = (data: CategoryItemPost) => {
+  return req.post(`/eatcoin-api/assets`, data);
+};
+
+export const editAssetsItem = (id: string | string[], data: CategoryItemPost) => {
+  return req.put(`/eatcoin-api/assets/${id}`, data);
+};
+
+export const deleteAssetsItem = (id: string | string[]) => {
+  return req._delete(`/eatcoin-api/assets/${id}`);
+};
+
+export const getAssetsMonthList = (date: string /** xxxx-xx */) => {
+  return req.get(`/eatcoin-api/statistics/asset/${date}`);
 };

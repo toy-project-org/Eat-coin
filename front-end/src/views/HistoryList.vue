@@ -107,7 +107,7 @@ export default defineComponent({
 
   data: () => {
     return {
-      currMonthAmount: { in: 10000, out: 500000 },
+      currMonthAmount: { in: 0, out: 0 },
       currDateMonth: { year: 0, month: 0 },
       currDateMonthStr: { year: '', month: '' },
       dataType: '전체',
@@ -163,9 +163,9 @@ export default defineComponent({
       tmpDataList.map(data => {
         this.addHistoryData(this.historyDataList, data);
 
-        if (data.category.type === '수입') {
+        if (data.type === '수입') {
           this.addHistoryData(this.historyDataListIn, data);
-        } else if (data.category.type === '지출') {
+        } else if (data.type === '지출') {
           this.addHistoryData(this.historyDataListOut, data);
         }
       });

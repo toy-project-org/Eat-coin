@@ -1,10 +1,11 @@
 <template>
+  <!-- Sidebar -->
   <nav class="sidebar-nav" :class="isNavbarShow ? 'action' : ''">
     <header class="header px-1">
       <v-btn icon variant="text" @click="setNavbarShow()">
         <i class="bx bx-x icon-size-md"></i>
       </v-btn>
-      <p @click="[movePage('Home'), setNavbarShow()]" class="header-logo cursor-pointer">
+      <p @click="[movePage('HomePage'), setNavbarShow()]" class="header-logo cursor-pointer">
         EAT COIN
       </p>
       <v-btn icon variant="text" class="btn-disabled">
@@ -29,21 +30,23 @@
     </v-list>
   </nav>
 
+  <!-- Header -->
   <header class="header px-1">
     <v-btn icon variant="text" @click="[removeBackground(), setNavbarShow()]">
       <i class="bx bx-menu icon-size-md"></i>
     </v-btn>
-    <p @click="movePage('Home')" class="header-logo cursor-pointer">EAT COIN</p>
+    <p @click="movePage('HomePage')" class="header-logo cursor-pointer">EAT COIN</p>
     <v-btn
-      @click="movePage('AddHistory')"
+      @click="movePage('AddHistoryPage')"
       icon
       variant="text"
-      :class="$route.name !== 'AddHistory' ? '' : 'btn-disabled'"
+      :class="$route.name !== 'AddHistoryPage' ? '' : 'btn-disabled'"
     >
       <i class="bx bx-plus icon-size-md"></i>
     </v-btn>
   </header>
 
+  <!-- Body -->
   <div class="wrapper">
     <router-view></router-view>
   </div>
@@ -66,9 +69,9 @@ export default defineComponent({
         { text: '카테고리 관리', icon: 'mdi-shape-plus' },
       ],
       sidebarItemsPath: [
-        'Home',
+        'HomePage',
         'HistoryList',
-        'AddHistory',
+        'AddHistoryPage',
         'AssetsManagement',
         'CategoryManagement',
       ],

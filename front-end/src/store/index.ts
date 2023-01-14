@@ -3,14 +3,10 @@ import { createStore } from 'vuex';
 
 export default createStore<State>({
   state: {
-    test_1: 1,
+    test: '',
   },
   getters: {},
-  mutations: {
-    setTestOne(state) {
-      state.test_1 = 2;
-    },
-  },
+  mutations: {},
   actions: {},
   modules: {},
 });

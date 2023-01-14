@@ -1,11 +1,11 @@
 <template>
-  <transition name="next" mode="out-in" appear>
+  <transition name="prev" mode="out-in" appear>
     <div>
       <v-form class="container-box pb-1" ref="formRef">
         <div class="container-box-content">
           <!-- Date -->
           <h3 class="add-history-title mt-3">날짜</h3>
-          <Datepicker v-model="date" :format="dateFormat" class="fade-in" />
+          <Datepicker v-model="date" :format="dateFormat" class="fade-in"></Datepicker>
 
           <!-- Account Content -->
           <h3 class="add-history-title mt-3">내용</h3>
@@ -14,7 +14,7 @@
               variant="flat"
               rounded="lg"
               :color="type === '수입' ? 'success' : ''"
-              style="width: 32%"
+              style="width: 48%"
               @click="setType('수입')"
               >수입</v-btn
             >
@@ -22,27 +22,12 @@
               variant="flat"
               rounded="lg"
               :color="type === '지출' ? 'success' : ''"
-              style="width: 32%"
+              style="width: 48%"
               @click="setType('지출')"
               >지출</v-btn
             >
-            <v-btn
-              variant="flat"
-              rounded="lg"
-              :color="type === '예/적금' ? 'success' : ''"
-              style="width: 32%"
-              @click="setType('예/적금')"
-            >
-              예/적금
-            </v-btn>
           </nav>
 
-          <div class="add-history-nav">
-            <span class="mt-5 add-history-sub-title">고정</span>
-            <div>
-              <v-switch v-model="autoUpdate" color="green-lighten-2" inset hide-details></v-switch>
-            </div>
-          </div>
           <div class="mt-3 add-history-nav">
             <span class="add-history-sub-title">내역</span>
             <div class="add-history-input-width fade-in">
@@ -74,8 +59,8 @@
           <div class="mt-1 add-history-nav">
             <span class="add-history-sub-title">자산</span>
             <div class="d-flex add-history-input-width fade-in">
-              <ItemModal
-                :type="'Assets'"
+              <AddCategoryModal
+                :type="'자산'"
                 :icon="'mdi-plus-circle-outline'"
                 :data-list="assetsItems"
                 @newItem="addNewItem"
@@ -84,7 +69,7 @@
                 v-model="assets"
                 :rules="assetsRules"
                 :items="assetsItems"
-                placeholder="자산을 선택하세요."
+                placeholder="자산을 입력해주세요."
                 variant="solo"
                 density="compact"
                 required
@@ -95,8 +80,8 @@
           <div class="mt-1 add-history-nav">
             <span class="add-history-sub-title">카테고리</span>
             <div class="d-flex add-history-input-width fade-in">
-              <ItemModal
-                :type="'Category'"
+              <AddCategoryModal
+                :type="'카테고리'"
                 :icon="'mdi-plus-circle-outline'"
                 :data-list="categoryItems"
                 @newItem="addNewItem"
@@ -105,7 +90,7 @@
                 v-model="category"
                 :rules="categoryRules"
                 :items="categoryItems"
-                placeholder="카테고리를 선택하세요."
+                placeholder="카테고리를 입력해주세요."
                 variant="solo"
                 density="compact"
                 required
@@ -130,8 +115,9 @@
         </div>
 
         <div class="d-flex justify-content-evenly mb-3">
-          <v-btn @click="reset" color="warning" rounded="lg" style="width: 35%">초기화</v-btn>
-          <v-btn @click="formValidate" color="success" rounded="lg" style="width: 35%">저장</v-btn>
+          <v-btn @click="deleteHistory" color="error" rounded="lg" style="width: 30%">삭제</v-btn>
+          <v-btn @click="beforePage" color="grey" rounded="lg" style="width: 30%">취소</v-btn>
+          <v-btn @click="formValidate" color="success" rounded="lg" style="width: 30%">저장</v-btn>
         </div>
       </v-form>
     </div>
@@ -142,19 +128,19 @@
 import * as api from '@/api/app';
 import { defineComponent } from 'vue';
 import Datepicker from '@vuepic/vue-datepicker';
-import ItemModal from '@/components/ItemModal.vue';
+import AddCategoryModal from '@/components/AddCategoryModal.vue';
+import { AssetsItem, CategoryItem } from '@/types/project';
 
 export default defineComponent({
-  name: 'AddHistory',
+  name: 'HistoryDetailPage',
 
-  components: { Datepicker, ItemModal },
+  components: { Datepicker, AddCategoryModal },
 
   data() {
     return {
       date: '',
       newDate: '',
       type: '',
-      autoUpdate: true,
       title: '',
       titleRules: [
         (v: string) => !!v || '한 글자 이상 작성해주세요.',
@@ -168,7 +154,7 @@ export default defineComponent({
       assets: '',
       newAssets: '',
       assetsDialog: false,
-      assetsItems: ['하나신용카드', '하나체크카드', '국민카드', '신한카드'],
+      assetsItems: [] as string[],
       assetsRules: [
         (v: string) => !!v || '한 글자 이상 작성해주세요.',
         (v: string) => v.length <= 12 || '12자 이하로 작성해주세요.',
@@ -176,7 +162,7 @@ export default defineComponent({
       category: '',
       newCategory: '',
       categoryDialog: false,
-      categoryItems: ['식비', '교통비', '생활비', '기타'],
+      categoryItems: [] as string[],
       categoryRules: [
         (v: string) => !!v || '한 글자 이상 작성해주세요.',
         (v: string) => v.length <= 12 || '12자 이하로 작성해주세요.',
@@ -187,23 +173,64 @@ export default defineComponent({
   },
 
   created() {
-    const today = new Date();
-    this.date = this.dateFormat(today);
+    this.getHistoryDetailData();
+    this.initAssetsList();
+    this.initCategoryList();
   },
 
   methods: {
-    beforePage() {
-      this.$router.go(-1);
+    async initAssetsList() {
+      const { data } = await api.getAssetsList();
+      this.assetsItems = data.map((asset: AssetsItem) => asset.name);
     },
 
-    addNewItem(title: string, newData: string) {
-      if (title === 'Assets') {
-        this.assetsItems.push(newData);
+    async initCategoryList() {
+      const { data } = await api.getCategoryList();
+      this.categoryItems = data.map((category: CategoryItem) => category.name);
+    },
+
+    async isDuplicateName(title: string, newItemName: string) {
+      let dupIdx;
+      if (title === '자산') {
+        const { data } = await api.getAssetsList();
+        dupIdx = data.findIndex((asset: AssetsItem) => asset.name === newItemName);
+      } else {
+        const { data } = await api.getCategoryList();
+        dupIdx = data.findIndex((asset: AssetsItem) => asset.name === newItemName);
+      }
+      return dupIdx !== -1;
+    },
+
+    async addNewItem(title: string, newData: string) {
+      const duplicate = await this.isDuplicateName(title, newData);
+      if (duplicate) {
+        alert('중복인 값이 있습니다! 수정해주세요 🙂');
+        return;
+      }
+      if (title === '자산') {
+        api.addAssetsItem({ name: newData, image: 'mdi-dots-horizontal-circle' });
         this.assets = newData;
       } else {
-        this.categoryItems.push(newData);
+        api.addCategoryItem({ name: newData, image: 'mdi-dots-horizontal-circle' });
         this.category = newData;
       }
+    },
+
+    async getHistoryDetailData() {
+      const detailId = this.$route.params.id;
+      const { data } = await api.getHistoryDetail(detailId);
+
+      this.date = new Date(`${data[0].payment_date}`).toString();
+      this.type = data[0].type;
+      this.title = data[0].title;
+      this.amount = data[0].amount;
+      this.assets = data[0].method;
+      this.category = data[0].category.name;
+      this.memo = data[0].memo;
+    },
+
+    beforePage() {
+      this.$router.go(-1);
     },
 
     dateFormat(date: Date) {
@@ -234,45 +261,34 @@ export default defineComponent({
           title: this.title,
           amount: Number(this.amount),
           payment_date: this.newDate,
+          type: this.type,
           category: {
             name: this.category,
-            type: this.type,
-            image: 'image',
+            image: 'mdi-dots-horizontal-circle',
           },
           method: this.assets,
           memo: this.memo,
-          isfixed: null,
         };
 
-        await api.addHistory(addHistoryData);
+        const id = this.$route.params.id;
+        await api.editHistory(id, addHistoryData);
         this.beforePage();
       } else {
-        alert('입력하지 않은 입력값이 존재합니다.');
+        alert('입력하지 않은 입력값이 존재합니다. 😅');
       }
     },
 
-    reset() {
-      (this.$refs as HTMLFormElement).formRef.reset();
-      this.date = '';
-      this.newDate = '';
-      this.type = '';
-
-      alert(
-        `Form is reset
-          이전날짜: ${this.date}
-          타입: ${this.type}
-          날짜: ${this.newDate}
-          내역: ${this.title}
-          금액: ${this.amount}
-          자산: ${this.assets}
-          카테고리: ${this.category}
-          메모: ${this.memo}`,
-      );
+    async deleteHistory() {
+      if (confirm('정말 삭제하시겠습니까??')) {
+        const id = this.$route.params.id;
+        await api.deleteHistory(id);
+        this.beforePage();
+      }
     },
   },
 });
 </script>
 
 <style lang="scss">
-@import '../style/addHistory.scss';
+@import '../style/addHistoryPage.scss';
 </style>

@@ -1,24 +1,24 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
-import Home from '../views/Home.vue';
-import History from '../views/History.vue';
-import AddHistory from '../views/AddHistory.vue';
+import HomePage from '../views/HomePage.vue';
+import AddHistoryPage from '../views/AddHistoryPage.vue';
+import HistoryPage from '../views/HistoryPage.vue';
 import HistoryList from '../views/HistoryList.vue';
 import HistoryCalendar from '../views/HistoryCalendar.vue';
 import HistoryCategory from '../views/HistoryCategory.vue';
-import Detail from '../views/Detail.vue';
-import ItemManagement from '../views/ItemManagement.vue';
-import AddItem from '../components/AddItem.vue';
+import HistoryDetailPage from '../views/HistoryDetailPage.vue';
+import CategoryManagementPage from '../views/CategoryManagementPage.vue';
+import AddCategoryPage from '../views/AddCategoryPage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Home',
-    component: Home,
+    name: 'HomePage',
+    component: HomePage,
   },
   {
     path: '/history',
-    name: 'History',
-    component: History,
+    name: 'HistoryPage',
+    component: HistoryPage,
     children: [
       {
         path: 'list',
@@ -48,43 +48,43 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/add-history',
-    name: 'AddHistory',
-    component: AddHistory,
+    name: 'AddHistoryPage',
+    component: AddHistoryPage,
   },
   {
     path: '/assets-management',
     name: 'AssetsManagement',
-    component: ItemManagement,
+    component: CategoryManagementPage,
   },
   {
     path: '/category-management',
     name: 'CategoryManagement',
-    component: ItemManagement,
+    component: CategoryManagementPage,
   },
   {
     path: '/add-assets',
     name: 'AddAssets',
-    component: AddItem,
+    component: AddCategoryPage,
   },
   {
     path: '/add-category',
     name: 'AddCategory',
-    component: AddItem,
+    component: AddCategoryPage,
   },
   {
     path: '/edit-assets/:id',
     name: 'EditAssets',
-    component: AddItem,
+    component: AddCategoryPage,
   },
   {
     path: '/edit-category/:id',
     name: 'EditCategory',
-    component: AddItem,
+    component: AddCategoryPage,
   },
   {
     path: '/detail/:id',
-    name: 'Detail',
-    component: Detail,
+    name: 'HistoryDetailPage',
+    component: HistoryDetailPage,
   },
 ];
 

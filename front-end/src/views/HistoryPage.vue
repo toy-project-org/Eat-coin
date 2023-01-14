@@ -20,7 +20,7 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'History',
+  name: 'HistoryPage',
 
   data: () => {
     return {
@@ -72,5 +72,5 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import '../style/history.scss';
+@import '../style/historyPage.scss';
 </style>

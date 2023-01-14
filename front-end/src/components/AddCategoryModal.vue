@@ -51,7 +51,7 @@
 import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
-  name: 'ItemModal',
+  name: 'AddCategoryModal',
 
   props: {
     type: { type: String, required: true },
@@ -83,7 +83,6 @@ export default defineComponent({
     async dataVaildate() {
       const { valid } = await (this.$refs as HTMLFormElement).newDataRef.validate();
       if (valid) {
-        alert(`New Data are valid: ${this.newData}`);
         this.$emit('newItem', this.type, this.newData);
         this.dialog = false;
       }
@@ -93,11 +92,7 @@ export default defineComponent({
   watch: {
     dialog() {
       if (this.dialog) {
-        if (this.editOriginData) {
-          this.newData = this.editOriginData;
-        } else {
-          this.newData = '';
-        }
+        this.newData = this.editOriginData ? this.editOriginData : '';
       }
     },
   },
