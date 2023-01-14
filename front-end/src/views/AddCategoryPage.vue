@@ -94,6 +94,7 @@ export default defineComponent({
       paramsId: [] as string[] | string,
       type: '',
       item: {
+        beforeName: '',
         name: '',
         image: '',
       },
@@ -118,12 +119,14 @@ export default defineComponent({
         if (this.type === 'Category') {
           const { data } = await api.getCategoryItem(this.paramsId);
           this.item = {
+            beforeName: data.name,
             name: data.name,
             image: data.image,
           };
         } else {
           const { data } = await api.getAssetsItem(this.paramsId);
           this.item = {
+            beforeName: data.name,
             name: data.name,
             image: data.image,
           };
@@ -191,7 +194,7 @@ export default defineComponent({
       }
 
       const duplicate = await this.isDuplicateName(this.item.name);
-      if (duplicate) {
+      if (this.item.beforeName !== this.item.name && duplicate) {
         alert('중복인 값이 있습니다! 수정해주세요 🙂');
         return;
       }

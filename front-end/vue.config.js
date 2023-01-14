@@ -8,7 +8,7 @@ module.exports = defineConfig({
     port: 9081,
     proxy: {
       '^/eatcoin-api': {
-        target: 'http://54.90.208.39:3000',
+        target: 'http://54.242.25.249:3000',
         changeOrigin: true,
       },
     },
