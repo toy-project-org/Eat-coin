@@ -1,5 +1,8 @@
 # front-end
 
+## version
+- node: v16.15.1
+
 ## Project setup
 ```
 yarn install
