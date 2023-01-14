@@ -4,8 +4,12 @@
       <div class="container-box">
         <div class="container-box-content fade-in">
           <h3 class="add-history-title mt-4 mb-1">{{ typeTitle }} 목록</h3>
-          <item-management-card v-for="(item, idx) in items" :key="idx" :type="type" :item="item" />
-
+          <category-management-card
+            v-for="(item, idx) in items"
+            :key="idx"
+            :type="type"
+            :item="item"
+          />
           <div class="card-container-add" @click="addMovePage()">
             <i class="bx bx-plus icon-size-md mr-1"></i>
             <p class="card-title">새 {{ typeTitle }} 추가</p>
@@ -17,15 +21,15 @@
 </template>
 
 <script lang="ts">
-import ItemManagementCard from '@/components/ItemManagementCard.vue';
+import CategoryManagementCard from '@/components/CategoryManagementCard.vue';
 import { AssetsItem, CategoryBasicItem, CategoryItem } from '@/types/project';
 import { defineComponent } from 'vue';
 import * as api from '@/api/app';
 
 export default defineComponent({
-  name: 'ItemManagement',
+  name: 'CategoryManagementPage',
 
-  components: { ItemManagementCard },
+  components: { CategoryManagementCard },
 
   data: () => {
     return {
@@ -41,16 +45,6 @@ export default defineComponent({
   },
 
   methods: {
-    addMovePage() {
-      this.type === 'Assets' ? this.movePage('AddAssets') : this.movePage('AddCategory');
-    },
-
-    movePage(new_page: string) {
-      this.$router.push({
-        name: new_page,
-      });
-    },
-
     async initSetting() {
       const routeName = this.$route.name as string;
       this.type = routeName.substring(0, routeName.length - 10);
@@ -74,6 +68,16 @@ export default defineComponent({
           });
         });
       }
+    },
+
+    addMovePage() {
+      this.type === 'Assets' ? this.movePage('AddAssets') : this.movePage('AddCategory');
+    },
+
+    movePage(new_page: string) {
+      this.$router.push({
+        name: new_page,
+      });
     },
   },
 

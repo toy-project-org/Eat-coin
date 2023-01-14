@@ -14,7 +14,7 @@ import { ChartMonthItem } from '@/types/project';
 import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
-  name: 'ChartCard',
+  name: 'CategoryChartCard',
 
   mixins: [MixinCommon],
 

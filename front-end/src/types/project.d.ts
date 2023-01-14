@@ -4,19 +4,6 @@ export interface Obj_app {
   id: number;
 }
 
-export interface HistoryItem {
-  hid: number;
-  title: string;
-  amount: number;
-  payment_date: string;
-  type: string;
-  category: {
-    cid: number;
-    name: string;
-    image: string;
-  };
-}
-
 export interface HistoryDetailItem {
   hid?: number;
   title: string;
@@ -30,7 +17,6 @@ export interface HistoryDetailItem {
   };
   method: string;
   memo: string;
-  isfixed: string | null;
 }
 
 export interface FormatHistoryItem {

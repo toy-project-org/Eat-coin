@@ -1,5 +1,5 @@
 <template>
-  <div class="card-container" @click="movePage('Detail')">
+  <div class="card-container" @click="movePage('HistoryDetailPage')">
     <div class="card-icon">
       <v-icon color="white">{{ cardItem.category.image }}</v-icon>
     </div>
@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import MixinCommon from '@/common/mixin';
-import { HistoryDetailItem, HistoryItem } from '@/types/project';
+import { HistoryDetailItem } from '@/types/project';
 import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
@@ -22,7 +22,7 @@ export default defineComponent({
   mixins: [MixinCommon],
 
   props: {
-    cardItem: { type: Object as PropType<HistoryItem | HistoryDetailItem>, required: true },
+    cardItem: { type: Object as PropType<HistoryDetailItem>, required: true },
   },
 
   methods: {

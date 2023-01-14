@@ -14,7 +14,7 @@
               variant="flat"
               rounded="lg"
               :color="type === '수입' ? 'success' : ''"
-              style="width: 32%"
+              style="width: 48%"
               @click="setType('수입')"
               >수입</v-btn
             >
@@ -22,27 +22,12 @@
               variant="flat"
               rounded="lg"
               :color="type === '지출' ? 'success' : ''"
-              style="width: 32%"
+              style="width: 48%"
               @click="setType('지출')"
               >지출</v-btn
             >
-            <v-btn
-              variant="flat"
-              rounded="lg"
-              :color="type === '예/적금' ? 'success' : ''"
-              style="width: 32%"
-              @click="setType('예/적금')"
-            >
-              예/적금
-            </v-btn>
           </nav>
 
-          <div class="add-history-nav">
-            <span class="mt-5 add-history-sub-title">고정</span>
-            <div>
-              <v-switch v-model="autoUpdate" color="green-lighten-2" inset hide-details></v-switch>
-            </div>
-          </div>
           <div class="mt-3 add-history-nav">
             <span class="add-history-sub-title">내역</span>
             <div class="add-history-input-width fade-in">
@@ -74,7 +59,7 @@
           <div class="mt-1 add-history-nav">
             <span class="add-history-sub-title">자산</span>
             <div class="d-flex add-history-input-width fade-in">
-              <ItemModal
+              <AddCategoryModal
                 :type="'Assets'"
                 :icon="'mdi-plus-circle-outline'"
                 :data-list="assetsItems"
@@ -95,7 +80,7 @@
           <div class="mt-1 add-history-nav">
             <span class="add-history-sub-title">카테고리</span>
             <div class="d-flex add-history-input-width fade-in">
-              <ItemModal
+              <AddCategoryModal
                 :type="'Category'"
                 :icon="'mdi-plus-circle-outline'"
                 :data-list="categoryItems"
@@ -142,20 +127,19 @@
 import * as api from '@/api/app';
 import { defineComponent } from 'vue';
 import Datepicker from '@vuepic/vue-datepicker';
-import ItemModal from '@/components/ItemModal.vue';
+import AddCategoryModal from '@/components/AddCategoryModal.vue';
 import { AssetsItem, CategoryItem } from '@/types/project';
 
 export default defineComponent({
-  name: 'AddHistory',
+  name: 'AddHistoryPage',
 
-  components: { Datepicker, ItemModal },
+  components: { Datepicker, AddCategoryModal },
 
   data() {
     return {
       date: '',
       newDate: '',
       type: '',
-      autoUpdate: true,
       title: '',
       titleRules: [
         (v: string) => !!v || '한 글자 이상 작성해주세요.',
@@ -205,18 +189,35 @@ export default defineComponent({
       this.categoryItems = data.map((category: CategoryItem) => category.name);
     },
 
-    beforePage() {
-      this.$router.go(-1);
+    async isDuplicateName(title: string, newItemName: string) {
+      let dupIdx;
+      if (title === 'Assets') {
+        const { data } = await api.getAssetsList();
+        dupIdx = data.findIndex((asset: AssetsItem) => asset.name === newItemName);
+      } else {
+        const { data } = await api.getCategoryList();
+        dupIdx = data.findIndex((asset: AssetsItem) => asset.name === newItemName);
+      }
+      return dupIdx !== -1;
     },
 
-    addNewItem(title: string, newData: string) {
+    async addNewItem(title: string, newData: string) {
+      const duplicate = await this.isDuplicateName(title, newData);
+      if (duplicate) {
+        alert('중복인 값이 있습니다! 수정해주세요 🙂');
+        return;
+      }
       if (title === 'Assets') {
-        this.assetsItems.push(newData);
+        api.addAssetsItem({ name: newData, image: 'mdi-dots-horizontal-circle' });
         this.assets = newData;
       } else {
-        this.categoryItems.push(newData);
+        api.addCategoryItem({ name: newData, image: 'mdi-dots-horizontal-circle' });
         this.category = newData;
       }
+    },
+
+    beforePage() {
+      this.$router.go(-1);
     },
 
     dateFormat(date: Date) {
@@ -250,17 +251,16 @@ export default defineComponent({
           type: this.type,
           category: {
             name: this.category,
-            image: 'mdi-guitar-acoustic',
+            image: 'mdi-dots-horizontal-circle',
           },
           method: this.assets,
           memo: this.memo,
-          isfixed: null,
         };
 
         await api.addHistory(addHistoryData);
         this.beforePage();
       } else {
-        alert('입력하지 않은 입력값이 존재합니다.');
+        alert('입력하지 않은 입력값이 존재합니다. 😅');
       }
     },
 
@@ -269,23 +269,11 @@ export default defineComponent({
       this.date = '';
       this.newDate = '';
       this.type = '';
-
-      alert(
-        `Form is reset
-          이전날짜: ${this.date}
-          타입: ${this.type}
-          날짜: ${this.newDate}
-          내역: ${this.title}
-          금액: ${this.amount}
-          자산: ${this.assets}
-          카테고리: ${this.category}
-          메모: ${this.memo}`,
-      );
     },
   },
 });
 </script>
 
 <style lang="scss">
-@import '../style/addHistory.scss';
+@import '../style/AddHistoryPage.scss';
 </style>

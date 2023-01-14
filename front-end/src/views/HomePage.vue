@@ -69,7 +69,7 @@ const storage = {
 };
 
 export default defineComponent({
-  name: 'Home',
+  name: 'HomePage',
 
   mixins: [MixinCommon],
 
@@ -105,12 +105,6 @@ export default defineComponent({
       });
     },
 
-    movePage(new_page: string) {
-      this.$router.push({
-        name: new_page,
-      });
-    },
-
     initShowBalance() {
       let storageFetch = storage.fetch();
       this.balance.show = storageFetch === null ? true : JSON.parse(storage.fetch() as string);
@@ -128,10 +122,16 @@ export default defineComponent({
         this.addHistoryData(this.historyDataList, data);
       });
     },
+
+    movePage(new_page: string) {
+      this.$router.push({
+        name: new_page,
+      });
+    },
   },
 });
 </script>
 
 <style lang="scss">
-@import '../style/home.scss';
+@import '../style/homePage.scss';
 </style>

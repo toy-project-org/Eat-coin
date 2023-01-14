@@ -83,9 +83,10 @@
 import { defineComponent } from 'vue';
 import iconData from '../assets/data/iconData';
 import * as api from '@/api/app';
+import { AssetsItem } from '@/types/project';
 
 export default defineComponent({
-  name: 'AddItem',
+  name: 'AddCategoryPage',
 
   data: () => {
     return {
@@ -170,10 +171,28 @@ export default defineComponent({
       }
     },
 
+    async isDuplicateName(newItemName: string) {
+      let dupIdx;
+      if (this.type === 'Category') {
+        const { data } = await api.getCategoryList();
+        dupIdx = data.findIndex((asset: AssetsItem) => asset.name === newItemName);
+      } else {
+        const { data } = await api.getAssetsList();
+        dupIdx = data.findIndex((asset: AssetsItem) => asset.name === newItemName);
+      }
+      return dupIdx !== -1;
+    },
+
     async setItemVaildate() {
       const { valid } = await (this.$refs as HTMLFormElement).formRef.validate();
-      if (this.item.name == '') {
+      if (!this.item.name) {
         alert('아무것도 입력하지 않았습니다!');
+        return;
+      }
+
+      const duplicate = await this.isDuplicateName(this.item.name);
+      if (duplicate) {
+        alert('중복인 값이 있습니다! 수정해주세요 🙂');
         return;
       }
 

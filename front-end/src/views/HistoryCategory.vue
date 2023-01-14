@@ -54,7 +54,7 @@
       class="container-box-content mt-5 inner fade-in"
       :key="`${usageType}-${currDateMonthStr.month}`"
     >
-      <ChartCard v-for="(item, idx) in chartItems" :key="idx" :card-item="item" />
+      <CategoryChartCard v-for="(item, idx) in chartItems" :key="idx" :card-item="item" />
     </div>
   </div>
 </template>
@@ -65,7 +65,7 @@ import { defineComponent } from 'vue';
 import MixinCommon from '@/common/mixin';
 import * as api from '@/api/app';
 import { AssetsMonthItem, CategoryMonthItem, ChartMonthItem } from '@/types/project';
-import ChartCard from '@/components/ChartCard.vue';
+import CategoryChartCard from '@/components/CategoryChartCard.vue';
 
 export default defineComponent({
   name: 'HistoryCategory',
@@ -74,7 +74,7 @@ export default defineComponent({
 
   components: {
     CategoryChart,
-    ChartCard,
+    CategoryChartCard,
   },
 
   data: () => {
@@ -90,17 +90,22 @@ export default defineComponent({
 
   created() {
     this.initDateMonth();
-
     this.setMonthInAndOut(this.currDateMonth).then(({ data }) => {
       this.currMonthAmount.in = data.income;
       this.currMonthAmount.out = data.expend;
     });
-
-    // TODO: 수진! 카드별 이용내역에서 수입은 빼야하지않나...?
     this.usageType === '카테고리' ? this.setCategoryMonthList() : this.setAssetsMonthList();
   },
 
   methods: {
+    initDateMonth() {
+      const date = new Date();
+      this.currDateMonth.year = date.getFullYear();
+      this.currDateMonth.month = date.getMonth() + 1;
+
+      this.currDateMonthStr = this.formatYearAndMonthHeader(this.currDateMonth);
+    },
+
     async setCategoryMonthList() {
       const { data } = await api.getCategoryMonthList(
         `${this.currDateMonthStr.year}-${this.currDateMonthStr.month}`,
@@ -127,14 +132,6 @@ export default defineComponent({
           image: assetsChartData.image,
         });
       });
-    },
-
-    initDateMonth() {
-      const date = new Date();
-      this.currDateMonth.year = date.getFullYear();
-      this.currDateMonth.month = date.getMonth() + 1;
-
-      this.currDateMonthStr = this.formatYearAndMonthHeader(this.currDateMonth);
     },
 
     changeYearAndMonth(m: number) {

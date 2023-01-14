@@ -4,7 +4,6 @@
       <v-icon color="white">{{ item.image }}</v-icon>
     </div>
     <p class="card-title">{{ item.name }}</p>
-
     <div>
       <v-btn icon variant="text" class="btn-add-history-plus mr-1" @click="addMovePage()">
         <v-icon>mdi-pencil-outline</v-icon>
@@ -18,15 +17,11 @@ import { CategoryBasicItem } from '@/types/project';
 import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
-  name: 'ItemManagementCard',
+  name: 'CategoryManagementCard',
 
   props: {
     item: { type: Object as PropType<CategoryBasicItem>, required: true },
     type: { type: String, required: true },
-  },
-
-  created() {
-    console.log('idx', this.type, this.item);
   },
 
   methods: {
