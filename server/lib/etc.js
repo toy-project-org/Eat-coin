@@ -34,6 +34,7 @@ const date = (today) => {
     }
 
     if (d < 10) d = '0' + d;
+    if (m < 10) d = '0' + m;
 
     return `${y}-${m}-${d}`;
 }
