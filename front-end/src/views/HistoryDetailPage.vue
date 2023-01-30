@@ -274,7 +274,7 @@ export default defineComponent({
         await api.editHistory(id, addHistoryData);
         this.beforePage();
       } else {
-        alert('입력하지 않은 입력값이 존재합니다. 😅');
+        alert('입력하지 않은 입력값이 존재합니다. 🤔');
       }
     },
 
