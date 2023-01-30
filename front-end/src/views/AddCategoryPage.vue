@@ -200,8 +200,6 @@ export default defineComponent({
       }
 
       if (valid) {
-        alert(`New items are valid: ${this.item.name} ${this.item.image}`);
-
         let newItem = {
           name: this.item.name,
           image: this.item.image ? this.item.image : this.settingInitImage(),
