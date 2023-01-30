@@ -164,7 +164,7 @@ export default defineComponent({
     },
 
     async deleteItem() {
-      if (confirm('정말 삭제하시겠습니까??')) {
+      if (confirm('정말 삭제하시겠습니까?? 🤨')) {
         if (this.type === 'Category') {
           await api.deleteCategoryItem(this.paramsId);
         } else {
@@ -189,7 +189,7 @@ export default defineComponent({
     async setItemVaildate() {
       const { valid } = await (this.$refs as HTMLFormElement).formRef.validate();
       if (!this.item.name) {
-        alert('아무것도 입력하지 않았습니다!');
+        alert('아무것도 입력하지 않았습니다! 입력해주세요 🙂');
         return;
       }
 
