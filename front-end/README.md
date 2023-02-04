@@ -1,7 +1,6 @@
 # front-end
 
-## Version
-- node: v16.15.1
+![Generic badge](https://img.shields.io/badge/node.js-v16.15.1-green.svg)
 
 ## Project setup
 ```
